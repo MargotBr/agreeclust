@@ -1,0 +1,61 @@
+---
+title: "Using the `AgreeClust` package to segment a panel of raters according to their agreement"
+author: "Margot Brard"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## <span style="color: #EA485C">TEST PUSH BLA BLA BLA BLAIntroduction</span>
+
+The `AgreeClust` package considers a latent class regression modeling framework for highlighting the structure of disagreement among panels of raters involved in an inquiry. On the contrary to popular approaches, the present method considers the ratings data provided by all raters when studying the structure of disagreement among the panel. More precisely, the structure of disagreement is captured through the profiles of residuals of a no-latent class regression model adjusted on the entire set of binary ratings, and can be visualized by using exploratory data analysis tools. The disagreement between two raters is then quantify in a concise way through the Euclidean distance between their respective profiles of residuals, this disagreement index being used as a basis to construct a dendrogram representing the structure of disagreement among the panel. The proper number of disagreed clusters among the panel of raters is then chosen by implementing a sequential strategy to test the significance of each $K$-clusters structure of disagreement.
+
+The `AgreeClust` package contains two main functions:
+
+- the `AgreeClustBin` function, which considers a logistic latent class regression modeling for the agreement-based unsupervised clustering of a set of binary ratings.
+- the `AgreeClustCont` function, which considers an analysis of variance-based latent class regression modeling for the agreement-based unsupervised clustering of a set of continuous ratings.
+
+The `AgreeClust` package also provides several `ggplot2`-type graphical tools to facilitate the interpretation of the structure of agreement/disagreement observed among the panel of raters.
+
+## <span style="color: #EA485C">Installing the package</span> 
+
+To get the current development version from github:
+
+```{r eval=FALSE}
+install.packages("devtools")
+devtools::install_github("MargotBr/AgreeClust", build_vignettes = TRUE)
+library(AgreeClust)
+```
+
+```{r echo=FALSE}
+library(AgreeClust)
+```
+
+```{r}
+help(AgreeClust)
+```
+
+## <span style="color: #EA485C">Data used</span> 
+
+```{r}
+data(pedagdata)
+pedagdata
+```
+
+## <span style="color: #EA485C">Using a function</span> 
+
+```{r eval = FALSE}
+res.pedag <- AgreeClustBin(dta = pedagdata, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdata), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdata), type.info.stim = c(rep("cont", 4), "cat"))
+```
+
+## <span style="color: #EA485C">Interpreting the results provided by the function</span> 
+
+```{r echo = FALSE, fig.keep = 'all', fig.width=7, fig.height=7}
+res.pedag <- AgreeClustBin(dta = pedagdata, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdata), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdata), type.info.stim = c(rep("cont", 4), "cat"))
+```
+
+
+
