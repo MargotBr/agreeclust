@@ -42,7 +42,7 @@ A boolean specifying if the graphical outputs should be plotted or not. By defau
 \item{partition}{A vector representing the partition of the raters (consolidated partition if consol = TRUE).}
 \item{res.plot.segment}{All the graphical results of the segmentation.}
 \item{res.pca}{All the results of the PCA.}
-\item{charact.clust }{The results of the description of the clusters by information describing the raters and/or the stimuli.}
+\item{charact.clust}{The results of the description of the clusters by information describing the raters and/or the stimuli.}
 }
 
 \references{

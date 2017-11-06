@@ -162,7 +162,7 @@ The `AgreeClustBin` function of the package considers a logistic latent class re
 
 For implementing the cutting strategy of the dendrogram, the Likelhood-Ratio Test (LRT) is used as the statistic test to test the significance of the $(K+1)-$ latent class model w.r.t the $K-$ latent class model.
 
-To illustrate the outputs and graphs of the function, let's use a small pedagogic data set named *pedagdataBin*. This data set refers to the ratings of 8 stimuli provided by a panel of 20 raters. Ratings data are supplemented by covariates providing information about the stimuli and the raters. The columns 21, 22, 23, 24, and 25 provide information about the stimuli: Citrus fruits intensity (continuous), Vanilla intensity (continuous), Wood intensity (continuous), Lotus intensity (continuous), and Packaging which is either the current one or a prototype (categorical). The lines 9, 10, 11 provide information about the raters: Gender (categorical), Age bracket (categorical), Frequency of use (categorical). The code to import and visualize this data set is:
+To illustrate the outputs and graphs of the function, let's use a small pedagogic data set named *pedagdataBin*. This data set refers to the ratings of 8 stimuli provided by a panel of 20 raters. Ratings data are supplemented by covariates providing information about the stimuli and the raters. The columns 21, 22, 23, 24, and 25 provide information about the stimuli: *Citrus fruits intensity* (continuous), *Vanilla intensity* (continuous), *Wood intensity* (continuous), *Lotus intensity* (continuous), and *Packaging* which is either the current one or a prototype (categorical). The lines 9, 10, 11 provide information about the raters: *Gender* (categorical), *Age bracket* (categorical), *Frequency of use* (categorical). The code to import and visualize this data set is:
 
 ```{r}
 data(pedagdataBin)
@@ -198,7 +198,19 @@ res.pedag <- AgreeClustBin(dta = pedagdataBin, id.info.rater = 9 : nrow(pedagdat
 res.pedag <- AgreeClustBin(dta = pedagdataBin, id.info.rater = 9 : nrow(pedagdataBin), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataBin), type.info.stim = c(rep("cont", 4), "cat"), graph = FALSE)
 ```
 
-By default, the `AgreeClustBin` function produces two graphs, one illustrating the clustering process and one illustrating the multidimensional representation of thestructure of disagreement observed among the panel. The following figure shows the clustering process. The dendrogram representing the structure of disagreement is presented at the top. The $p-$values associated the levels of its hierarchy show that two clusters of raters exist among the panel, as the $3-$ latent class model is not significant w.r.t the $2-$ latent class model. The consolidation step did not modify the partition of clusters. 
+The first object returned by the function is the matrix containing the profiles of deviance residuals. The larger the residual (in absolute value), the larger the impact on the gap from the situation of *perfect agreement* (cf. model (2)). This object can be accessed with this code:
+
+```{r}
+res.pedag$profiles.residuals
+```
+
+The second object returned by the function is the disagreement matrix between raters. This object can be accessed with this code:
+
+```{r}
+res.pedag$mat.disag
+```
+
+The first graph created by the function shows the clustering process applied to this disagreement matrix. The dendrogram representing the structure of disagreement is presented at the top of the graph. The $p-$values associated to the different levels of its hierarchy show that two clusters of raters exist among the panel, as the $3-$ latent class model is not significant w.r.t the $2-$ latent class model. The consolidation step, whose the result is presented at the bottom of the graph, did not modify the partition of clusters. In other words, this panel is composed of two disagreed clusters: the first ten raters (cluster 1) against the last ten raters (cluster 2).
 
 ```{r echo=FALSE, fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
 plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#42B983", "#F36170"))
@@ -206,14 +218,50 @@ plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#42B983", "#F36170"))
 
 The clusters can be colored according to new colors in this plot. To do so, the following code is used:
 
-```{r echo=FALSE, fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
+```{r fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
 plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#FF8379", "#009193"))
 ```
 
-The following figure shows the multidimensional representation of the structure of disagreement observed among the panel. This representation is obtained by submitting the $20 \times 2$ matrix contained in the object *res.pedag* to a Principal Components Analysis (PCA). PCA provides two main representations: a representation of the individuals (i.e. a representation of the 20 raters) and a representation of the variables (i.e. a representation of the 8 stimuli). On the representation of the raters, two raters are distant if they present a high disagreement. As these two representations are related to each other, the representation of the raters has to be interpreted regarding to the representation of the stimuli This may be expressed as follows: raters are on the same side as the stimuli for which they gave a '1' rating, and opposite of the gestures for which they gave a '0' rating.
+The results of the clustering process ($p-$values associated to the test of the significance of each $K-$ clusters structure, number of clusters of raters found, and the final partition of raters that is consolidated in the present example) can be accessed with this code:
 
-```{r echo=FALSE, fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
+```{r}
+res.pedag$pval.dendro
+res.pedag$nb.clust.found
+res.pedag$partition
+```
+
+The second graph created by the function shows the multidimensional representation of the structure of disagreement observed among the panel. This representation is obtained by submitting the $20 \times 8$ matrix contained in the object *res.pedag$profiles.residuals* to a Principal Components Analysis (PCA). PCA provides two main representations: a representation of the individuals (i.e. a representation of the 20 raters) and a representation of the variables (i.e. a representation of the 8 stimuli). On the representation of the raters, two raters are distant if they present a high disagreement. As these two representations are related to each other, the representation of the raters has to be interpreted regarding to the representation of the stimuli. This may be expressed as follows: raters are on the same side as the stimuli for which they gave a '1' rating, and opposite of the gestures for which they gave a '0' rating. In the present example, cluster 1 is characterized by '1' ratings for stimuli *Stim5*, *Stim6*, *Stim7*, and *Stim8*, and by '0' ratings for stimuli *Stim1*, *Stim2*, *Stim3*, and *Stim4*. On the contrary, cluster 2 is characterized by '0' ratings for stimuli *Stim5*, *Stim6*, *Stim7*, and *Stim8*, and by '1' ratings for stimuli *Stim1*, *Stim2*, *Stim3*, and *Stim4*.
+
+```{r echo=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
 plot.AgreeClust(res.pedag, choice = "mul", col.clust = c("#42B983", "#F36170"))
+```
+
+In the present example, the percentage of variability explained by the first factorial plane is $67.12+16.87=83.99\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. Howerver, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `FactoMineR` package (cf. help page of this function if needed). These results can be accessed with this code:
+
+```{r}
+res.pedag$res.pca
+```
+
+We can draw a bar plot with the eigenvalues of PCA with the following code:
+
+```{r}
+barplot(res.pedag$res.pca$eig[, 1], main = "Eigenvalues", names.arg = paste0("Dim", 1 : nrow(res.pedag$res.pca$eig)))
+```
+
+This graph allows to detect the number of dimensions interesting for the interpretation of the structure of disagreement. The user can then plot the graph for the other interesting dimensions, let's say the third and the fourth dimensions:
+
+```{r eval=FALSE}
+plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4))
+```
+
+```{r echo=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
+plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B983", "#F36170"))
+```
+
+Finally, the function provides an automatic description of the clusters of raters. This description can be accessed with this code: 
+
+```{r}
+res.pedag$charact.clust
 ```
 
 # Adapting the method to continuous ratings
