@@ -198,10 +198,22 @@ res.pedag <- AgreeClustBin(dta = pedagdataBin, id.info.rater = 9 : nrow(pedagdat
 res.pedag <- AgreeClustBin(dta = pedagdataBin, id.info.rater = 9 : nrow(pedagdataBin), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataBin), type.info.stim = c(rep("cont", 4), "cat"), graph = FALSE)
 ```
 
-By default, the `AgreeClustBin` function produces two graphs, one illustrating the clustering process and one illustrating the multidimensional structure of disagreement observed among the panel. The following figure shows the clustering process. The dendrogram representing the structure of disagreement is presented at the top. The $p-$values associated the levels of its hierarchy show that two clusters of raters exist among the panel, as the $3-$ latent class model is not significant w.r.t the $2-$ latent class model.
+By default, the `AgreeClustBin` function produces two graphs, one illustrating the clustering process and one illustrating the multidimensional representation of thestructure of disagreement observed among the panel. The following figure shows the clustering process. The dendrogram representing the structure of disagreement is presented at the top. The $p-$values associated the levels of its hierarchy show that two clusters of raters exist among the panel, as the $3-$ latent class model is not significant w.r.t the $2-$ latent class model. The consolidation step did not modify the partition of clusters. 
 
-```{r echo=FALSE, fig.width=8, fig.height=8}
+```{r echo=FALSE, fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
 plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#42B983", "#F36170"))
+```
+
+The clusters can be colored according to new colors in this plot. To do so, the following code is used:
+
+```{r echo=FALSE, fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
+plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#FF8379", "#009193"))
+```
+
+The following figure shows the multidimensional representation of the structure of disagreement observed among the panel. This representation is obtained by submitting the $20 \times 2$ matrix contained in the object *res.pedag* to a Principal Components Analysis (PCA). PCA provides two main representations: a representation of the individuals (i.e. a representation of the 20 raters) and a representation of the variables (i.e. a representation of the 8 stimuli). On the representation of the raters, two raters are distant if they present a high disagreement. As these two representations are related to each other, the representation of the raters has to be interpreted regarding to the representation of the stimuli This may be expressed as follows: raters are on the same side as the stimuli for which they gave a '1' rating, and opposite of the gestures for which they gave a '0' rating.
+
+```{r echo=FALSE, fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
+plot.AgreeClust(res.pedag, choice = "mul", col.clust = c("#42B983", "#F36170"))
 ```
 
 # Adapting the method to continuous ratings
