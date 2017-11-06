@@ -1,21 +1,21 @@
-AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL) {
-  
+AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL) {
+
   options(warn = -1)
-  
+
   # load packages
-  suppressPackageStartupMessages(require(reshape2, quietly = TRUE))  
-  suppressPackageStartupMessages(require(parallel, quietly = TRUE))  
-  suppressPackageStartupMessages(require(ggdendro, quietly = TRUE))  
-  suppressPackageStartupMessages(require(ggplot2, quietly = TRUE))  
-  suppressPackageStartupMessages(require(dendextend, quietly = TRUE))  
-  suppressPackageStartupMessages(require(grid, quietly = TRUE))  
-  suppressPackageStartupMessages(require(gridExtra, quietly = TRUE))  
-  suppressPackageStartupMessages(require(FactoMineR, quietly = TRUE))  
-  suppressPackageStartupMessages(require(ggrepel, quietly = TRUE))  
+  suppressPackageStartupMessages(require(reshape2, quietly = TRUE))
+  suppressPackageStartupMessages(require(parallel, quietly = TRUE))
+  suppressPackageStartupMessages(require(ggdendro, quietly = TRUE))
+  suppressPackageStartupMessages(require(ggplot2, quietly = TRUE))
+  suppressPackageStartupMessages(require(dendextend, quietly = TRUE))
+  suppressPackageStartupMessages(require(grid, quietly = TRUE))
+  suppressPackageStartupMessages(require(gridExtra, quietly = TRUE))
+  suppressPackageStartupMessages(require(FactoMineR, quietly = TRUE))
+  suppressPackageStartupMessages(require(ggrepel, quietly = TRUE))
 
   # save the data set
   dta.sauv <- dta
-  
+
   # remove external information about raters and stimuli
   if (!is.null(id.info.rater)) {
     dta <- dta[-id.info.rater,]
@@ -25,14 +25,14 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     dta <- dta[, -id.info.stim]
     dta <- droplevels(dta)
   }
-  
+
   # calculate the numbers of raters and stimuli
   nbrater <- ncol(dta)
   nbstim <- nrow(dta)
-  
+
   # create a res object to save the results
   res <- list()
-  
+
   # create the melted data set
   melted.data <- melt(as.matrix(dta))
   melted.data <- melted.data[, c(2,1,3)]
@@ -40,10 +40,10 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
   melted.data$Rater <- as.factor(melted.data$Rater)
   melted.data$Stimulus <- as.factor(melted.data$Stimulus)
   melted.data$Rating <- as.factor(melted.data$Rating)
-  
+
   # adjust the no-latent class model
-  mod.noLC <- glm(model, data = melted.data, family = binomial) 
-  
+  mod.noLC <- glm(model, data = melted.data, family = binomial)
+
   # compute the disagreement matrix
   mat.resids <- matrix(residuals(mod.noLC, type = "deviance"), nrow(dta), ncol(dta))
   dimnames(mat.resids) <- list(rownames(dta), colnames(dta))
@@ -52,10 +52,10 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
   disagmat <- as.dist(disagmat)
   res[[1]] <- mat.resids
   res[[2]] <- as.matrix(disagmat)
-  
+
   # construct the dendrogram
   dendrogram <- stats::hclust(disagmat, method = "ward.D2")
-  
+
   # compute p-values for each level of the dendrogram
   remove_outliers <- function(x, na.rm = TRUE, ...) {
     qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
@@ -66,7 +66,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     y
   }
   compute.dist.null <- function(j, list.data.null, K) {
-    
+
     # Null dendrogram
     print(paste0("Test ", (K + 1), " VS ", (K), " | Simul ", j))
     data.null <- as.matrix(list.data.null[[j]])
@@ -76,14 +76,14 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     melted.data.null$Rater <- as.factor(melted.data.null$Rater)
     melted.data.null$Stimulus <- as.factor(melted.data.null$Stimulus)
     melted.data.null$Rating <- as.factor(melted.data.null$Rating)
-    mod.noLC.null <- glm(model, data = melted.data.null, family = binomial) 
+    mod.noLC.null <- glm(model, data = melted.data.null, family = binomial)
     mat.resids.null <- matrix(residuals(mod.noLC.null, type = "deviance"), nrow(data.null), ncol(data.null))
     dimnames(mat.resids.null) <- list(rownames(data.null), colnames(data.null))
     mat.resids.null <- t(as.data.frame(mat.resids.null))
     disagmat.null <- dist(mat.resids.null, method = "euclidean")
     disagmat.null <- as.dist(disagmat.null)
     dendrogram.null <- stats::hclust(disagmat.null, method = "ward.D2")
-    
+
     # Null K-latent class model
     partition.KLC.null <- cutree(dendrogram.null, k = K)
     partition.KLC.null <- cbind.data.frame(names(partition.KLC.null), partition.KLC.null)
@@ -98,7 +98,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       X.KLC.null <- X.KLC.null[, !is.na(coef(mod.KLC.null))]
       mod.KLC.null <- glm(Rating ~ ., data = data.frame(Rating = clustered.data.KLC.null$Rating, X.KLC.null[, -1]), family = binomial)
     }
-    
+
     # Null (K+1)-latent class model
     partition.Kplus1LC.null <- cutree(dendrogram.null, k = K + 1)
     partition.Kplus1LC.null <- cbind.data.frame(names(partition.Kplus1LC.null), partition.Kplus1LC.null)
@@ -109,16 +109,16 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     X.Kplus1LC.null <- model.matrix(mod.Kplus1LC.null)
     X.Kplus1LC.null <- X.Kplus1LC.null[, !is.na(coef(mod.Kplus1LC.null))]
     mod.Kplus1LC.null <- glm(Rating ~ ., data = data.frame(Rating = clustered.data.Kplus1LC.null$Rating, X.Kplus1LC.null[, -1]), family = binomial)
-    
+
     # Compute the null LRT statistic
     lrt.H0 <- deviance(mod.KLC.null) - deviance(mod.Kplus1LC.null)
     return(lrt.H0)
-    
+
   }
   compute.pval <- function(K) {
-    
+
     if(control.break) {
-      
+
       # K-latent class model
       partition.KLC <- cutree(dendrogram, k = K)
       partition.KLC <- cbind.data.frame(names(partition.KLC), partition.KLC)
@@ -133,7 +133,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
         X.KLC <- X.KLC[, !is.na(coef(mod.KLC))]
         mod.KLC <- glm(Rating ~ ., data = data.frame(Rating = clustered.data.KLC$Rating, X.KLC[, -1]), family = binomial)
       }
-      
+
       # (K+1)-latent class model
       partition.Kplus1LC <- cutree(dendrogram, k = K + 1)
       partition.Kplus1LC <- cbind.data.frame(names(partition.Kplus1LC), partition.Kplus1LC)
@@ -144,10 +144,10 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       X.Kplus1LC <- model.matrix(mod.Kplus1LC)
       X.Kplus1LC <- X.Kplus1LC[,!is.na(coef(mod.Kplus1LC))]
       mod.Kplus1LC <- glm(Rating~., data=data.frame(Rating = clustered.data.Kplus1LC$Rating, X.Kplus1LC[, -1]), family = binomial)
-      
+
       # Compute the LRT statistic
       lrt.obs <- deviance(mod.KLC) - deviance(mod.Kplus1LC)
-      
+
       # Generate the null data sets
       proba.null <- predict(mod.KLC, type = "response")
       if (approx.null == FALSE) {
@@ -158,7 +158,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       list.data.null <- lapply(1:nb.simul.null, function(l, proba.null) {
         as.numeric(runif(length(proba.null)) <= proba.null) }, proba.null = proba.null)
       list.data.null <- lapply(list.data.null, function(vec, k, dnames) matrix(vec, nrow = k, dimnames = dnames), k = nlevels(melted.data$Stimulus), dnames = dimnames(dta))
-      
+
       # Compute p-value
       if (paral == FALSE) {
         list.lrt.H0 <- lapply(1 : nb.simul.null, compute.dist.null, list.data.null = list.data.null, K = K)
@@ -195,7 +195,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
         control.break <<- FALSE
       }
       return(pval)
-      
+
     } else {
       return(NULL)
     }
@@ -213,12 +213,12 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
   colnames(mat.partition.noconsol) <- c("Cluster", "Rater")
   res[[3]] <- pval
   res[[4]] <- nb.found
-  
+
   # test the goodness of fit of the no-latent class model if nb.found = 1
   res.test.noLC <- as.data.frame(matrix(NA, 1, 3))
   colnames(res.test.noLC) <- c("x", "y", "pval")
   res.test.noLC[1, "pval"] <- round(1 - pchisq(mod.noLC$deviance, mod.noLC$df.residual), 2)
-  
+
   # implement a partitioning algorithm to consolidate the partition
   if (consol == TRUE) {
     centers <- by(mat.resids, partition, colMeans)
@@ -231,7 +231,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
   } else {
     res[[5]] <- partition.noconsol
   }
-  
+
   # plot the basic dendrogram
   palette.col <- c("#90B08F", "#EA485C", "#FF8379", "#009193", "#FFCEA5", "#A9A9A9", "#B0983D", "#941751", "#333333", "#A8D9FF")
   dendrogram.info <- as.dendrogram(dendrogram)
@@ -247,9 +247,9 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     scale_colour_manual(values = palette.col[1 : nlevels(data.labels$Cluster)]) +
     ylim(-1, (max(data.segments$y) + (0.2 * max(dendrogram$height) / 10))) +
     theme(
-      legend.key = element_rect(colour = "white", fill = "white"), 
-      panel.background = element_rect(fill = 'white', colour = "white"), 
-      panel.grid.major = element_line(colour = "white"), 
+      legend.key = element_rect(colour = "white", fill = "white"),
+      panel.background = element_rect(fill = 'white', colour = "white"),
+      panel.grid.major = element_line(colour = "white"),
       panel.grid.minor = element_line(colour = "white"),
       plot.title = element_text(hjust = 0.5, vjust = -1, size = 10, colour = "black"),
       plot.margin = unit(c(0.5,0,0,0), "cm"),
@@ -258,11 +258,11 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       axis.ticks.y = element_blank(),
       axis.ticks.x = element_blank(),
       axis.text.x = element_blank(),
-      legend.position = "none") 
+      legend.position = "none")
   if (consol == TRUE) {
     plot.dendro <- plot.dendro +
       ggtitle("Before consolidation")
-  } 
+  }
 
   # add p-values on the dendrogram
   res.test <- cbind.data.frame(dendrogram$height[length(dendrogram$height) : 1], rep(NA, length(dendrogram$height)), rep(NA, length(dendrogram$height)))
@@ -280,7 +280,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
   plot.dendro <- plot.dendro +
     geom_hline(data = res.test, aes(yintercept = y), colour = "grey", linetype = 2) +
     geom_text(data = res.test, aes(x = 1, y = (y + (0.2 * max(dendrogram$height) / 10))), label = res.test[,"pval"], colour = "grey", size = 2.5)
-  
+
   # add the p-value corresponding to the no-latent class model on the dendrogram
   coord.all.nodes <- get_nodes_xy(dendrogram.info)
   res.test.noLC[, c(1,2)] <- coord.all.nodes[which(coord.all.nodes[, 2] == max(coord.all.nodes[, 2])), ]
@@ -288,7 +288,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     geom_point(data = res.test.noLC, aes(x = x, y = y), colour = "grey", size = 3, shape = 18) +
     geom_text(data = res.test.noLC, aes(x = x, y = (y - (0.3 * max(dendrogram$height) / 10))), label = res.test.noLC[, "pval"], colour = "grey", size = 2.5) +
     guides(colour = guide_legend(override.aes = list(size=2.5)))
-  
+
   # add legend to the dendrogram
   coord.legend.dendro <- as.data.frame(matrix(NA, 4, 2))
   coord.legend.dendro[, 1] <- c(0, 0, 10, 10)
@@ -310,9 +310,9 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     geom_text(data = coord.legend.test.height, aes(x = x, y = y + 0.1), label = text.legend.test.height, hjust = 0, colour = "grey", size = 2) +
     geom_text(data = coord.legend.test.noLC, aes(x = x, y = y - 0.1), label = text.legend.test.noLC, hjust = 0, colour = "grey", size = 2) +
     theme(
-      legend.key = element_rect(colour = "white", fill = "white"), 
-      panel.background = element_rect(fill = 'white', colour = "white"), 
-      panel.grid.major = element_line(colour = "white"), 
+      legend.key = element_rect(colour = "white", fill = "white"),
+      panel.background = element_rect(fill = 'white', colour = "white"),
+      panel.grid.major = element_line(colour = "white"),
       panel.grid.minor = element_line(colour = "white"),
       plot.margin = unit(c(0.5, 0, 0, 0), "cm"),
       axis.title.x = element_blank(),
@@ -320,8 +320,8 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       axis.ticks.y = element_blank(),
       axis.ticks.x = element_blank(),
       axis.text.x = element_blank(),
-      axis.text.y = element_blank()) 
-  
+      axis.text.y = element_blank())
+
   # plot the partition of raters after consolidation if consol = TRUE
   if (consol == TRUE) {
     data.labels.partitioning <- merge(data.labels[, -4], mat.partition.consol, by = "Rater")
@@ -332,9 +332,9 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       ylim(-0.3, 0) +
       ggtitle("After consolidation") +
       theme(
-        legend.key = element_rect(colour = "white",fill = "white"), 
-        panel.background = element_rect(fill = 'white', colour = "white"), 
-        panel.grid.major = element_line(colour = "white"), 
+        legend.key = element_rect(colour = "white",fill = "white"),
+        panel.background = element_rect(fill = 'white', colour = "white"),
+        panel.grid.major = element_line(colour = "white"),
         panel.grid.minor = element_line(colour = "white"),
         plot.title = element_text(hjust = 0.5, size = 10, colour = "black"),
         plot.margin = unit(c(0.5, 0, 0, 0.45), "cm"),
@@ -344,21 +344,21 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
         axis.ticks.x = element_blank(),
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),
-        legend.position = "none") 
+        legend.position = "none")
   }
-  
+
   # save the global legend of the clusters
   plot.legend.clust <- ggplot(NULL) +
     geom_label(data = data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, fill = Cluster), colour = "transparent") +
     scale_fill_manual(values = palette.col[1 : nlevels(data.labels$Cluster)]) +
     theme(
       plot.margin = unit(c(0,0,0,0), "cm"),
-      legend.position = "bottom", 
-      legend.title = element_text(size=8), 
-      legend.text = element_text(size=8), 
+      legend.position = "bottom",
+      legend.title = element_text(size=8),
+      legend.text = element_text(size=8),
       legend.margin = margin(t=0, unit='cm'),
-      legend.key = element_rect(size=4), 
-      legend.key.size = unit(0.4, "cm"))  
+      legend.key = element_rect(size=4),
+      legend.key.size = unit(0.4, "cm"))
   get.legend <- function(plot){
     tmp <- ggplot_gtable(ggplot_build(plot))
     leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
@@ -366,7 +366,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     return(legend)
   }
   legend.plot <- get.legend(plot.legend.clust)
-  
+
   # combine all plots
   main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2))
   #dev.new(height = 7, width = 7)
@@ -375,8 +375,8 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     res[[6]][[1]] <- plot.dendro
     res[[6]][[2]] <- plot.legend.dendro
     res[[6]][[3]] <- plot.legend.clust
-    grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"), 
-                             plot.legend.dendro + theme(legend.position = "none"), 
+    grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
+                             plot.legend.dendro + theme(legend.position = "none"),
                              ncol = 1, nrow = 2, heights = c(4, 1)),
                  legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
   } else if (consol == TRUE) {
@@ -385,13 +385,13 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     res[[6]][[2]] <- plot.legend.dendro
     res[[6]][[3]] <- plot.partitioning
     res[[6]][[4]] <- plot.legend.clust
-    grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"), 
-                             plot.legend.dendro + theme(legend.position = "none"), 
-                             plot.partitioning + theme(legend.position = "none"), 
+    grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
+                             plot.legend.dendro + theme(legend.position = "none"),
+                             plot.partitioning + theme(legend.position = "none"),
                              ncol = 1, nrow = 3, heights = c(4, 1, 1)),
                  legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
   }
-  
+
   # plot the multidimensional representation of the disagreement
   if (consol == TRUE) {
     mat.partition <- mat.partition.consol
@@ -404,7 +404,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
   coord.raters <- res.pca$ind$coord[, axis]
   mat.coord.raters <- cbind.data.frame(rownames(coord.raters), coord.raters)
   colnames(mat.coord.raters) <- c("Rater", "AxeA", "AxeB")
-  coord.raters <- merge(mat.coord.raters, mat.partition, by = "Rater")  
+  coord.raters <- merge(mat.coord.raters, mat.partition, by = "Rater")
   coord.raters$Cluster <- as.factor(coord.raters$Cluster)
   rownames(coord.raters) <- coord.raters[, "Rater"]
   coord.raters <- coord.raters[, -1]
@@ -428,7 +428,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     coord_fixed() +
     xlim(xlim[1], xlim[2]) +
     ylim(ylim[1], ylim[2]) +
-    geom_hline(yintercept = 0, linetype = 2, color = "black", size = 0.2) + 
+    geom_hline(yintercept = 0, linetype = 2, color = "black", size = 0.2) +
     geom_vline(xintercept = 0, linetype = 2, color = "black", size = 0.2) +
     geom_point(data = coord.raters, aes(x = AxeA, y = AxeB, color = Cluster)) +
     scale_color_manual(values = palette.col[1 : nlevels(data.labels$Cluster)]) +
@@ -466,7 +466,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
     coord_fixed() +
     xlim(xlim[1], xlim[2]) +
     ylim(ylim[1], ylim[2]) +
-    geom_hline(yintercept = 0, linetype = 2, color = "black", size = 0.2) + 
+    geom_hline(yintercept = 0, linetype = 2, color = "black", size = 0.2) +
     geom_vline(xintercept = 0,  linetype = 2, color = "black", size = 0.2) +
     geom_segment(data = coord.stimuli, aes(x = 0, y = 0, xend = AxeA, yend = AxeB), alpha = 1, color = "black", size = 0.3, arrow = arrow(length = unit(0.3, "cm"))) +
     geom_text_repel(data = coord.stimuli, aes(x = AxeA, y = AxeB, label = rownames(coord.stimuli)), segment.color = "transparent", segment.size = 0.3, size = 2.3) +
@@ -482,29 +482,29 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       legend.position = "none")
   main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12,font = 2))
   #dev.new(height = 5, width = 9)
-  grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"), 
-                           plot.var.pca + theme(legend.position="none"), 
+  grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
+                           plot.var.pca + theme(legend.position="none"),
                            ncol = 2, nrow = 1),
                legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
-  
+
   # interpret the clusters
   if (nb.found > 1) {
     res[[8]] <- list()
     mat.partition$Cluster <- as.factor(mat.partition$Cluster)
     # supplement the interpretation of the clusters with information about the raters
     charact.cluster.rater <- function (i) {
-    
+
       res.clust.rater <- list()
       clust <- levels(mat.partition$Cluster)[i]
-    
+
       # calculate the number of raters
       nb.rater.clust <- length(which(mat.partition$Cluster == clust))
       res.clust.rater[[1]] <- nb.rater.clust
-    
+
       # calculate the percentage of raters
       perc.rater.clust <- round(nb.rater.clust / nrow(mat.partition) * 100, 0)
       res.clust.rater[[2]] <- perc.rater.clust
-    
+
       # find the parangon
       coord.bary.clust <- apply(res.pca$ind$coord[which(rownames(res.pca$ind$coord)%in%mat.partition[which(mat.partition$Cluster == clust), "Rater"]),], 2, mean)
       coord.rater.bary <- rbind.data.frame(res.pca$ind$coord, coord.bary.clust)
@@ -513,7 +513,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       dist.bary.clust <- mat.dist.bary.clust[nrow(mat.dist.bary.clust), -ncol(mat.dist.bary.clust)]
       parangon.clust <- names(which.min(dist.bary.clust))
       res.clust.rater[[3]] <- parangon.clust
-    
+
       # interpret the cluster with external information about the raters
       if (!is.null(id.info.rater)) {
       info.rater <- dta.sauv[id.info.rater, -id.info.stim]
@@ -569,7 +569,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       if (!is.null(id.info.rater)) {
         names(res.clust.rater)[4] <- "info.raters"
       }
-    
+
       return(res.clust.rater)
     }
     list.charact.cluster.rater <- lapply(1 : nlevels(mat.partition$Cluster), charact.cluster.rater)
@@ -581,7 +581,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
       melted.data.clusters$Rating <- as.factor(melted.data.clusters$Rating)
       melted.data.clusters$Cluster <- as.factor(melted.data.clusters$Cluster)
       charact.cluster.stim <- function (i) {
-        
+
         # interpret the cluster with external information about the stimuli
         info.stim <- dta.sauv[-id.info.rater, id.info.stim]
         dta.info.stim <- cbind.data.frame(rownames(info.stim), info.stim)
@@ -596,7 +596,7 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
         colnames(dta.info.stim)[1] <- "Stimulus"
         melted.data.clusters.info.sup.stim <- merge(dta.info.stim, melted.data.clusters, by = "Stimulus")
         melted.data.clusters.info.sup.stim <- melted.data.clusters.info.sup.stim[, -which(colnames(melted.data.clusters.info.sup.stim)%in%c("Stimulus","Rater"))]
-        
+
         info.stim.sup <- as.data.frame(matrix(NA, 1, 3))
         colnames(info.stim.sup) <- c("information", "sign statistic test", "pvalue")
         for (j in 1 : length(id.info.stim)) {
@@ -623,16 +623,16 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
               }
             }
           }
-        }   
+        }
         info.stim.sup <- info.stim.sup[-1, ]
         info.stim.sup[which(info.stim.sup[, 2] < 0), 2] <- "-"
         info.stim.sup[which(info.stim.sup[, 2] > 0), 2] <- "+"
         info.stim.sup <- info.stim.sup[order(as.numeric(info.stim.sup[, 3])), ]
-        
+
         res.clust.stim <- info.stim.sup
 
         return(res.clust.stim)
-        
+
       }
       list.charact.cluster.stim <- lapply(1 : nlevels(mat.partition$Cluster), charact.cluster.stim)
     }
@@ -648,12 +648,12 @@ AgreeClustBin <- function(dta, model, max.clust = 10, approx.null = TRUE, paral 
   } else {
     res[[8]] <- NULL
   }
-  
+
   # return the results
   names(res) <- c("profiles.residuals", "mat.disag", "pval.dendro", "nb.clust.found", "partition", "res.plot.segment", "res.pca", "charact.clust")
   print("Clustering performed")
   options(warn = 0)
   class(res) <- c("AgreeClust", "list ")
-  return(res) 
-  
+  return(res)
+
 }
