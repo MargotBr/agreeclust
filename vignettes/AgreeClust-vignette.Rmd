@@ -160,12 +160,41 @@ The `AgreeClustBin` function of the package considers a logistic latent class re
 
 <center> $g(y) = logit(\mathbb{P}(y = 1))$ </center>
 
+For implementing the cutting strategy of the dendrogram, the Likelhood-Ratio Test is used as the statistic test to test the significance of the $(K+1)-$ latent class model w.r.t the $K-$ latent class model
+
 To illustrate the outputs and graphs of the function, let's use a small pedagogic data set named *pedagdataBin*. This data set refers to the ratings of 8 stimuli provided by a panel of 20 raters. Ratings data are supplemented by covariates providing information about the stimuli and the raters. The columns 21, 22, 23, 24, and 25 provide information about the stimuli: Citrus fruits intensity (continuous), Vanilla intensity (continuous), Wood intensity (continuous), Lotus intensity (continuous), and Packaging which is either the current one or a prototype (categorical). The lines 9, 10, 11 provide information about the raters: Gender (categorical), Age bracket (categorical), Frequency of use (categorical). The code to import and visualize this data set is:
 
 ```{r}
 data(pedagdataBin)
 pedagdataBin
 ```
+
+The code to access the help page of the function is:
+
+```{r}
+help(AgreeClustBin)
+```
+
+As shown on the help page, the function uses by default the following important arguments:
+
+- model = "Rating ~ Rater + Stimulus", meaning that both the raters propensities and the stimuli propensities are taken into account when modeling the ratings data;
+- consol = TRUE, meaning that the partition of raters is consolidated using a partitioning algorithm; 
+- id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, and type.info.stim = NULL, meaning that no covariates about raters and stimuli are available in the data set. 
+
+As the data set contains covariates about the raters and the stimuli, the last arguments have to be modified in the following way:
+
+- id.info.rater = c(9, 10, 11), meaning that the 3 covariates about the raters are accessible in lines 9, 10, and 11;
+- type.info.rater = rep("cat", 3), meaning that the 3 covariates are categorical;
+- id.info.rater = c(21, 22, 23, 24, 25), meaning that the 5 covariates about the stimuli are accessible in columns 21, 22, 23, 24, and 25;
+- type.info.stim = c(rep("cont", 4), "cat"), meaning that the 4 first covariates are continuous and that the last one is categorical.
+
+Finally, the code to perform the clustering is:
+
+```{r eval = FALSE}
+res.pedag <- AgreeClustBin(dta = pedagdataBin, id.info.rater = 9 : nrow(pedagdataBin), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataBin), type.info.stim = c(rep("cont", 4), "cat"))
+```
+
+By default, the `AgreeClustBin` function gives two graphs, one illustrating the clustering process and one illustrating the multidimensional structure of disagreement observed among the panel.
 
 
 # Adapting the method to continuous ratings
