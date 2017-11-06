@@ -36,6 +36,14 @@ library(AgreeClust)
 
 # Using the proper format of data
 
+The package is able to manage matrices of dimensions $S \times R$, where $S$ denotes the number of strimuli rated during the experiment and $R$ denotes the number of raters who were involved into the experiment. At the intersection of the line $s$ and the column $r$ is the rating of the $s$-th stimulus by the $r$-th rater $Y_{sr}$.
+
+<center><img src="Datanoext.pdf" alt="Drawing" style="width: 450px;"/></center>
+
+If external information about stimuli and raters was collected during the experiment, the previous data set is supplemented by these covariates. More precisely, covariates providing information about stimuli are added to the previous data set as supplementary columns; and covariates providing information about raters are added to the previous data set as supplementary lines. The intersection cells between these covariates are filled by missing data.
+
+<center><img src="Dataext.pdf" alt="Drawing" style="width: 640px;"/></center>
+
 $R$ raters rating $S$ stimuli
 Image 
 
