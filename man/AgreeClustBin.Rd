@@ -4,14 +4,14 @@
 \title{Agreement-based unsupervised clustering of binary ratings}
 \description{Performs an agreement-based clustering of binary ratings to obtain a segmentation of the panel of raters. The method is able to manage covariates providing informations about the raters and the stimuli (i.e. objects assessed) to facilitate the interpretation of the clusters of raters.}
 \usage{
-AgreeClustBin(dta, model, max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL)
+AgreeClustBin(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{dta}{
 A binary matrix or data frame of dimensions S x R (S=number of stimuli, R=number of raters).}
   \item{model}{
-A formula for the model. Either 'Rating~Rater+Stimulus', 'Rating~Rater', or 'Rating~1'.}
+A formula for the model. Either 'Rating~Rater+Stimulus' (default), 'Rating~Rater', or 'Rating~1'.}
   \item{max.clust}{
 An integer specifying the maximum number of clusters of raters. By default, this number is fixed to 10.}
   \item{approx.null}{
