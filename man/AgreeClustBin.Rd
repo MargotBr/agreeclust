@@ -58,8 +58,8 @@ A vector of character elements composed of the type of the covariates about the 
 }
 \examples{
 # Small pedagogic data set
-data(pedagdata)
-res.pedag <- AgreeClustBin(dta = pedagdata, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdata), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdata), type.info.stim = c(rep("cont", 4), "cat"))
+data(pedagdataBin)
+res.pedag <- AgreeClustBin(dta = pedagdataBin, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdataBin), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataBin), type.info.stim = c(rep("cont", 4), "cat"))
 res.pedag
 
 # 'Good gesture' data set
