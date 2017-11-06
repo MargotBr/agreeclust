@@ -89,15 +89,15 @@ The $p-$value of each test is provided at each level of the dendrogram. If the 2
 
 Once the partition of raters is defined, it can been consolidated by introducing it as the initial partition of a partitioning algorithm. More precisely, in this case, a $K-$means algorithm is implemented. In practice, at each step of this algorithm, each rater in affected to the cluster with the nearest center of gravity, serving as a prototype of the cluster. The partition resulting from this algorithm is finally conserved. In practice, the initial partition is never entirely replaced, but rather improved or *consolidated*.
 
-## Interpreting the clusters of raters
+## Interpreting clusters of raters
 
 Once the final partition of raters is defined, clusters are described by information about the raters such as the percentage of raters in each cluster or the parangon of each cluster (i.e. the rater the nearest of the center of gravity of the cluster, who can be defined as the rater the most representative of the cluster). Moreover, if external information about the raters and/or about the stimuli are present in the data set, these covariates can be used to supplement the interpretation of the clusters of raters.
 
-### Interpretation of the clusters by using external information about the raters
+### Interpreting clusters by using external information about raters
 
 In some situations, supplementary information on the raters who participated to the experiment is available. These pieces of information often represent identity characteristics about the raters such as their gender, their age, their occupation, their level of expertise and so forth; but they can also represent habit characteristics. With the aim of characterizing the clusters of raters by using these pieces of information, univariate analyses are used to study the relationship between the clusters and the supplementary variables available about the raters. These univariate analyses depend on the type of the supplementary variables (i.e. quantitative or categorical variables). They are described precisely in Husson et al. (2011) and implemented in the `FactoMineR` package (Lê, Josse & Husson, 2008). 
 
-#### Description of the clusters by the values of a quantitative variable describing the raters
+#### Describing clusters by the values of a quantitative variable describing raters
 
 First, the global effect of the *Cluster* variable on the quantitative variable $X$ describing the rater is studied through the global test of an analysis of variance model. If the global effect of the *Cluster* variable on the quantitative variable $X$ is significant, the effect of each category of the *Cluster* variable is then studied independently. More precisely, for each category of the *Cluster* variable (i.e. for each cluster of raters), a $v$-test (a test value) is calculated as follows:
 
@@ -119,7 +119,7 @@ The $v$-test can therefore be considered a *standardized* deviation between the 
 
 If the null hypothesis $H_0$ is accepted, that means that the average of the quantitative variable for cluster ${\cal C}_{k}$ equals the general average among the panel; and that, in other words, the quantitative variable does not characterize cluster ${\cal C}_{k}$. On the contrary, if the null hypothesis $H_0$ is rejected, that means that the quantitative variable characterizes cluster ${\cal C}_{k}$. The sign of the $v$-test is then used to determine if the values of the quantitative variable taken by the raters of the cluster ${\cal C}_{k}$ are high (positive $v$-test) or low (negative $v$-test) w.r.t. the observations made on the entire panel.
 
-#### Description of the clusters by the levels of a categorical variable describing the raters
+#### Describing clusters by the levels of a categorical variable describing raters
 
 First, the global effect of the *Cluster* variable on the categorical variable $Q$ describing the rater is studied through a chi-square test of independence. If the \texttt{Cluster} variable and the categorical variable $Q$ are not significantly independent, the effect of each category of the *Cluster* variable is then studied independently. More precisely, for each category of the *Cluster* variable (i.e. for each cluster of raters) and for a given level (noticed $q$) of the categorical variable $Q$, the aim is to determine if cluster ${\cal C}_{k}$ is characterized by this given level $q$ or not. To do so, the proportion $R_{kq}/R_{k}$ corresponding to the proportion of raters among cluster ${\cal C}_{k}$ who take the given level $q$ is compared to the proportion $R_{q}/J$ corresponding to the proportion of raters among the entire panel who take the given level $q$. These two proportions are equal under the null hypothesis of independence $H_0$: 
 
@@ -130,11 +130,11 @@ $R_{k}$ raters are randomly selected among $R$. We shall focus on the random var
 
 If the null hypothesis $H_0$ is accepted, that means that the level $q$ does not characterize the cluster ${\cal C}_{k}$. On the contrary, if the null hypothesis $H_0$ is rejected, that means that the level $q$ characterizes cluster ${\cal C}_{k}$. The sign of the $v$-test is then used to determine if level $q$ is overrepresented (positive $v$-test) or underrepresented (negative $v$-test) in cluster ${\cal C}_{k}$ w.r.t. the observations made on the entire panel.
 
-### Interpretation of the clusters by using external information about the stimuli
+### Interpreting clusters by using external information about stimuli
 
 In some situations, supplementary information on the stimuli rated during the experiment is available. If the stimuli are industrial goods, these pieces of information can represent intrinsic characteristics about the stimuli such as the composition, rheological properties, psycho-chemical properties, sensory properties and so forth; but they can also represent extrinsic characteristics about the stimuli such as the packaging. With the aim to characterize the clusters of raters by using these pieces of information, univariate analyses are used to study the relationship between the clusters and the supplementary variables available about the stimuli. These univariate depend on the type of the supplementary variables (i.e. quantitative or categorical variables). 
 
-#### Description of the clusters by the values of a quantitative variable describing the stimuli
+#### Describing clusters by the values of a quantitative variable describing stimuli
 
 The interaction effect between the *Cluster* variable and the given quantitative variable $X$ on the rating is studied through the following regression model involving sum contrasts:
 
@@ -144,7 +144,7 @@ where $g$ is the link function; $Y_{kl}$ stands for the $l-$th rating provided b
 
 If the global effect of the interaction between the cluster and the quantitative variable $X$ is significant, that means that the effect of the quantitative variable $X$ on the rating is not the same from one cluster to the other. To highlight these aspects, the significance of the coefficients $\sigma_{k}$ is studied. Indeed, if the coefficient $\sigma_{k}$ is significant, that means that the impact of the values of the quantitative $X$ on the rating is significantly different for cluster ${\cal C}_{k}$ w.r.t. the observations made on the entire panel. If this is the case, that means that the impact of the quantitative variable $X$ on the rating characterizes cluster ${\cal C}_{k}$. The sign of the coefficient is then used to determine if large values of the quantitative variable $X$ led to high ratings (positive coefficient) or low ratings (negative coefficient) in cluster ${\cal C}_{k}$ w.r.t. the observations made on the entire panel.
 
-#### Description of the clusters by the values of a categorical variable describing the stimuli
+#### Describing clusters by the values of a categorical variable describing stimuli
 
 The interaction effect between the *Cluster* variable and the given categorical variable $Q$ on the rating is studied through the following regression model involving sum contrasts:
 
@@ -156,17 +156,19 @@ If the global effect of the interaction between the cluster and the categorical 
 
 # Adapting the method to binary ratings
 
-The `AgreeClustBin` function considers a logistic latent class regression modeling for the agreement-based unsupervised clustering of a set of binary ratings.
+The `AgreeClustBin` function of the package considers a logistic latent class regression modeling for the agreement-based unsupervised clustering of a set of binary ratings:
 
-g - logit
+<center> $g(y) = logit(\mathbb{P}(y = 1))$ </center>
 
 Approximation 
 
 # Adapting the method to continuous ratings
 
-The `AgreeClustCont` function considers an analysis of variance-based latent class regression modeling for the agreement-based unsupervised clustering of a set of continuous ratings.
+The `AgreeClustCont` function of the package considers a latent class regression modeling for the agreement-based unsupervised clustering of a set of continuous ratings:
 
-g - identity
+<center> $g(y) = y$ </center>
+
+Example
 
 # Conclusion
 
