@@ -1,11 +1,11 @@
 plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2)) {
-  
+
   options(warn = -1)
-  
+
   # load packages
-  suppressPackageStartupMessages(require(ggplot2, quietly = TRUE))  
-  suppressPackageStartupMessages(require(ggrepel, quietly = TRUE))  
-  
+  suppressPackageStartupMessages(require(ggplot2, quietly = TRUE))
+  suppressPackageStartupMessages(require(ggrepel, quietly = TRUE))
+
   # check the format of the arguments
   if (!inherits(res, "AgreeClust")) {
     stop("Non convenient data - res should be an AgreeClust object")
@@ -23,7 +23,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
   if (length(axis) != 2 | length(unique(axis)) != 2 | class(axis) != "numeric") {
     stop("Non convenient specification of axis - axis should be a numeric vector of 2 different elements")
   }
-  
+
   # plot the segmentation
   if (choice == "all" | choice == "seg") {
     if (length(res[[6]]) == 4) { # consolidation performed
@@ -34,7 +34,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
     } else if (length(res[[6]]) == 3) { # consolidation not performed
       plot.dendro <- res[[6]][[1]]
       plot.legend.dendro <- res[[6]][[2]]
-      plot.legend.clust <- res[[6]][[3]]    
+      plot.legend.clust <- res[[6]][[3]]
     }
     if (!is.null(col.clust)) {
       plot.dendro <- plot.dendro +
@@ -55,26 +55,26 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
     legend.plot <- get.legend(plot.legend.clust)
     main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2))
     if (length(res[[6]]) == 4) {
-      grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"), 
-                             plot.legend.dendro + theme(legend.position = "none"), 
-                             ncol = 1, nrow = 2, heights = c(4, 1)),
-                 legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
+      grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
+                               plot.legend.dendro + theme(legend.position = "none"),
+                               plot.partitioning + theme(legend.position = "none"),
+                               ncol = 1, nrow = 3, heights = c(4, 1, 1)),
+                   legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
     } else if (length(res[[6]]) == 3) {
-      grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"), 
-                             plot.legend.dendro + theme(legend.position = "none"), 
-                             plot.partitioning + theme(legend.position = "none"), 
-                             ncol = 1, nrow = 3, heights = c(4, 1, 1)),
-                 legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
+      grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
+                               plot.legend.dendro + theme(legend.position = "none"),
+                               ncol = 1, nrow = 2, heights = c(4, 1)),
+                   legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
     }
   }
-  
+
   # plot the multidimensional representation of disagreement
   if (choice == "all" | choice == "mul") {
     res.pca <- res[[7]]
     coord.raters <- res.pca$ind$coord[, axis]
     mat.coord.raters <- cbind.data.frame(rownames(coord.raters), coord.raters)
     colnames(mat.coord.raters) <- c("Rater", "AxeA", "AxeB")
-    coord.raters <- merge(mat.coord.raters, mat.partition, by = "Rater")  
+    coord.raters <- merge(mat.coord.raters, mat.partition, by = "Rater")
     coord.raters$Cluster <- as.factor(coord.raters$Cluster)
     rownames(coord.raters) <- coord.raters[, "Rater"]
     coord.raters <- coord.raters[, -1]
@@ -98,7 +98,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       coord_fixed() +
       xlim(xlim[1], xlim[2]) +
       ylim(ylim[1], ylim[2]) +
-      geom_hline(yintercept = 0, linetype = 2, color = "black", size = 0.2) + 
+      geom_hline(yintercept = 0, linetype = 2, color = "black", size = 0.2) +
       geom_vline(xintercept = 0, linetype = 2, color = "black", size = 0.2) +
       geom_point(data = coord.raters, aes(x = AxeA, y = AxeB, color = Cluster)) +
       geom_text_repel(data = coord.raters, aes(x = AxeA, y = AxeB, label = rownames(coord.raters), color = Cluster), segment.color = "grey", segment.size = 0.3, size = 2.3) +
@@ -143,7 +143,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       coord_fixed() +
       xlim(xlim[1], xlim[2]) +
       ylim(ylim[1], ylim[2]) +
-      geom_hline(yintercept = 0, linetype = 2, color = "black", size = 0.2) + 
+      geom_hline(yintercept = 0, linetype = 2, color = "black", size = 0.2) +
       geom_vline(xintercept = 0,  linetype = 2, color = "black", size = 0.2) +
       geom_segment(data = coord.stimuli, aes(x = 0, y = 0, xend = AxeA, yend = AxeB), alpha = 1, color = "black", size = 0.3, arrow = arrow(length = unit(0.3, "cm"))) +
       geom_text_repel(data = coord.stimuli, aes(x = AxeA, y = AxeB, label = rownames(coord.stimuli)), segment.color = "transparent", segment.size = 0.3, size = 2.3) +
@@ -158,14 +158,14 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         axis.title = element_text(colour = "black"),
         legend.position = "none")
     main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12,font = 2))
-    grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"), 
-                           plot.var.pca + theme(legend.position="none"), 
+    grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
+                           plot.var.pca + theme(legend.position="none"),
                            ncol = 2, nrow = 1),
                legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
   }
-  
+
   # end the function
   options(warn = 0)
   return("Representations plotted")
-  
+
 }
