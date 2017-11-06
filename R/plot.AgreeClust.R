@@ -24,6 +24,14 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
     stop("Non convenient specification of axis - axis should be a numeric vector of 2 different elements")
   }
 
+  # function to extract legend
+  get.legend <- function(plot){
+    tmp <- ggplot_gtable(ggplot_build(plot))
+    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+    legend <- tmp$grobs[[leg]]
+    return(legend)
+  }
+
   # plot the segmentation
   if (choice == "all" | choice == "seg") {
     if (length(res[[6]]) == 4) { # consolidation performed
@@ -45,12 +53,6 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         plot.partitioning <- plot.partitioning +
           scale_colour_manual(values = col.clust)
       }
-    }
-    get.legend <- function(plot){
-      tmp <- ggplot_gtable(ggplot_build(plot))
-      leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-      legend <- tmp$grobs[[leg]]
-      return(legend)
     }
     legend.plot <- get.legend(plot.legend.clust)
     main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2))
@@ -157,6 +159,8 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         axis.text = element_text(colour = "black"),
         axis.title = element_text(colour = "black"),
         legend.position = "none")
+    plot.legend.clust <- res[[6]][[length(res[[6]])]]
+    legend.plot <- get.legend(plot.legend.clust)
     main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12,font = 2))
     grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
                            plot.var.pca + theme(legend.position="none"),
