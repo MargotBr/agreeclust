@@ -1,4 +1,4 @@
-AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL) {
+AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE) {
 
   options(warn = -1)
 
@@ -375,21 +375,25 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
     res[[6]][[1]] <- plot.dendro
     res[[6]][[2]] <- plot.legend.dendro
     res[[6]][[3]] <- plot.legend.clust
-    grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
+    if (graph == TRUE) {
+      grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
                              plot.legend.dendro + theme(legend.position = "none"),
                              ncol = 1, nrow = 2, heights = c(4, 1)),
                  legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
+    }
   } else if (consol == TRUE) {
     res[[6]] <- list()
     res[[6]][[1]] <- plot.dendro
     res[[6]][[2]] <- plot.legend.dendro
     res[[6]][[3]] <- plot.partitioning
     res[[6]][[4]] <- plot.legend.clust
-    grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
+    if (graph == TRUE) {
+      grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
                              plot.legend.dendro + theme(legend.position = "none"),
                              plot.partitioning + theme(legend.position = "none"),
                              ncol = 1, nrow = 3, heights = c(4, 1, 1)),
                  legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
+    }
   }
 
   # plot the multidimensional representation of the disagreement
@@ -482,10 +486,12 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
       legend.position = "none")
   main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12,font = 2))
   #dev.new(height = 5, width = 9)
-  grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
+  if (graph == TRUE) {
+    grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
                            plot.var.pca + theme(legend.position="none"),
                            ncol = 2, nrow = 1),
                legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
+  }
 
   # interpret the clusters
   if (nb.found > 1) {

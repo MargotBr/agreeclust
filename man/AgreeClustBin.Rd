@@ -28,6 +28,8 @@ A vector of character elements composed of the type of the covariates about the 
 A vector of integer elements composed of the identification of the columns containing the supplementary information (i.e. covariates) about the stimuli. This argument is optional and, by default, it is fixed to NULL, meaning that dta does not contain supplementary information about the stimuli.}
   \item{type.info.stim}{
 A vector of character elements composed of the type of the covariates about the stimuli. This vector must be of the same length that id.info.stim. A continuous covariate is associated to 'cont' and a categorical covariate is associated to 'cat'. This argument is optional and, by default, it is fixed to NULL, meaning that dta does not contain supplementary information about the stimuli.}
+  \item{graph}{
+A boolean specifying if the graphical outputs should be plotted or not. By default, they are plotted.}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
