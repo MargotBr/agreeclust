@@ -160,6 +160,10 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         axis.title = element_text(colour = "black"),
         legend.position = "none")
     plot.legend.clust <- res[[6]][[length(res[[6]])]]
+    if (!is.null(col.clust)) {
+      plot.legend.clust <- plot.legend.clust +
+        scale_fill_manual(values = col.clust)
+    }
     legend.plot <- get.legend(plot.legend.clust)
     main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12,font = 2))
     grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
