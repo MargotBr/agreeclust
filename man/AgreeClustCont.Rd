@@ -65,7 +65,7 @@ res.pedag
 # 'Cocktail liking' data set
 library(SensoMineR)
 data(cocktail)
-res.cocktail <- AgreeClustCont(dta = hedo.cocktail)
+res.cocktail <- AgreeClustCont(dta = hedo.cocktail, model = "Rating ~ Rater")
 res.cocktail
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
