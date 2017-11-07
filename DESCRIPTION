@@ -11,3 +11,4 @@ Encoding: UTF-8
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
+Depends: prettydoc, reshape2, parallel, ggdendro, ggplot2, dendextend, grid, gridExtra, FactoMineR, ggrepel
