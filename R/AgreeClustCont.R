@@ -1,4 +1,4 @@
-AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE) {
+AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE) {
 
   options(warn = -1)
 
@@ -39,13 +39,13 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
   colnames(melted.data) <- c("Rater", "Stimulus", "Rating")
   melted.data$Rater <- as.factor(melted.data$Rater)
   melted.data$Stimulus <- as.factor(melted.data$Stimulus)
-  melted.data$Rating <- as.factor(melted.data$Rating)
+  melted.data$Rating <- as.numeric(as.character(melted.data$Rating))
 
   # adjust the no-latent class model
-  mod.noLC <- glm(model, data = melted.data, family = binomial)
+  mod.noLC <- lm(model, data = melted.data)
 
   # compute the disagreement matrix
-  mat.resids <- matrix(residuals(mod.noLC, type = "deviance"), nrow(dta), ncol(dta))
+  mat.resids <- matrix(residuals(mod.noLC), nrow(dta), ncol(dta))
   dimnames(mat.resids) <- list(rownames(dta), colnames(dta))
   mat.resids <- t(as.data.frame(mat.resids))
   disagmat <- dist(mat.resids, method = "euclidean")
@@ -57,14 +57,14 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
   dendrogram <- stats::hclust(disagmat, method = "ward.D2")
 
   # compute p-values for each level of the dendrogram
-  remove_outliers <- function(x, na.rm = TRUE, ...) {
-    qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
-    H <- 10 * IQR(x, na.rm = na.rm)
-    y <- x
-    y[x < (qnt[1] - H)] <- NA
-    y[x > (qnt[2] + H)] <- NA
-    y
-  }
+  #remove_outliers <- function(x, na.rm = TRUE, ...) {
+  #  qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
+  #  H <- 10 * IQR(x, na.rm = na.rm)
+  #  y <- x
+  #  y[x < (qnt[1] - H)] <- NA
+  #  y[x > (qnt[2] + H)] <- NA
+  #  y
+  #}
   compute.dist.null <- function(j, list.data.null, K) {
 
     # Null dendrogram
@@ -75,9 +75,9 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
     colnames(melted.data.null) <- c("Rater", "Stimulus", "Rating")
     melted.data.null$Rater <- as.factor(melted.data.null$Rater)
     melted.data.null$Stimulus <- as.factor(melted.data.null$Stimulus)
-    melted.data.null$Rating <- as.factor(melted.data.null$Rating)
-    mod.noLC.null <- glm(model, data = melted.data.null, family = binomial)
-    mat.resids.null <- matrix(residuals(mod.noLC.null, type = "deviance"), nrow(data.null), ncol(data.null))
+    melted.data.null$Rating <- as.numeric(as.character(melted.data.null$Rating))
+    mod.noLC.null <- lm(model, data = melted.data.null)
+    mat.resids.null <- matrix(residuals(mod.noLC.null), nrow(data.null), ncol(data.null))
     dimnames(mat.resids.null) <- list(rownames(data.null), colnames(data.null))
     mat.resids.null <- t(as.data.frame(mat.resids.null))
     disagmat.null <- dist(mat.resids.null, method = "euclidean")
@@ -91,12 +91,12 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
     clustered.data.KLC.null <- merge(melted.data.null, partition.KLC.null, by = "Rater")
     clustered.data.KLC.null$Cluster <- as.factor(clustered.data.KLC.null$Cluster)
     if (K == 1) {
-      mod.KLC.null <- glm(Rating ~ Stimulus + Rater, data = clustered.data.KLC.null, family = binomial)
+      mod.KLC.null <- lm(Rating ~ Stimulus + Rater, data = clustered.data.KLC.null)
     } else {
-      mod.KLC.null <- glm(Rating ~ Stimulus + Rater%in%Cluster + Cluster + Stimulus:Cluster, data = clustered.data.KLC.null, family = binomial)
+      mod.KLC.null <- lm(Rating ~ Stimulus + Rater%in%Cluster + Cluster + Stimulus:Cluster, data = clustered.data.KLC.null)
       X.KLC.null <- model.matrix(mod.KLC.null)
       X.KLC.null <- X.KLC.null[, !is.na(coef(mod.KLC.null))]
-      mod.KLC.null <- glm(Rating ~ ., data = data.frame(Rating = clustered.data.KLC.null$Rating, X.KLC.null[, -1]), family = binomial)
+      mod.KLC.null <- lm(Rating ~ ., data = data.frame(Rating = clustered.data.KLC.null$Rating, X.KLC.null[, -1]))
     }
 
     # Null (K+1)-latent class model
@@ -105,14 +105,14 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
     colnames(partition.Kplus1LC.null) <- c("Rater", "Cluster")
     clustered.data.Kplus1LC.null <- merge(melted.data.null, partition.Kplus1LC.null, by = "Rater")
     clustered.data.Kplus1LC.null$Cluster <- as.factor(clustered.data.Kplus1LC.null$Cluster)
-    mod.Kplus1LC.null <- glm(Rating ~ Stimulus + Rater%in%Cluster + Cluster + Stimulus:Cluster, data = clustered.data.Kplus1LC.null, family = binomial)
+    mod.Kplus1LC.null <- lm(Rating ~ Stimulus + Rater%in%Cluster + Cluster + Stimulus:Cluster, data = clustered.data.Kplus1LC.null)
     X.Kplus1LC.null <- model.matrix(mod.Kplus1LC.null)
     X.Kplus1LC.null <- X.Kplus1LC.null[, !is.na(coef(mod.Kplus1LC.null))]
-    mod.Kplus1LC.null <- glm(Rating ~ ., data = data.frame(Rating = clustered.data.Kplus1LC.null$Rating, X.Kplus1LC.null[, -1]), family = binomial)
+    mod.Kplus1LC.null <- lm(Rating ~ ., data = data.frame(Rating = clustered.data.Kplus1LC.null$Rating, X.Kplus1LC.null[, -1]))
 
-    # Compute the null LRT statistic
-    lrt.H0 <- deviance(mod.KLC.null) - deviance(mod.Kplus1LC.null)
-    return(lrt.H0)
+    # Compute the null F statistic
+    f.H0 <- anova(mod.KLC.null, mod.Kplus1LC.null, test = "F")$F[2]
+    return(f.H0)
 
   }
   compute.pval <- function(K) {
@@ -126,12 +126,12 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
       clustered.data.KLC <- merge(melted.data, partition.KLC, by = "Rater")
       clustered.data.KLC$Cluster <- as.factor(clustered.data.KLC$Cluster)
       if (K == 1) {
-        mod.KLC <- glm(Rating ~ Rater + Stimulus, data = clustered.data.KLC, family = binomial)
+        mod.KLC <- lm(Rating ~ Rater + Stimulus, data = clustered.data.KLC)
       } else {
-        mod.KLC <- glm(Rating ~ Rater%in%Cluster + Stimulus + Cluster + Stimulus:Cluster, data = clustered.data.KLC, family = binomial)
+        mod.KLC <- lm(Rating ~ Rater%in%Cluster + Stimulus + Cluster + Stimulus:Cluster, data = clustered.data.KLC)
         X.KLC <- model.matrix(mod.KLC)
         X.KLC <- X.KLC[, !is.na(coef(mod.KLC))]
-        mod.KLC <- glm(Rating ~ ., data = data.frame(Rating = clustered.data.KLC$Rating, X.KLC[, -1]), family = binomial)
+        mod.KLC <- lm(Rating ~ ., data = data.frame(Rating = clustered.data.KLC$Rating, X.KLC[, -1]))
       }
 
       # (K+1)-latent class model
@@ -140,57 +140,57 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
       colnames(partition.Kplus1LC) <- c("Rater", "Cluster")
       clustered.data.Kplus1LC <- merge(melted.data, partition.Kplus1LC, by = "Rater")
       clustered.data.Kplus1LC$Cluster <- as.factor(clustered.data.Kplus1LC$Cluster)
-      mod.Kplus1LC <- glm(Rating ~ Rater%in%Cluster + Stimulus + Cluster + Stimulus:Cluster, data = clustered.data.Kplus1LC, family = binomial)
+      mod.Kplus1LC <- lm(Rating ~ Rater%in%Cluster + Stimulus + Cluster + Stimulus:Cluster, data = clustered.data.Kplus1LC)
       X.Kplus1LC <- model.matrix(mod.Kplus1LC)
       X.Kplus1LC <- X.Kplus1LC[,!is.na(coef(mod.Kplus1LC))]
-      mod.Kplus1LC <- glm(Rating~., data=data.frame(Rating = clustered.data.Kplus1LC$Rating, X.Kplus1LC[, -1]), family = binomial)
+      mod.Kplus1LC <- lm(Rating~., data=data.frame(Rating = clustered.data.Kplus1LC$Rating, X.Kplus1LC[, -1]))
 
-      # Compute the LRT statistic
-      lrt.obs <- deviance(mod.KLC) - deviance(mod.Kplus1LC)
+      # Compute the F statistic
+      f.obs <- anova(mod.KLC, mod.Kplus1LC, test = "F")$F[2]
 
       # Generate the null data sets
-      proba.null <- predict(mod.KLC, type = "response")
-      if (approx.null == FALSE) {
+      value.null <- predict(mod.KLC, type = "response")
+      #if (approx.null == FALSE) {
         nb.simul.null <- 1000
-      } else if (approx.null == TRUE) {
-        nb.simul.null <- 250
-      }
-      list.data.null <- lapply(1:nb.simul.null, function(l, proba.null) {
-        as.numeric(runif(length(proba.null)) <= proba.null) }, proba.null = proba.null)
+      #} else if (approx.null == TRUE) {
+      #  nb.simul.null <- 250
+      #}
+      list.data.null <- lapply(1:nb.simul.null, function(l, value.null) {
+        as.numeric(value.null + runif(length(value.null)))}, value.null = value.null)
       list.data.null <- lapply(list.data.null, function(vec, k, dnames) matrix(vec, nrow = k, dimnames = dnames), k = nlevels(melted.data$Stimulus), dnames = dimnames(dta))
 
       # Compute p-value
       if (paral == FALSE) {
-        list.lrt.H0 <- lapply(1 : nb.simul.null, compute.dist.null, list.data.null = list.data.null, K = K)
+        list.f.H0 <- lapply(1 : nb.simul.null, compute.dist.null, list.data.null = list.data.null, K = K)
       } else if (paral == TRUE) {
         environment(compute.dist.null) <- .GlobalEnv
         nb.cores <- detectCores()
         cl <- makeCluster(nb.cores - 1, outfile = "TestDendrogram_processing.txt")
         clusterExport(cl, varlist = c("melt", "model", "list.data.null", "K"), environment())
-        list.lrt.H0 <- clusterApply(cl, 1 : nb.simul.null, compute.dist.null, list.data.null = list.data.null, K = K)
+        list.f.H0 <- clusterApply(cl, 1 : nb.simul.null, compute.dist.null, list.data.null = list.data.null, K = K)
         stopCluster(cl)
         if ("TestDendrogram_processing.txt" %in% list.files()) {
           file.remove("TestDendrogram_processing.txt")
         }
       }
-      lrt.H0 <- unlist(list.lrt.H0)
-      if (approx.null == TRUE) {
-        if (mean(lrt.H0) == 0 & var(lrt.H0) == 0) {
-          lrt.H0 <- rep(0, 1000)
-        } else {
-          lrt.H0 <- remove_outliers(lrt.H0)
-          if (length(which(is.na(lrt.H0))) != 0) {
-            lrt.H0 <- lrt.H0[-which(is.na(lrt.H0))]
-          }
-          nu <- (mean(lrt.H0)^2) / ((1/2) * var(lrt.H0))
-          c <- mean(lrt.H0) / nu
-          lrt.H0 <- rep(0, 1000)
-          for (i in 1 : length(lrt.H0)) {
-            lrt.H0[i] = c * rchisq(1, nu, ncp = 0)
-          }
-        }
-      }
-      pval <- length(which(lrt.obs <= lrt.H0)) / 1000
+      f.H0 <- unlist(list.f.H0)
+      #if (approx.null == TRUE) {
+      #  if (mean(lrt.H0) == 0 & var(lrt.H0) == 0) {
+      #    lrt.H0 <- rep(0, 1000)
+      #  } else {
+      #    lrt.H0 <- remove_outliers(lrt.H0)
+      #    if (length(which(is.na(lrt.H0))) != 0) {
+      #      lrt.H0 <- lrt.H0[-which(is.na(lrt.H0))]
+      #    }
+      #    nu <- (mean(lrt.H0)^2) / ((1/2) * var(lrt.H0))
+      #    c <- mean(lrt.H0) / nu
+      #    lrt.H0 <- rep(0, 1000)
+      #    for (i in 1 : length(lrt.H0)) {
+      #      lrt.H0[i] = c * rchisq(1, nu, ncp = 0)
+      #   }
+      #  }
+      #}
+      pval <- length(which(f.obs <= f.H0)) / 1000
       if (pval >= 0.05) {
         control.break <<- FALSE
       }
@@ -217,7 +217,7 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
   # test the goodness of fit of the no-latent class model if nb.found = 1
   res.test.noLC <- as.data.frame(matrix(NA, 1, 3))
   colnames(res.test.noLC) <- c("x", "y", "pval")
-  res.test.noLC[1, "pval"] <- round(1 - pchisq(mod.noLC$deviance, mod.noLC$df.residual), 2)
+  res.test.noLC[1, "pval"] <- round(1 - pf(summary(mod.noLC)$fstatistic[1], summary(mod.noLC)$fstatistic[2], summary(mod.noLC)$fstatistic[3]), 2)
 
   # implement a partitioning algorithm to consolidate the partition
   if (consol == TRUE) {
@@ -585,7 +585,7 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
       melted.data.clusters <- merge(melted.data, mat.partition, by = "Rater")
       melted.data.clusters$Rater <- as.factor(melted.data.clusters$Rater)
       melted.data.clusters$Stimulus <- as.factor(melted.data.clusters$Stimulus)
-      melted.data.clusters$Rating <- as.factor(melted.data.clusters$Rating)
+      melted.data.clusters$Rating <- as.numeric(as.character(melted.data.clusters$Rating))
       melted.data.clusters$Cluster <- as.factor(melted.data.clusters$Cluster)
       charact.cluster.stim <- function (i) {
 
@@ -610,9 +610,11 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
           name.Supp <- colnames(dta.sauv)[id.info.stim[j]]
           melted.data.clusters.info.sup.stim.j <- melted.data.clusters.info.sup.stim[, which(colnames(melted.data.clusters.info.sup.stim) %in% c("Rating", name.Supp, "Cluster"))]
           colnames(melted.data.clusters.info.sup.stim.j)[1] <- "Supp"
-          res.GlmSum <- GlmSum(Rating ~ Cluster * Supp, data = melted.data.clusters.info.sup.stim.j)
-          if (res.GlmSum$GlobTest["Cluster:Supp", 3] < 0.05) {
-            int.clust <- as.data.frame(res.GlmSum$LocTest[grep(paste("Cluster - ", i, " :", sep = ""), rownames(res.GlmSum$LocTest)), ])
+          res.AovSum <- AovSum(Rating ~ Cluster * Supp, data = melted.data.clusters.info.sup.stim.j)
+          res.AovSum <- list(res.AovSum[[1]], res.AovSum[[2]])
+          names(res.AovSum) <- c("GlobTest", "LocTest")
+          if (res.AovSum$GlobTest["Cluster:Supp", 5] < 0.05) {
+            int.clust <- as.data.frame(res.AovSum$LocTest[grep(paste("Cluster - ", i, " :", sep = ""), rownames(res.AovSum$LocTest)), ])
             if ((nrow(int.clust) == 4) & (ncol(int.clust) == 1)) {
               int.clust <- t(int.clust)
             }
@@ -634,6 +636,7 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
         info.stim.sup <- info.stim.sup[-1, ]
         info.stim.sup[which(info.stim.sup[, 2] < 0), 2] <- "-"
         info.stim.sup[which(info.stim.sup[, 2] > 0), 2] <- "+"
+        info.stim.sup[, 3] <- as.numeric(info.stim.sup[, 3])
         info.stim.sup.plus <- info.stim.sup[which(info.stim.sup[, 2] == "+"), ]
         info.stim.sup.plus <- info.stim.sup.plus[order(info.stim.sup.plus[, 3], decreasing = FALSE), ]
         info.stim.sup.moins <- info.stim.sup[which(info.stim.sup[, 2] == "-"), ]

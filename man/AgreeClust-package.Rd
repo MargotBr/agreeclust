@@ -18,6 +18,7 @@ Maintainer: \packageMaintainer{AgreeClust}
 \keyword{ package }
 \seealso{
 \code{\link{AgreeClustBin}}
+\code{\link{AgreeClustCont}}
 \code{\link{plot.AgreeClust}}
 }
 \examples{

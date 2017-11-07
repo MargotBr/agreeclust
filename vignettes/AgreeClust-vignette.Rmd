@@ -282,8 +282,20 @@ plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B98
 
 Finally, the function provides an automatic description of the clusters of raters. This description can be accessed with this code: 
 
-```{r}
+```{r results=FALSE}
 res.pedag$charact.clust
+```
+
+As shown on the following output, cluster 1 is composed of 10 raters (50/% of the panel) and the most representative rater of this cluster is *Subj7*. In this cluster, and relatively to the average, women and raters between 21 and 30 years old are overrepresented; while men and raters who assessed their frequency of use of the category of product at 3/10 are underrepresented. Relatively to the average, raters of this cluster present a higher propensity to give a '1' rating to stimuli presenting a high intensity of citrus fruits flavor and to stimuli with the prototype packaging; while they present a lower propensity to give a '1' rating to stimuli presenting a high intensity of wood flavor and to stimuli with the current packaging:
+
+```{r echo=FALSE}
+res.pedag$charact.clust[[1]]
+```
+
+As there is only two clusters of raters in this example, the interpretation of cluster 2 is the opposite to those of cluster 1:
+
+```{r echo=FALSE}
+res.pedag$charact.clust[[2]]
 ```
 
 # Adapting the method to continuous ratings

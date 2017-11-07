@@ -1,21 +1,19 @@
-\name{AgreeClustBin}
-\alias{AgreeClustBin}
+\name{AgreeClustCont}
+\alias{AgreeClustCont}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Agreement-based unsupervised clustering of binary ratings}
-\description{Performs an agreement-based clustering of binary ratings to obtain a segmentation of the panel of raters. The method is able to manage covariates providing informations about the raters and the stimuli (i.e. objects assessed) to facilitate the interpretation of the clusters of raters.}
+\title{Agreement-based unsupervised clustering of continuous ratings}
+\description{Performs an agreement-based clustering of continuous ratings to obtain a segmentation of the panel of raters. The method is able to manage covariates providing informations about the raters and the stimuli (i.e. objects assessed) to facilitate the interpretation of the clusters of raters.}
 \usage{
-AgreeClustBin(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE)
+AgreeClustCont(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{dta}{
-A binary matrix or data frame of dimensions S x R (S=number of stimuli, R=number of raters).}
+A numeric matrix or data frame of dimensions S x R (S=number of stimuli, R=number of raters).}
   \item{model}{
 A formula for the model. Either 'Rating~Rater+Stimulus' (default), 'Rating~Rater', or 'Rating~1'.}
   \item{max.clust}{
 An integer specifying the maximum number of clusters of raters. By default, this number is fixed to 10.}
-  \item{approx.null}{
-A boolean indicating if the null LRT distribution should be approximated using Satterthwaite's approximation. By default, the null LRT distribution is approximated.}
   \item{paral}{
 A boolean indicating if the computation of the null LRT distribution should be parallelized. By default, the computation of the null LRT distribution is parallelized on nb.cores-1 cores. During the process, a text file 'TestDendrogram_processing.txt' is created.}
   \item{consol}{
@@ -56,18 +54,13 @@ A boolean specifying if the graphical outputs should be plotted or not. By defau
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{plot.AgreeClust} \link{AgreeClustCont}}
+\code{\link{plot.AgreeClust} \link{AgreeClustBin}}
 }
 \examples{
 # Small pedagogic data set
-data(pedagdataBin)
-res.pedag <- AgreeClustBin(dta = pedagdataBin, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdataBin), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataBin), type.info.stim = c(rep("cont", 4), "cat"))
+data(pedagdataCont)
+res.pedag <- AgreeClustBin(dta = pedagdataCont, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdataCont), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataCont), type.info.stim = c(rep("cont", 4), "cat"))
 res.pedag
-
-# 'Good gesture' data set
-data(ggdata)
-res.gg <- AgreeClustBin(dta = ggdata, model = "Rating ~ Rater + Stimulus", id.info.rater = 40 : nrow(ggdata), type.info.rater = rep("cat", 4), id.info.stim = 73 : ncol(ggdata), type.info.stim = c(rep("cat", 3), rep("cont", 11)))
-res.gg
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
