@@ -10,9 +10,8 @@
 }
 
 \author{
-\packageAuthor{AgreeClust}
-
-Maintainer: \packageMaintainer{AgreeClust}
+Margot Brard, S\'{e}bastien L\^{e}, David Causeur
+Maintainer: Margot Brard \email{margot.brard@agrocampus-ouest.fr}
 }
 
 \keyword{ package }
