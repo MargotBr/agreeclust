@@ -10,7 +10,8 @@
 }
 
 \author{
-Margot Brard, S\'{e}bastien L\^{e}, David Causeur
+Margot Brard, Sebastien Le, David Causeur
+
 Maintainer: Margot Brard \email{margot.brard@agrocampus-ouest.fr}
 }
 
