@@ -15,5 +15,5 @@ library(AgreeClust)
 To get an overview of the functionalities of the packages, read the corresponding vignette:
 
   ```{r eval=FALSE}
-vignette("AgreeClust-vignette", package = "AgreeClust")
+vignette("AgreeClust-vignette")
 ```
