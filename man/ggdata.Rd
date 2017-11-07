@@ -14,6 +14,7 @@ An initial data frame of dimensions 39 x 72 containing the binary ratings on the
 \details{
 %%  ~~ If necessary, more details than the __description__ above ~~
 }
+\author{Margot Brard \email{margot.brard@agrocampus-ouest.fr}}
 \source{
 %%  ~~ reference to a publication or URL from which the data were obtained ~~
 }

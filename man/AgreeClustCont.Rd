@@ -33,7 +33,7 @@ A boolean specifying if the graphical outputs should be plotted or not. By defau
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-\item{profiles.residuals}{A matrix of dimensions S x R (S=number of stimuli, R=number of raters) containing the residuals profiles of the raters obtained through the modelling of the set of binary ratings.}
+\item{profiles.residuals}{A matrix of dimensions S x R (S=number of stimuli, R=number of raters) containing the residuals profiles of the raters obtained through the modelling of the set of continuous ratings.}
 \item{mat.disag}{A matrix of dimensions R x R (R=number of raters) corresponding to the dissimilarity matrix between the raters.}
 \item{pval.dendro}{A vector containing the probabilities associated to the statistical test realized at each level of the dendrogram.}
 \item{nb.clust.found}{An integer corresponding to the number of clusters found among the panel.}
@@ -59,7 +59,7 @@ A boolean specifying if the graphical outputs should be plotted or not. By defau
 \examples{
 # Small pedagogic data set
 data(pedagdataCont)
-res.pedag <- AgreeClustBin(dta = pedagdataCont, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdataCont), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataCont), type.info.stim = c(rep("cont", 4), "cat"))
+res.pedag <- AgreeClustCont(dta = pedagdataCont, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdataCont), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataCont), type.info.stim = c(rep("cont", 4), "cat"))
 res.pedag
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

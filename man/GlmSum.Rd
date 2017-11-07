@@ -29,9 +29,8 @@ GlmSum(formula, data, na.action = na.omit)
 \references{
 %% ~put references to the literature/web site here ~
 }
-\author{
-Margot Brard
-}
+\author{Margot Brard \email{margot.brard@agrocampus-ouest.fr}}
+
 \note{
 %%  ~~further notes~~
 }

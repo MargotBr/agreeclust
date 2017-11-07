@@ -25,7 +25,7 @@ Returns the graphical representations.
 }
 \author{Margot Brard \email{margot.brard@agrocampus-ouest.fr}}
 \seealso{
-\code{\link{AgreeClustBin}}
+\code{\link{AgreeClustBin} \link{AgreeClustCont}}
 }
 \examples{
 # Small pedagogic data set
