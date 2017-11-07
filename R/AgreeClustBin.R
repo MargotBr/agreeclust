@@ -634,7 +634,11 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
         info.stim.sup <- info.stim.sup[-1, ]
         info.stim.sup[which(info.stim.sup[, 2] < 0), 2] <- "-"
         info.stim.sup[which(info.stim.sup[, 2] > 0), 2] <- "+"
-        info.stim.sup <- info.stim.sup[order(as.numeric(info.stim.sup[, 3])), ]
+        info.stim.sup.plus <- info.stim.sup[which(info.stim.sup[, 2] == "+"), ]
+        info.stim.sup.plus <- info.stim.sup.plus[order(info.stim.sup.plus[, 3], decreasing = FALSE), ]
+        info.stim.sup.moins <- info.stim.sup[which(info.stim.sup[, 2] == "-"), ]
+        info.stim.sup.moins <- info.stim.sup.moins[order(info.stim.sup.moins[, 3], decreasing = TRUE), ]
+        info.stim.sup <- rbind.data.frame(info.stim.sup.plus, info.stim.sup.moins)
 
         res.clust.stim <- info.stim.sup
 
