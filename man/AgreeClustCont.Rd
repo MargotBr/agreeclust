@@ -61,6 +61,12 @@ A boolean specifying if the graphical outputs should be plotted or not. By defau
 data(pedagdataCont)
 res.pedag <- AgreeClustCont(dta = pedagdataCont, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdataCont), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataCont), type.info.stim = c(rep("cont", 4), "cat"))
 res.pedag
+
+# 'Cocktail liking' data set
+library(SensoMineR)
+data(cocktail)
+res.cocktail <- AgreeClustCont(dta = hedo.cocktail)
+res.cocktail
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
