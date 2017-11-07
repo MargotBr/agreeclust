@@ -522,56 +522,57 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
 
       # interpret the cluster with external information about the raters
       if (!is.null(id.info.rater)) {
-      info.rater <- dta.sauv[id.info.rater, -id.info.stim]
-      dta.info.rater <- cbind.data.frame(rownames(mat.resids), t(info.rater))
-      for (j in 2:ncol(dta.info.rater)) {
-        if (type.info.rater[j-1] == "cat") {
-          dta.info.rater[,j] <- as.factor(dta.info.rater[, j])
-        }
-        if (type.info.rater[j-1] == "cont") {
-          dta.info.rater[,j] <- as.numeric(dta.info.rater[, j])
-        }
-      }
-      colnames(dta.info.rater)[1] <- "Rater"
-      dta.info.rater <- merge(dta.info.rater, mat.partition, by = "Rater")
-      dta.info.rater <- dta.info.rater[, -1]
-      dta.info.rater$Cluster <- as.factor(dta.info.rater$Cluster)
-      res.info.rater <- catdes(dta.info.rater, ncol(dta.info.rater), 0.05)
-      res.clust.rater[[4]] <- list()
-      if (is.null(res.info.rater$quanti[[i]])) {
-        nbquanti <- 0
-      } else {
-        nbquanti <- nrow(res.info.rater$quanti[[i]])
-      }
-      if (is.null(res.info.rater$category[[i]])) {
-        nbquali <- 0
-      } else {
-        nbquali <- nrow(res.info.rater$category[[i]])
-      }
-      info.rater.sup.clust <- as.data.frame(matrix(NA, nbquanti + nbquali, 3))
-      info.rater.sup.clust[, 1] <- c(rownames(res.info.rater$quanti[[i]]), rownames(res.info.rater$category[[i]]))
-      colnames(info.rater.sup.clust) <- c("information", "sign statistic test", "pvalue")
-      for (j in 1 : nrow(info.rater.sup.clust)) {
-        if (length(which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1])) != 0) {
-          info.rater.sup.clust[j, 3] <- res.info.rater$quanti[[i]][which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1]), 6]
-          if (res.info.rater$quanti[[i]][which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1]), 1] > 0) {
-            info.rater.sup.clust[j,2] <- "+"
-          } else {
-            info.rater.sup.clust[j,2] <- "-"
+        info.rater <- dta.sauv[id.info.rater, -id.info.stim]
+        dta.info.rater <- cbind.data.frame(rownames(mat.resids), t(info.rater))
+        for (j in 2:ncol(dta.info.rater)) {
+          if (type.info.rater[j-1] == "cat") {
+            dta.info.rater[,j] <- as.factor(dta.info.rater[, j])
+          }
+          if (type.info.rater[j-1] == "cont") {
+            dta.info.rater[,j] <- as.numeric(dta.info.rater[, j])
           }
         }
-        if (length(which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j,1])) != 0) {
-          info.rater.sup.clust[j, 3] <- res.info.rater$category[[i]][which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j, 1]), 4]
-          if (res.info.rater$category[[i]][which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j, 1]), 5] > 0) {
-            info.rater.sup.clust[j, 2] <- "+"
-          } else {
-            info.rater.sup.clust[j, 2] <- "-"
+        colnames(dta.info.rater)[1] <- "Rater"
+        dta.info.rater <- merge(dta.info.rater, mat.partition, by = "Rater")
+        dta.info.rater <- dta.info.rater[, -1]
+        dta.info.rater$Cluster <- as.factor(dta.info.rater$Cluster)
+        res.info.rater <- catdes(dta.info.rater, ncol(dta.info.rater), 0.05)
+        res.clust.rater[[4]] <- list()
+        if (is.null(res.info.rater$quanti[[i]])) {
+          nbquanti <- 0
+        } else {
+          nbquanti <- nrow(res.info.rater$quanti[[i]])
+        }
+        if (is.null(res.info.rater$category[[i]])) {
+          nbquali <- 0
+        } else {
+          nbquali <- nrow(res.info.rater$category[[i]])
+        }
+        info.rater.sup.clust <- as.data.frame(matrix(NA, nbquanti + nbquali, 3))
+        info.rater.sup.clust[, 1] <- c(rownames(res.info.rater$quanti[[i]]), rownames(res.info.rater$category[[i]]))
+        colnames(info.rater.sup.clust) <- c("information", "sign statistic test", "pvalue")
+        for (j in 1 : nrow(info.rater.sup.clust)) {
+          if (length(which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1])) != 0) {
+            info.rater.sup.clust[j, 3] <- res.info.rater$quanti[[i]][which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1]), 6]
+            if (res.info.rater$quanti[[i]][which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1]), 1] > 0) {
+              info.rater.sup.clust[j,2] <- "+"
+            } else {
+              info.rater.sup.clust[j,2] <- "-"
+            }
+          }
+          if (length(which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j,1])) != 0) {
+            info.rater.sup.clust[j, 3] <- res.info.rater$category[[i]][which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j, 1]), 4]
+            if (res.info.rater$category[[i]][which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j, 1]), 5] > 0) {
+              info.rater.sup.clust[j, 2] <- "+"
+            } else {
+              info.rater.sup.clust[j, 2] <- "-"
+            }
           }
         }
+        res.clust.rater[[4]] <- info.rater.sup.clust
       }
-      res.clust.rater[[4]] <- info.rater.sup.clust
-    }
-        names(res.clust.rater)[1 : 3] <- c("nb.raters", "percent.of.panel", "parangon")
+
+      names(res.clust.rater)[1 : 3] <- c("nb.raters", "percent.of.panel", "parangon")
       if (!is.null(id.info.rater)) {
         names(res.clust.rater)[4] <- "info.raters"
       }
@@ -646,8 +647,8 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
     for (i in 1 : nlevels(mat.partition$Cluster)) {
       res[[8]][[i]] <- list.charact.cluster.rater[[i]]
       if (!is.null(id.info.stim)) {
-        res[[8]][[i]][[length(res[[7]][[i]]) + 1]] <- list.charact.cluster.stim[[i]]
-        names(res[[8]][[i]])[length(res[[7]][[i]])] <- "info.stim"
+        res[[8]][[i]][[length(res[[8]][[i]]) + 1]] <- list.charact.cluster.stim[[i]]
+        names(res[[8]][[i]])[length(res[[8]][[i]])] <- "info.stim"
       }
     }
     names(res[[8]]) <- 1 : nlevels(mat.partition$Cluster)
