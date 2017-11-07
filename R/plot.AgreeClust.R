@@ -121,7 +121,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
     } else {
       palette.col <- c("#90B08F", "#EA485C", "#FF8379", "#009193", "#FFCEA5", "#A9A9A9", "#B0983D", "#941751", "#333333", "#A8D9FF")
       plot.ind.pca <- plot.ind.pca +
-        scale_color_manual(values = palette.col[1 : nlevels(data.labels$Cluster)])
+        scale_color_manual(values = palette.col[1 : nlevels(coord.raters$Cluster)])
     }
     coord.stimuli <- as.data.frame(res.pca$var$coord[, axis])
     colnames(coord.stimuli) <- c("AxeA", "AxeB")
