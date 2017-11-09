@@ -215,9 +215,11 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   res[[4]] <- nb.found
 
   # test the goodness of fit of the no-latent class model if nb.found = 1
-  res.test.noLC <- as.data.frame(matrix(NA, 1, 3))
-  colnames(res.test.noLC) <- c("x", "y", "pval")
-  res.test.noLC[1, "pval"] <- round(1 - pf(summary(mod.noLC)$fstatistic[1], summary(mod.noLC)$fstatistic[2], summary(mod.noLC)$fstatistic[3]), 2)
+  if (nb.found == 1) {
+    res.test.noLC <- as.data.frame(matrix(NA, 1, 3))
+    colnames(res.test.noLC) <- c("x", "y", "pval")
+    res.test.noLC[1, "pval"] <- round(1 - pf(summary(mod.noLC)$fstatistic[1], summary(mod.noLC)$fstatistic[2], summary(mod.noLC)$fstatistic[3]), 2)
+  }
 
   # implement a partitioning algorithm to consolidate the partition
   if (consol == TRUE) {
@@ -282,12 +284,15 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     geom_text(data = res.test, aes(x = 1, y = (y + (0.2 * max(dendrogram$height) / 10))), label = res.test[,"pval"], colour = "grey", size = 2.5)
 
   # add the p-value corresponding to the no-latent class model on the dendrogram
-  coord.all.nodes <- get_nodes_xy(dendrogram.info)
-  res.test.noLC[, c(1,2)] <- coord.all.nodes[which(coord.all.nodes[, 2] == max(coord.all.nodes[, 2])), ]
-  plot.dendro <- plot.dendro +
-    geom_point(data = res.test.noLC, aes(x = x, y = y), colour = "grey", size = 3, shape = 18) +
-    geom_text(data = res.test.noLC, aes(x = x, y = (y - (0.3 * max(dendrogram$height) / 10))), label = res.test.noLC[, "pval"], colour = "grey", size = 2.5) +
-    guides(colour = guide_legend(override.aes = list(size=2.5)))
+  if (nb.found == 1) {
+    coord.all.nodes <- get_nodes_xy(dendrogram.info)
+    res.test.noLC[, c(1,2)] <- coord.all.nodes[which(coord.all.nodes[, 2] == max(coord.all.nodes[, 2])), ]
+    plot.dendro <- plot.dendro +
+      ylim(-1, (max(data.segments$y) + (0.3 * max(dendrogram$height) / 10))) +
+      geom_point(data = res.test.noLC, aes(x = x, y = y), colour = "grey", size = 3, shape = 18) +
+      geom_text(data = res.test.noLC, aes(x = x, y = (y + (0.3 * max(dendrogram$height) / 10))), label = res.test.noLC[, "pval"], colour = "grey", size = 2.5) +
+      guides(colour = guide_legend(override.aes = list(size=2.5)))
+  }
 
   # add legend to the dendrogram
   coord.legend.dendro <- as.data.frame(matrix(NA, 4, 2))
@@ -299,7 +304,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   coord.legend.test.height <- data.frame(x = 1, y = 0.8)
   coord.legend.test.noLC <- data.frame(x = 1, y = 0.4)
   text.legend.test.height <- "p-value associated to the test of H0: this K-latent class structure is not significant (w.r.t. the (K-1)-latent class structure)"
-  text.legend.test.noLC <- "p-value associated to the test of H0: the no-latent class structure presents a weak goodness of fit"
+  text.legend.test.noLC <- "p-value associated to the test of H0: the ratings are hetereogeneous (displayed only if the number of clusters found equals 1)"
   plot.legend.dendro <- ggplot(NULL) +
     coord_fixed() +
     geom_point(data = coord.legend.dendro, aes(x = x, y = y), colour = "white", size = 2, shape = 18) +
