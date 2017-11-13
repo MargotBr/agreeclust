@@ -304,7 +304,7 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
   coord.legend.test.height <- data.frame(x = 1, y = 0.8)
   coord.legend.test.noLC <- data.frame(x = 1, y = 0.4)
   text.legend.test.height <- "p-value associated to the test of H0: this K-latent class structure is not significant (w.r.t. the (K-1)-latent class structure)"
-  text.legend.test.noLC <- "p-value associated to the test of H0: the ratings are hetereogeneous (displayed only if the number of clusters found equals 1)"
+  text.legend.test.noLC <- "p-value associated to the test of H0: the perfect agreement model well fits the data (displayed only if the number of clusters found equals 1)"
   plot.legend.dendro <- ggplot(NULL) +
     coord_fixed() +
     geom_point(data = coord.legend.dendro, aes(x = x, y = y), colour = "white", size = 2, shape = 18) +
