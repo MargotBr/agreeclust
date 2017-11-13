@@ -57,6 +57,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   dendrogram <- stats::hclust(disagmat, method = "ward.D2")
 
   # compute p-values for each level of the dendrogram
+  message("Computation of the dendrogram testing in progress")
   #remove_outliers <- function(x, na.rm = TRUE, ...) {
   #  qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
   #  H <- 10 * IQR(x, na.rm = na.rm)
@@ -304,7 +305,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   coord.legend.test.height <- data.frame(x = 1, y = 0.8)
   coord.legend.test.noLC <- data.frame(x = 1, y = 0.4)
   text.legend.test.height <- "p-value associated to the test of H0: this K-latent class structure is not significant (w.r.t. the (K-1)-latent class structure)"
-  text.legend.test.noLC <- "p-value associated to the test of H0: the ratings are hetereogeneous (displayed only if the number of clusters found equals 1)"
+  text.legend.test.noLC <- "p-value associated to the test of H0: the perfect agreement model well fits the data (displayed only if the number of clusters found equals 1)"
   plot.legend.dendro <- ggplot(NULL) +
     coord_fixed() +
     geom_point(data = coord.legend.dendro, aes(x = x, y = y), colour = "white", size = 2, shape = 18) +
@@ -375,29 +376,33 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   # combine all plots
   main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2))
   #dev.new(height = 7, width = 7)
+  res[[6]] <- list(data.segments, data.labels, dendrogram, res.test, coord.legend.dendro, coord.test.height, coord.test.noLC, coord.legend.test.height, coord.legend.test.noLC)
+  names(res[[6]]) <- c("data.segments", "data.labels", "dendrogram", "res.test", "coord.legend.dendro", "coord.test.height", "coord.test.noLC", "coord.legend.test.height", "coord.legend.test.noLC")
+  if (nb.found == 1) {
+    res[[6]][[length(res[[6]]) + 1]] <- res.test.noLC
+    names(res[[6]])[length(res[[6]])] <- "res.test.noLC"
+  } else {
+    res[[6]][length(res[[6]]) + 1] <- list(NULL)
+    names(res[[6]])[length(res[[6]])] <- "res.test.noLC"
+  }
   if (consol == FALSE) {
-    res[[6]] <- list()
-    res[[6]][[1]] <- plot.dendro
-    res[[6]][[2]] <- plot.legend.dendro
-    res[[6]][[3]] <- plot.legend.clust
+    res[[6]][length(res[[6]]) + 1] <- list(NULL)
+    names(res[[6]])[length(res[[6]])] <- "data.labels.partitioning"
     if (graph == TRUE) {
       grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
-                             plot.legend.dendro + theme(legend.position = "none"),
-                             ncol = 1, nrow = 2, heights = c(4, 1)),
-                 legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
+                               plot.legend.dendro + theme(legend.position = "none"),
+                               ncol = 1, nrow = 2, heights = c(4, 1)),
+                   legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
     }
   } else if (consol == TRUE) {
-    res[[6]] <- list()
-    res[[6]][[1]] <- plot.dendro
-    res[[6]][[2]] <- plot.legend.dendro
-    res[[6]][[3]] <- plot.partitioning
-    res[[6]][[4]] <- plot.legend.clust
+    res[[6]][[length(res[[6]]) + 1]] <- data.labels.partitioning
+    names(res[[6]])[length(res[[6]])] <- "data.labels.partitioning"
     if (graph == TRUE) {
       grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
-                             plot.legend.dendro + theme(legend.position = "none"),
-                             plot.partitioning + theme(legend.position = "none"),
-                             ncol = 1, nrow = 3, heights = c(4, 1, 1)),
-                 legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
+                               plot.legend.dendro + theme(legend.position = "none"),
+                               plot.partitioning + theme(legend.position = "none"),
+                               ncol = 1, nrow = 3, heights = c(4, 1, 1)),
+                   legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
     }
   }
 
@@ -670,7 +675,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
 
   # return the results
   names(res) <- c("profiles.residuals", "mat.disag", "pval.dendro", "nb.clust.found", "partition", "res.plot.segment", "res.pca", "charact.clust")
-  print("Clustering performed")
+  message("Clustering performed")
   options(warn = 0)
   class(res) <- c("AgreeClust", "list ")
   return(res)

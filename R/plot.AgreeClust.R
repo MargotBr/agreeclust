@@ -32,40 +32,127 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
     return(legend)
   }
 
+  palette.col <- c("#90B08F", "#EA485C", "#FF8379", "#009193", "#FFCEA5", "#A9A9A9", "#B0983D", "#941751", "#333333", "#A8D9FF")
+
   # plot the segmentation
   if (choice == "all" | choice == "seg") {
-    if (length(res[[6]]) == 4) { # consolidation performed
-      plot.dendro <- res[[6]][[1]]
-      plot.legend.dendro <- res[[6]][[2]]
-      plot.partitioning <- res[[6]][[3]]
-      plot.legend.clust <- res[[6]][[4]]
-    } else if (length(res[[6]]) == 3) { # consolidation not performed
-      plot.dendro <- res[[6]][[1]]
-      plot.legend.dendro <- res[[6]][[2]]
-      plot.legend.clust <- res[[6]][[3]]
-    }
+    plot.dendro <- ggplot(NULL) +
+      geom_segment(data = res[[6]]$data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "black") +
+      geom_text(data = res[[6]]$data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, colour = Cluster), size = 2.1) +
+      ylim(-1, (max(res[[6]]$data.segments$y) + (0.2 * max(res[[6]]$dendrogram$height) / 10))) +
+      theme(
+        legend.key = element_rect(colour = "white", fill = "white"),
+        panel.background = element_rect(fill = 'white', colour = "white"),
+        panel.grid.major = element_line(colour = "white"),
+        panel.grid.minor = element_line(colour = "white"),
+        plot.title = element_text(hjust = 0.5, vjust = -1, size = 10, colour = "black"),
+        plot.margin = unit(c(0.5,0,0,0), "cm"),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
+        legend.position = "none")
     if (!is.null(col.clust)) {
       plot.dendro <- plot.dendro +
         scale_colour_manual(values = col.clust)
-      plot.legend.clust <- plot.legend.clust +
-        scale_fill_manual(values = col.clust)
-      if (length(res[[6]]) == 4) {
+    } else {
+      plot.dendro <- plot.dendro +
+        scale_colour_manual(values = palette.col[1 : nlevels(res[[6]]$data.labels$Cluster)])
+    }
+    if (!is.null(res[[6]]$data.labels.partitioning)) {
+      plot.dendro <- plot.dendro +
+        ggtitle("Before consolidation")
+    }
+    plot.dendro <- plot.dendro +
+      geom_hline(data = res[[6]]$res.test, aes(yintercept = y), colour = "grey", linetype = 2) +
+      geom_text(data = res[[6]]$res.test, aes(x = 1, y = (y + (0.2 * max(res[[6]]$dendrogram$height) / 10))), label = res[[6]]$res.test[,"pval"], colour = "grey", size = 2.5)
+    if (!is.null(res[[6]]$res.test.noLC)) {
+      plot.dendro <- plot.dendro +
+        ylim(-1, (max(res[[6]]$data.segments$y) + (0.3 * max(res[[6]]$dendrogram$height) / 10))) +
+        geom_point(data = res[[6]]$res.test.noLC, aes(x = x, y = y), colour = "grey", size = 3, shape = 18) +
+        geom_text(data = res[[6]]$res.test.noLC, aes(x = x, y = (y + (0.3 * max(res[[6]]$dendrogram$height) / 10))), label = res[[6]]$res.test.noLC[, "pval"], colour = "grey", size = 2.5) +
+        guides(colour = guide_legend(override.aes = list(size=2.5)))
+    }
+    text.legend.test.height <- "p-value associated to the test of H0: this K-latent class structure is not significant (w.r.t. the (K-1)-latent class structure)"
+    text.legend.test.noLC <- "p-value associated to the test of H0: the perfect agreement model well fits the data (displayed only if the number of clusters found equals 1)"
+    plot.legend.dendro <- ggplot(NULL) +
+      coord_fixed() +
+      geom_point(data = res[[6]]$coord.legend.dendro, aes(x = x, y = y), colour = "white", size = 2, shape = 18) +
+      geom_segment(data = res[[6]]$coord.test.height, aes(x = x, xend = xend, y = y, yend = yend), colour = "grey", linetype = 2) +
+      geom_text(data = res[[6]]$coord.test.height, aes(x = x, y = (y + 0.2)), label = "p-value", colour = "grey", hjust = 0, size = 2) +
+      geom_point(data = res[[6]]$coord.test.noLC, aes(x = x, y = y), colour = "grey", size = 2, shape = 18) +
+      geom_text(data = res[[6]]$coord.test.noLC, aes(x = x, y = (y - 0.2)), label = "p-value", colour = "grey", size = 2) +
+      geom_text(data = res[[6]]$coord.legend.test.height, aes(x = x, y = y + 0.1), label = text.legend.test.height, hjust = 0, colour = "grey", size = 2) +
+      geom_text(data = res[[6]]$coord.legend.test.noLC, aes(x = x, y = y - 0.1), label = text.legend.test.noLC, hjust = 0, colour = "grey", size = 2) +
+      theme(
+        legend.key = element_rect(colour = "white", fill = "white"),
+        panel.background = element_rect(fill = 'white', colour = "white"),
+        panel.grid.major = element_line(colour = "white"),
+        panel.grid.minor = element_line(colour = "white"),
+        plot.margin = unit(c(0.5, 0, 0, 0), "cm"),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank())
+    if (!is.null(res[[6]]$data.labels.partitioning)) {
+      plot.partitioning <- ggplot(NULL) +
+        geom_text(data = res[[6]]$data.labels.partitioning, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, colour = Cluster), size = 2.1) +
+        ylim(-0.3, 0) +
+        ggtitle("After consolidation") +
+        theme(
+          legend.key = element_rect(colour = "white",fill = "white"),
+          panel.background = element_rect(fill = 'white', colour = "white"),
+          panel.grid.major = element_line(colour = "white"),
+          panel.grid.minor = element_line(colour = "white"),
+          plot.title = element_text(hjust = 0.5, size = 10, colour = "black"),
+          plot.margin = unit(c(0.5, 0, 0, 0.45), "cm"),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          legend.position = "none")
+      if (!is.null(col.clust)) {
         plot.partitioning <- plot.partitioning +
           scale_colour_manual(values = col.clust)
+      } else {
+        plot.partitioning <- plot.partitioning +
+          scale_colour_manual(values = palette.col[1 : nlevels(res[[6]]$data.labels$Cluster)])
       }
+    }
+    plot.legend.clust <- ggplot(NULL) +
+      geom_label(data = res[[6]]$data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, fill = Cluster), colour = "transparent") +
+      theme(
+        plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "bottom",
+        legend.title = element_text(size=8),
+        legend.text = element_text(size=8),
+        legend.margin = margin(t=0, unit='cm'),
+        legend.key = element_rect(size=4),
+        legend.key.size = unit(0.4, "cm"))
+    if (!is.null(col.clust)) {
+      plot.legend.clust <- plot.legend.clust +
+        scale_fill_manual(values = col.clust)
+    } else {
+      plot.legend.clust <- plot.legend.clust +
+        scale_fill_manual(values = palette.col[1 : nlevels(res[[6]]$data.labels$Cluster)])
     }
     legend.plot <- get.legend(plot.legend.clust)
     main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2))
-    if (length(res[[6]]) == 4) {
+    if (!is.null(res[[6]]$data.labels.partitioning)) {
+      grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
+                               plot.legend.dendro + theme(legend.position = "none"),
+                               ncol = 1, nrow = 2, heights = c(4, 1)),
+                   legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
+    } else {
       grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
                                plot.legend.dendro + theme(legend.position = "none"),
                                plot.partitioning + theme(legend.position = "none"),
                                ncol = 1, nrow = 3, heights = c(4, 1, 1)),
-                   legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
-    } else if (length(res[[6]]) == 3) {
-      grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
-                               plot.legend.dendro + theme(legend.position = "none"),
-                               ncol = 1, nrow = 2, heights = c(4, 1)),
                    legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
     }
   }
@@ -119,7 +206,6 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       plot.ind.pca <- plot.ind.pca +
         scale_color_manual(values = col.clust)
     } else {
-      palette.col <- c("#90B08F", "#EA485C", "#FF8379", "#009193", "#FFCEA5", "#A9A9A9", "#B0983D", "#941751", "#333333", "#A8D9FF")
       plot.ind.pca <- plot.ind.pca +
         scale_color_manual(values = palette.col[1 : nlevels(coord.raters$Cluster)])
     }
@@ -159,10 +245,22 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         axis.text = element_text(colour = "black"),
         axis.title = element_text(colour = "black"),
         legend.position = "none")
-    plot.legend.clust <- res[[6]][[length(res[[6]])]]
+    plot.legend.clust <- ggplot(NULL) +
+      geom_label(data = res[[6]]$data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, fill = Cluster), colour = "transparent") +
+      theme(
+        plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "bottom",
+        legend.title = element_text(size=8),
+        legend.text = element_text(size=8),
+        legend.margin = margin(t=0, unit='cm'),
+        legend.key = element_rect(size=4),
+        legend.key.size = unit(0.4, "cm"))
     if (!is.null(col.clust)) {
       plot.legend.clust <- plot.legend.clust +
         scale_fill_manual(values = col.clust)
+    } else {
+      plot.legend.clust <- plot.legend.clust +
+        scale_fill_manual(values = palette.col[1 : nlevels(coord.raters$Cluster)])
     }
     legend.plot <- get.legend(plot.legend.clust)
     main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12,font = 2))
