@@ -58,7 +58,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
 
   # compute p-values for each level of the dendrogram
   message("Computation of the dendrogram testing in progress")
-  message("If the computation is parallelized: Processing status can be checked in the 'TestDendrogram_processing.txt'")
+  message("If the computation is parallelized: Processing status can be checked in the 'TestDendrogram_processing.txt' file")
   message("If the computation is not parallelized: Processing status can be checked in the console")
   model2 <- paste(model, "+ Cluster + Stimulus:Cluster")
   cut.model.Rater <- strsplit(model2, "Rater")[[1]]
@@ -216,8 +216,8 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   } else {
     nb.found <- which(pval > 0.05)
   }
-  partition <- cutree(dendrogram, k = nb.found)
-  mat.partition.noconsol <- cbind.data.frame(partition, names(partition))
+  partition.noconsol <- cutree(dendrogram, k = nb.found)
+  mat.partition.noconsol <- cbind.data.frame(partition.noconsol, names(partition.noconsol))
   colnames(mat.partition.noconsol) <- c("Cluster", "Rater")
   res[[3]] <- pval
   res[[4]] <- nb.found
@@ -231,7 +231,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
 
   # implement a partitioning algorithm to consolidate the partition
   if (consol == TRUE) {
-    centers <- by(mat.resids, partition, colMeans)
+    centers <- by(mat.resids, partition.noconsol, colMeans)
     centers <- matrix(unlist(centers), ncol = ncol(mat.resids), byrow = TRUE)
     res.consol <- kmeans(mat.resids, centers = centers, iter.max = 10)
     partition.consol <- res.consol$cluster
