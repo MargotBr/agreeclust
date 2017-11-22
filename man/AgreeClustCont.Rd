@@ -14,7 +14,7 @@ A numeric matrix or data frame of dimensions S x R (S=number of stimuli, R=numbe
 A formula for the model. Either 'Rating~Rater+Stimulus' (default), 'Rating~Rater', or 'Rating~1'.}
   \item{max.clust}{
 An integer specifying the maximum number of clusters of raters. By default, this number is fixed to 10.}
-  \item{paral}{
+  \item{paral.null}{
 A boolean indicating if the computation of the null LRT distribution should be parallelized. By default, the computation of the null LRT distribution is parallelized on nb.cores-1 cores. During the process, a text file 'TestDendrogram_processing.txt' is created.}
   \item{consol}{
 A boolean indicating if a k-means consolidation of the partition of raters should be performed. By default, the partition is consolidated.}
@@ -62,11 +62,20 @@ data(pedagdataCont)
 res.pedag <- AgreeClustCont(dta = pedagdataCont, model = "Rating ~ Rater + Stimulus", id.info.rater = 9 : nrow(pedagdataCont), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataCont), type.info.stim = c(rep("cont", 4), "cat"))
 res.pedag
 
-# 'Cocktail liking' data set
+# 'Cocktail liking' data set without external information about the stimuli
 library(SensoMineR)
+help(cocktail)
 data(cocktail)
 res.cocktail <- AgreeClustCont(dta = hedo.cocktail, model = "Rating ~ Rater")
 res.cocktail
+
+# 'Cocktail liking' data set with external information about the stimuli
+library(SensoMineR)
+help(cocktail)
+data(cocktail)
+dta.all.cocktail <- cbind.data.frame(hedo.cocktail, compo.cocktail, senso.cocktail)
+res.cocktail2 <- AgreeClustCont(dta = dta.all.cocktail, model = "Rating ~ Rater", id.info.stim = (ncol(hedo.cocktail) + 1) : ncol(dta.all.cocktail), type.info.stim = rep("cont", 17))
+res.cocktail2
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

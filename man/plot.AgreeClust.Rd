@@ -16,6 +16,8 @@ A character element specifying the graphs to be plotted ('seg' for the represent
 A vector with as many color as clusters of raters. Colors can be specified by a character such as "blue" or by a hexadecimal code such as "#0D10D5". All hexadecimal codes can be found at \url{http://htmlcolorcodes.com}. By default, no colors are specified and default colors are used.}
   \item{axis}{
 A length 2 numeric vector specifying the PCA components to be plotted. By default, the first 2 components are plotted.}
+ \item{new.dev}{
+A boolean indicating if a new device window should be opened for each plot. By default, this is the case.}
 }
 \value{
 Returns the graphical representations.

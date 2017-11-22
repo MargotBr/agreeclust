@@ -1,4 +1,4 @@
-plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2)) {
+plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2), new.dev = TRUE) {
 
   options(warn = -1)
 
@@ -32,10 +32,15 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
     return(legend)
   }
 
+  # default palette
   palette.col <- c("#90B08F", "#EA485C", "#FF8379", "#009193", "#FFCEA5", "#A9A9A9", "#B0983D", "#941751", "#333333", "#A8D9FF")
 
   # plot the segmentation
   if (choice == "all" | choice == "seg") {
+    if (new.dev == TRUE) {
+      dev.new()
+      dev.new()
+    }
     plot.dendro <- ggplot(NULL) +
       geom_segment(data = res[[6]]$data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "black") +
       geom_text(data = res[[6]]$data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, colour = Cluster), size = 2.1) +
@@ -143,7 +148,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
     }
     legend.plot <- get.legend(plot.legend.clust)
     main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2))
-    if (!is.null(res[[6]]$data.labels.partitioning)) {
+    if (is.null(res[[6]]$data.labels.partitioning)) {
       grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
                                plot.legend.dendro + theme(legend.position = "none"),
                                ncol = 1, nrow = 2, heights = c(4, 1)),
@@ -159,6 +164,9 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
 
   # plot the multidimensional representation of disagreement
   if (choice == "all" | choice == "mul") {
+    if (new.dev == TRUE) {
+      dev.new()
+    }
     res.pca <- res[[7]]
     coord.raters <- res.pca$ind$coord[, axis]
     mat.coord.raters <- cbind.data.frame(rownames(coord.raters), coord.raters)
@@ -272,6 +280,6 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
 
   # end the function
   options(warn = 0)
-  return("Representations plotted")
+  return(message("Representations plotted"))
 
 }

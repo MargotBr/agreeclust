@@ -1,4 +1,4 @@
-AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE) {
+AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, paral.null = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE) {
 
   options(warn = -1)
 
@@ -58,6 +58,13 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
 
   # compute p-values for each level of the dendrogram
   message("Computation of the dendrogram testing in progress")
+  message("If the computation is parallelized: Processing status can be checked in the 'TestDendrogram_processing.txt'")
+  message("If the computation is not parallelized: Processing status can be checked in the console")
+  model2 <- paste(model, "+ Cluster + Stimulus:Cluster")
+  cut.model.Rater <- strsplit(model2, "Rater")[[1]]
+  if (length(cut.model.Rater) == 2) {
+    model2 <- paste0(cut.model.Rater[1], "Rater%in%Cluster", cut.model.Rater[2])
+  }
   #remove_outliers <- function(x, na.rm = TRUE, ...) {
   #  qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
   #  H <- 10 * IQR(x, na.rm = na.rm)
@@ -69,7 +76,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   compute.dist.null <- function(j, list.data.null, K) {
 
     # Null dendrogram
-    print(paste0("Test ", (K + 1), " VS ", (K), " | Simul ", j))
+    message(paste0("Comparison test: ", (K + 1), "-latent class model VS " , (K), "-latent class model | Progress: ", round(j / length(list.data.null) * 100, 1), "%"))
     data.null <- as.matrix(list.data.null[[j]])
     melted.data.null <- melt(data.null)
     melted.data.null <- melted.data.null[, c(2,1,3)]
@@ -92,9 +99,9 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     clustered.data.KLC.null <- merge(melted.data.null, partition.KLC.null, by = "Rater")
     clustered.data.KLC.null$Cluster <- as.factor(clustered.data.KLC.null$Cluster)
     if (K == 1) {
-      mod.KLC.null <- lm(Rating ~ Stimulus + Rater, data = clustered.data.KLC.null)
+      mod.KLC.null <- lm(model, data = clustered.data.KLC.null)
     } else {
-      mod.KLC.null <- lm(Rating ~ Stimulus + Rater%in%Cluster + Cluster + Stimulus:Cluster, data = clustered.data.KLC.null)
+      mod.KLC.null <- lm(model2, data = clustered.data.KLC.null)
       X.KLC.null <- model.matrix(mod.KLC.null)
       X.KLC.null <- X.KLC.null[, !is.na(coef(mod.KLC.null))]
       mod.KLC.null <- lm(Rating ~ ., data = data.frame(Rating = clustered.data.KLC.null$Rating, X.KLC.null[, -1]))
@@ -106,7 +113,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     colnames(partition.Kplus1LC.null) <- c("Rater", "Cluster")
     clustered.data.Kplus1LC.null <- merge(melted.data.null, partition.Kplus1LC.null, by = "Rater")
     clustered.data.Kplus1LC.null$Cluster <- as.factor(clustered.data.Kplus1LC.null$Cluster)
-    mod.Kplus1LC.null <- lm(Rating ~ Stimulus + Rater%in%Cluster + Cluster + Stimulus:Cluster, data = clustered.data.Kplus1LC.null)
+    mod.Kplus1LC.null <- lm(model2, data = clustered.data.Kplus1LC.null)
     X.Kplus1LC.null <- model.matrix(mod.Kplus1LC.null)
     X.Kplus1LC.null <- X.Kplus1LC.null[, !is.na(coef(mod.Kplus1LC.null))]
     mod.Kplus1LC.null <- lm(Rating ~ ., data = data.frame(Rating = clustered.data.Kplus1LC.null$Rating, X.Kplus1LC.null[, -1]))
@@ -127,9 +134,9 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
       clustered.data.KLC <- merge(melted.data, partition.KLC, by = "Rater")
       clustered.data.KLC$Cluster <- as.factor(clustered.data.KLC$Cluster)
       if (K == 1) {
-        mod.KLC <- lm(Rating ~ Rater + Stimulus, data = clustered.data.KLC)
+        mod.KLC <- lm(model, data = clustered.data.KLC)
       } else {
-        mod.KLC <- lm(Rating ~ Rater%in%Cluster + Stimulus + Cluster + Stimulus:Cluster, data = clustered.data.KLC)
+        mod.KLC <- lm(model2, data = clustered.data.KLC)
         X.KLC <- model.matrix(mod.KLC)
         X.KLC <- X.KLC[, !is.na(coef(mod.KLC))]
         mod.KLC <- lm(Rating ~ ., data = data.frame(Rating = clustered.data.KLC$Rating, X.KLC[, -1]))
@@ -141,7 +148,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
       colnames(partition.Kplus1LC) <- c("Rater", "Cluster")
       clustered.data.Kplus1LC <- merge(melted.data, partition.Kplus1LC, by = "Rater")
       clustered.data.Kplus1LC$Cluster <- as.factor(clustered.data.Kplus1LC$Cluster)
-      mod.Kplus1LC <- lm(Rating ~ Rater%in%Cluster + Stimulus + Cluster + Stimulus:Cluster, data = clustered.data.Kplus1LC)
+      mod.Kplus1LC <- lm(model2, data = clustered.data.Kplus1LC)
       X.Kplus1LC <- model.matrix(mod.Kplus1LC)
       X.Kplus1LC <- X.Kplus1LC[,!is.na(coef(mod.Kplus1LC))]
       mod.Kplus1LC <- lm(Rating~., data=data.frame(Rating = clustered.data.Kplus1LC$Rating, X.Kplus1LC[, -1]))
@@ -161,13 +168,13 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
       list.data.null <- lapply(list.data.null, function(vec, k, dnames) matrix(vec, nrow = k, dimnames = dnames), k = nlevels(melted.data$Stimulus), dnames = dimnames(dta))
 
       # Compute p-value
-      if (paral == FALSE) {
+      if (paral.null == FALSE) {
         list.f.H0 <- lapply(1 : nb.simul.null, compute.dist.null, list.data.null = list.data.null, K = K)
-      } else if (paral == TRUE) {
+      } else if (paral.null == TRUE) {
         environment(compute.dist.null) <- .GlobalEnv
         nb.cores <- detectCores()
         cl <- makeCluster(nb.cores - 1, outfile = "TestDendrogram_processing.txt")
-        clusterExport(cl, varlist = c("melt", "model", "list.data.null", "K"), environment())
+        clusterExport(cl, varlist = c("melt", "model", "model2", "list.data.null", "K"), environment())
         list.f.H0 <- clusterApply(cl, 1 : nb.simul.null, compute.dist.null, list.data.null = list.data.null, K = K)
         stopCluster(cl)
         if ("TestDendrogram_processing.txt" %in% list.files()) {
@@ -248,7 +255,6 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     geom_segment(data = data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "black") +
     geom_text(data = data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, colour = Cluster), size = 2.1) +
     scale_colour_manual(values = palette.col[1 : nlevels(data.labels$Cluster)]) +
-    ylim(-1, (max(data.segments$y) + (0.2 * max(dendrogram$height) / 10))) +
     theme(
       legend.key = element_rect(colour = "white", fill = "white"),
       panel.background = element_rect(fill = 'white', colour = "white"),
@@ -289,10 +295,13 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     coord.all.nodes <- get_nodes_xy(dendrogram.info)
     res.test.noLC[, c(1,2)] <- coord.all.nodes[which(coord.all.nodes[, 2] == max(coord.all.nodes[, 2])), ]
     plot.dendro <- plot.dendro +
-      ylim(-1, (max(data.segments$y) + (0.3 * max(dendrogram$height) / 10))) +
+      ylim(-1, (max(data.segments$y) + (0.4 * max(dendrogram$height) / 10))) +
       geom_point(data = res.test.noLC, aes(x = x, y = y), colour = "grey", size = 3, shape = 18) +
-      geom_text(data = res.test.noLC, aes(x = x, y = (y + (0.3 * max(dendrogram$height) / 10))), label = res.test.noLC[, "pval"], colour = "grey", size = 2.5) +
+      geom_text(data = res.test.noLC, aes(x = x, y = (y + (0.4 * max(dendrogram$height) / 10))), label = res.test.noLC[, "pval"], colour = "grey", size = 2.5) +
       guides(colour = guide_legend(override.aes = list(size=2.5)))
+  } else {
+    plot.dendro <- plot.dendro +
+      ylim(-1, (max(data.segments$y) + (0.2 * max(dendrogram$height) / 10)))
   }
 
   # add legend to the dendrogram
@@ -558,28 +567,32 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
         } else {
           nbquali <- nrow(res.info.rater$category[[i]])
         }
-        info.rater.sup.clust <- as.data.frame(matrix(NA, nbquanti + nbquali, 3))
-        info.rater.sup.clust[, 1] <- c(rownames(res.info.rater$quanti[[i]]), rownames(res.info.rater$category[[i]]))
-        colnames(info.rater.sup.clust) <- c("information", "sign statistic test", "pvalue")
-        for (j in 1 : nrow(info.rater.sup.clust)) {
-          if (length(which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1])) != 0) {
-            info.rater.sup.clust[j, 3] <- res.info.rater$quanti[[i]][which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1]), 6]
-            if (res.info.rater$quanti[[i]][which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1]), 1] > 0) {
-              info.rater.sup.clust[j,2] <- "+"
-            } else {
-              info.rater.sup.clust[j,2] <- "-"
+        if (nbquanti == 0 & nbquali == 0) {
+          res.clust.rater[4] <- list(NULL)
+        } else {
+          info.rater.sup.clust <- as.data.frame(matrix(NA, nbquanti + nbquali, 3))
+          info.rater.sup.clust[, 1] <- c(rownames(res.info.rater$quanti[[i]]), rownames(res.info.rater$category[[i]]))
+          colnames(info.rater.sup.clust) <- c("information", "sign statistic test", "pvalue")
+          for (j in 1 : nrow(info.rater.sup.clust)) {
+            if (length(which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1])) != 0) {
+              info.rater.sup.clust[j, 3] <- res.info.rater$quanti[[i]][which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1]), 6]
+              if (res.info.rater$quanti[[i]][which(rownames(res.info.rater$quanti[[i]]) == info.rater.sup.clust[j, 1]), 1] > 0) {
+                info.rater.sup.clust[j,2] <- "+"
+              } else {
+                info.rater.sup.clust[j,2] <- "-"
+              }
+            }
+            if (length(which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j,1])) != 0) {
+              info.rater.sup.clust[j, 3] <- res.info.rater$category[[i]][which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j, 1]), 4]
+              if (res.info.rater$category[[i]][which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j, 1]), 5] > 0) {
+                info.rater.sup.clust[j, 2] <- "+"
+              } else {
+                info.rater.sup.clust[j, 2] <- "-"
+              }
             }
           }
-          if (length(which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j,1])) != 0) {
-            info.rater.sup.clust[j, 3] <- res.info.rater$category[[i]][which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j, 1]), 4]
-            if (res.info.rater$category[[i]][which(rownames(res.info.rater$category[[i]]) == info.rater.sup.clust[j, 1]), 5] > 0) {
-              info.rater.sup.clust[j, 2] <- "+"
-            } else {
-              info.rater.sup.clust[j, 2] <- "-"
-            }
-          }
+          res.clust.rater[[4]] <- info.rater.sup.clust
         }
-        res.clust.rater[[4]] <- info.rater.sup.clust
       }
 
       names(res.clust.rater)[1 : 3] <- c("nb.raters", "percent.of.panel", "parangon")
@@ -600,8 +613,13 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
       charact.cluster.stim <- function (i) {
 
         # interpret the cluster with external information about the stimuli
-        info.stim <- dta.sauv[-id.info.rater, id.info.stim]
-        dta.info.stim <- cbind.data.frame(rownames(info.stim), info.stim)
+        if (!is.null(id.info.rater)) {
+          info.stim <- as.data.frame(dta.sauv[-id.info.rater, id.info.stim])
+        } else {
+          info.stim <- as.data.frame(dta.sauv[, id.info.stim])
+        }
+        colnames(info.stim) <- colnames(dta.sauv)[id.info.stim]
+        dta.info.stim <- cbind.data.frame(rownames(dta), info.stim)
         for (j in 2 : ncol(dta.info.stim)) {
           if (type.info.stim[j - 1] == "cat") {
             dta.info.stim[,j] <- as.factor(dta.info.stim[,j])
@@ -644,16 +662,19 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
           }
         }
         info.stim.sup <- info.stim.sup[-1, ]
-        info.stim.sup[which(info.stim.sup[, 2] < 0), 2] <- "-"
-        info.stim.sup[which(info.stim.sup[, 2] > 0), 2] <- "+"
-        info.stim.sup[, 3] <- as.numeric(info.stim.sup[, 3])
-        info.stim.sup.plus <- info.stim.sup[which(info.stim.sup[, 2] == "+"), ]
-        info.stim.sup.plus <- info.stim.sup.plus[order(info.stim.sup.plus[, 3], decreasing = FALSE), ]
-        info.stim.sup.moins <- info.stim.sup[which(info.stim.sup[, 2] == "-"), ]
-        info.stim.sup.moins <- info.stim.sup.moins[order(info.stim.sup.moins[, 3], decreasing = TRUE), ]
-        info.stim.sup <- rbind.data.frame(info.stim.sup.plus, info.stim.sup.moins)
-
-        res.clust.stim <- info.stim.sup
+        if (nrow(info.stim.sup) == 0) {
+          res.clust.stim <- list(NULL)
+        } else {
+          info.stim.sup[which(info.stim.sup[, 2] < 0), 2] <- "-"
+          info.stim.sup[which(info.stim.sup[, 2] > 0), 2] <- "+"
+          info.stim.sup[, 3] <- as.numeric(info.stim.sup[, 3])
+          info.stim.sup.plus <- info.stim.sup[which(info.stim.sup[, 2] == "+"), ]
+          info.stim.sup.plus <- info.stim.sup.plus[order(info.stim.sup.plus[, 3], decreasing = FALSE), ]
+          info.stim.sup.moins <- info.stim.sup[which(info.stim.sup[, 2] == "-"), ]
+          info.stim.sup.moins <- info.stim.sup.moins[order(info.stim.sup.moins[, 3], decreasing = TRUE), ]
+          info.stim.sup <- rbind.data.frame(info.stim.sup.plus, info.stim.sup.moins)
+          res.clust.stim <- info.stim.sup
+        }
 
         return(res.clust.stim)
 
@@ -665,6 +686,9 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
       res[[8]][[i]] <- list.charact.cluster.rater[[i]]
       if (!is.null(id.info.stim)) {
         res[[8]][[i]][[length(res[[8]][[i]]) + 1]] <- list.charact.cluster.stim[[i]]
+        if (length(list.charact.cluster.stim[[i]]) == 1 & is.null(res[[8]][[i]]$info.stim[[1]])) {
+          res[[8]][[i]][length(res[[8]][[i]])] <- list(NULL)
+        }
         names(res[[8]][[i]])[length(res[[8]][[i]])] <- "info.stim"
       }
     }

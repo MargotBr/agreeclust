@@ -16,7 +16,7 @@ A formula for the model. Either 'Rating~Rater+Stimulus' (default), 'Rating~Rater
 An integer specifying the maximum number of clusters of raters. By default, this number is fixed to 10.}
   \item{approx.null}{
 A boolean indicating if the null LRT distribution should be approximated using Satterthwaite's approximation. By default, the null LRT distribution is approximated.}
-  \item{paral}{
+  \item{paral.null}{
 A boolean indicating if the computation of the null LRT distribution should be parallelized. By default, the computation of the null LRT distribution is parallelized on nb.cores-1 cores. During the process, a text file 'TestDendrogram_processing.txt' is created.}
   \item{consol}{
 A boolean indicating if a k-means consolidation of the partition of raters should be performed. By default, the partition is consolidated.}
