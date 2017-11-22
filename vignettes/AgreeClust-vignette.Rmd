@@ -2,7 +2,7 @@
 title: "`AgreeClust`: implementing with R an agreement-based unsupervised clustering of ratings through a latent class regression modeling framework"
 author: "Margot Brard"
 date: "`r Sys.Date()`"
-output: 
+output:
   prettydoc::html_pretty:
     theme: leonids
     highlight: github
@@ -40,11 +40,11 @@ library(AgreeClust)
 
 The package is able to manage matrices of dimensions $S \times R$, where $S$ denotes the number of strimuli rated during the experiment and $R$ denotes the number of raters who were involved in the experiment. At the intersection of the line $s$ and the column $r$ is the rating of the $s$-th stimulus by the $r$-th rater $Y_{sr}$.
 
-<center><img src="Datanoext.pdf" alt="Drawing" style="width: 450px;"/></center>
+![](Datanoext.jpeg)
 
 If external information about the stimuli and the raters was collected during the experiment, the previous data set is supplemented by these covariates. More precisely, covariates providing information about the stimuli are added to the previous data set as supplementary columns; and covariates providing information about the raters are added to the previous data set as supplementary lines. The intersection cells between these covariates are filled by missing data.
 
-<center><img src="Dataext.pdf" alt="Drawing" style="width: 640px;"/></center>
+![](Dataext.jpeg)
 
 # Understanding the global approach
 
