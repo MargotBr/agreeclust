@@ -217,7 +217,7 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
     nb.found <- which(pval > 0.05)
   }
   partition.noconsol <- cutree(dendrogram, k = nb.found)
-  mat.partition.noconsol <- cbind.data.frame(partition.noconsol, names(partition))
+  mat.partition.noconsol <- cbind.data.frame(partition.noconsol, names(partition.noconsol))
   colnames(mat.partition.noconsol) <- c("Cluster", "Rater")
   res[[3]] <- pval
   res[[4]] <- nb.found
