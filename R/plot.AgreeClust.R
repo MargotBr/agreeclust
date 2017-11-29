@@ -42,7 +42,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       dev.new()
     }
     plot.dendro <- ggplot(NULL) +
-      geom_segment(data = res[[6]]$data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "black") +
+      geom_segment(data = res[[6]]$data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "#444444") +
       geom_text(data = res[[6]]$data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, colour = Cluster), size = 2.1) +
       ylim(-1, (max(res[[6]]$data.segments$y) + (0.2 * max(res[[6]]$dendrogram$height) / 10))) +
       theme(
@@ -50,7 +50,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         panel.background = element_rect(fill = 'white', colour = "white"),
         panel.grid.major = element_line(colour = "white"),
         panel.grid.minor = element_line(colour = "white"),
-        plot.title = element_text(hjust = 0.5, vjust = -1, size = 10, colour = "black"),
+        plot.title = element_text(hjust = 0.5, vjust = -1, size = 10, colour = "#444444"),
         plot.margin = unit(c(0.5,0,0,0), "cm"),
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
@@ -112,7 +112,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
           panel.background = element_rect(fill = 'white', colour = "white"),
           panel.grid.major = element_line(colour = "white"),
           panel.grid.minor = element_line(colour = "white"),
-          plot.title = element_text(hjust = 0.5, size = 10, colour = "black"),
+          plot.title = element_text(hjust = 0.5, size = 10, colour = "#444444"),
           plot.margin = unit(c(0.5, 0, 0, 0.45), "cm"),
           axis.title.x = element_blank(),
           axis.title.y = element_blank(),
@@ -147,7 +147,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         scale_fill_manual(values = palette.col[1 : nlevels(res[[6]]$data.labels$Cluster)])
     }
     legend.plot <- get.legend(plot.legend.clust)
-    main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2))
+    main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2, col = "#444444"))
     if (is.null(res[[6]]$data.labels.partitioning)) {
       grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
                                plot.legend.dendro + theme(legend.position = "none"),
@@ -273,7 +273,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         scale_fill_manual(values = palette.col[1 : nlevels(coord.raters$Cluster)])
     }
     legend.plot <- get.legend(plot.legend.clust)
-    main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12,font = 2))
+    main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12, font = 2, col = "#444444"))
     grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
                            plot.var.pca + theme(legend.position="none"),
                            ncol = 2, nrow = 1),

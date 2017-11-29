@@ -252,7 +252,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   data.labels$Cluster <- as.factor(data.labels$Cluster)
   data.segments <- segment(dendrogram.data)
   plot.dendro <- ggplot(NULL) +
-    geom_segment(data = data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "black") +
+    geom_segment(data = data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "#444444") +
     geom_text(data = data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, colour = Cluster), size = 2.1) +
     scale_colour_manual(values = palette.col[1 : nlevels(data.labels$Cluster)]) +
     theme(
@@ -260,7 +260,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
       panel.background = element_rect(fill = 'white', colour = "white"),
       panel.grid.major = element_line(colour = "white"),
       panel.grid.minor = element_line(colour = "white"),
-      plot.title = element_text(hjust = 0.5, vjust = -1, size = 10, colour = "black"),
+      plot.title = element_text(hjust = 0.5, vjust = -1, size = 10, colour = "#444444"),
       plot.margin = unit(c(0.5,0,0,0), "cm"),
       axis.title.x = element_blank(),
       axis.title.y = element_blank(),
@@ -351,7 +351,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
         panel.background = element_rect(fill = 'white', colour = "white"),
         panel.grid.major = element_line(colour = "white"),
         panel.grid.minor = element_line(colour = "white"),
-        plot.title = element_text(hjust = 0.5, size = 10, colour = "black"),
+        plot.title = element_text(hjust = 0.5, size = 10, colour = "#444444"),
         plot.margin = unit(c(0.5, 0, 0, 0.45), "cm"),
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
@@ -383,7 +383,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   legend.plot <- get.legend(plot.legend.clust)
 
   # combine all plots
-  main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2))
+  main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2, col = "#444444"))
   #dev.new(height = 7, width = 7)
   res[[6]] <- list(data.segments, data.labels, dendrogram, res.test, coord.legend.dendro, coord.test.height, coord.test.noLC, coord.legend.test.height, coord.legend.test.noLC)
   names(res[[6]]) <- c("data.segments", "data.labels", "dendrogram", "res.test", "coord.legend.dendro", "coord.test.height", "coord.test.noLC", "coord.legend.test.height", "coord.legend.test.noLC")
@@ -505,7 +505,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
       axis.ticks = element_line(colour = "#444444"),
       axis.title = element_text(colour = "#444444"),
       legend.position = "none")
-  main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12,font = 2))
+  main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12, font = 2, col = "#444444"))
   #dev.new(height = 5, width = 9)
   if (graph == TRUE) {
     grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
