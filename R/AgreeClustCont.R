@@ -257,6 +257,8 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     scale_colour_manual(values = palette.col[1 : nlevels(data.labels$Cluster)]) +
     theme(
       legend.key = element_rect(colour = "white", fill = "white"),
+      legend.title = element_text(colour = "#444444"),
+      legend.text = element_text(colour = "#444444"),
       panel.background = element_rect(fill = 'white', colour = "white"),
       panel.grid.major = element_line(colour = "white"),
       panel.grid.minor = element_line(colour = "white"),
@@ -326,6 +328,8 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     geom_text(data = coord.legend.test.noLC, aes(x = x, y = y - 0.1), label = text.legend.test.noLC, hjust = 0, colour = "#444444", size = 2) +
     theme(
       legend.key = element_rect(colour = "white", fill = "white"),
+      legend.title = element_text(colour = "#444444"),
+      legend.text = element_text(colour = "#444444"),
       panel.background = element_rect(fill = 'white', colour = "white"),
       panel.grid.major = element_line(colour = "white"),
       panel.grid.minor = element_line(colour = "white"),
@@ -348,6 +352,8 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
       ggtitle("After consolidation") +
       theme(
         legend.key = element_rect(colour = "white",fill = "white"),
+        legend.title = element_text(colour = "#444444"),
+        legend.text = element_text(colour = "#444444"),
         panel.background = element_rect(fill = 'white', colour = "white"),
         panel.grid.major = element_line(colour = "white"),
         panel.grid.minor = element_line(colour = "white"),
@@ -369,8 +375,8 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     theme(
       plot.margin = unit(c(0,0,0,0), "cm"),
       legend.position = "bottom",
-      legend.title = element_text(size=8),
-      legend.text = element_text(size=8),
+      legend.title = element_text(size=8, colour = "#444444"),
+      legend.text = element_text(size=8, colour = "#444444"),
       legend.margin = margin(t=0, unit='cm'),
       legend.key = element_rect(size=4),
       legend.key.size = unit(0.4, "cm"))

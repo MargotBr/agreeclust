@@ -47,6 +47,8 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       ylim(-1, (max(res[[6]]$data.segments$y) + (0.2 * max(res[[6]]$dendrogram$height) / 10))) +
       theme(
         legend.key = element_rect(colour = "white", fill = "white"),
+        legend.title = element_text(colour = "#444444"),
+        legend.text = element_text(colour = "#444444"),
         panel.background = element_rect(fill = 'white', colour = "white"),
         panel.grid.major = element_line(colour = "white"),
         panel.grid.minor = element_line(colour = "white"),
@@ -92,6 +94,8 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       geom_text(data = res[[6]]$coord.legend.test.noLC, aes(x = x, y = y - 0.1), label = text.legend.test.noLC, hjust = 0, colour = "#444444", size = 2) +
       theme(
         legend.key = element_rect(colour = "white", fill = "white"),
+        legend.title = element_text(colour = "#444444"),
+        legend.text = element_text(colour = "#444444"),
         panel.background = element_rect(fill = 'white', colour = "white"),
         panel.grid.major = element_line(colour = "white"),
         panel.grid.minor = element_line(colour = "white"),
@@ -109,6 +113,8 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         ggtitle("After consolidation") +
         theme(
           legend.key = element_rect(colour = "white",fill = "white"),
+          legend.title = element_text(colour = "#444444"),
+          legend.text = element_text(colour = "#444444"),
           panel.background = element_rect(fill = 'white', colour = "white"),
           panel.grid.major = element_line(colour = "white"),
           panel.grid.minor = element_line(colour = "white"),
@@ -134,8 +140,8 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       theme(
         plot.margin = unit(c(0,0,0,0), "cm"),
         legend.position = "bottom",
-        legend.title = element_text(size=8),
-        legend.text = element_text(size=8),
+        legend.title = element_text(size=8, colour = "#444444"),
+        legend.text = element_text(size=8, colour = "#444444"),
         legend.margin = margin(t=0, unit='cm'),
         legend.key = element_rect(size=4),
         legend.key.size = unit(0.4, "cm"))
