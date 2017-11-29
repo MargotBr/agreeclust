@@ -70,13 +70,13 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         ggtitle("Before consolidation")
     }
     plot.dendro <- plot.dendro +
-      geom_hline(data = res[[6]]$res.test, aes(yintercept = y), colour = "grey", linetype = 2) +
-      geom_text(data = res[[6]]$res.test, aes(x = 1, y = (y + (0.2 * max(res[[6]]$dendrogram$height) / 10))), label = res[[6]]$res.test[,"pval"], colour = "grey", size = 2.5)
+      geom_hline(data = res[[6]]$res.test, aes(yintercept = y), colour = "#444444", linetype = 2) +
+      geom_text(data = res[[6]]$res.test, aes(x = 1, y = (y + (0.2 * max(res[[6]]$dendrogram$height) / 10))), label = res[[6]]$res.test[,"pval"], colour = "#444444", size = 2.5)
     if (!is.null(res[[6]]$res.test.noLC)) {
       plot.dendro <- plot.dendro +
         ylim(-1, (max(res[[6]]$data.segments$y) + (0.3 * max(res[[6]]$dendrogram$height) / 10))) +
-        geom_point(data = res[[6]]$res.test.noLC, aes(x = x, y = y), colour = "grey", size = 3, shape = 18) +
-        geom_text(data = res[[6]]$res.test.noLC, aes(x = x, y = (y + (0.3 * max(res[[6]]$dendrogram$height) / 10))), label = res[[6]]$res.test.noLC[, "pval"], colour = "grey", size = 2.5) +
+        geom_point(data = res[[6]]$res.test.noLC, aes(x = x, y = y), colour = "#444444", size = 3, shape = 18) +
+        geom_text(data = res[[6]]$res.test.noLC, aes(x = x, y = (y + (0.3 * max(res[[6]]$dendrogram$height) / 10))), label = res[[6]]$res.test.noLC[, "pval"], colour = "#444444", size = 2.5) +
         guides(colour = guide_legend(override.aes = list(size=2.5)))
     }
     text.legend.test.height <- "p-value associated to the test of H0: this K-latent class structure is not significant (w.r.t. the (K-1)-latent class structure)"
@@ -84,12 +84,12 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
     plot.legend.dendro <- ggplot(NULL) +
       coord_fixed() +
       geom_point(data = res[[6]]$coord.legend.dendro, aes(x = x, y = y), colour = "white", size = 2, shape = 18) +
-      geom_segment(data = res[[6]]$coord.test.height, aes(x = x, xend = xend, y = y, yend = yend), colour = "grey", linetype = 2) +
-      geom_text(data = res[[6]]$coord.test.height, aes(x = x, y = (y + 0.2)), label = "p-value", colour = "grey", hjust = 0, size = 2) +
-      geom_point(data = res[[6]]$coord.test.noLC, aes(x = x, y = y), colour = "grey", size = 2, shape = 18) +
-      geom_text(data = res[[6]]$coord.test.noLC, aes(x = x, y = (y - 0.2)), label = "p-value", colour = "grey", size = 2) +
-      geom_text(data = res[[6]]$coord.legend.test.height, aes(x = x, y = y + 0.1), label = text.legend.test.height, hjust = 0, colour = "grey", size = 2) +
-      geom_text(data = res[[6]]$coord.legend.test.noLC, aes(x = x, y = y - 0.1), label = text.legend.test.noLC, hjust = 0, colour = "grey", size = 2) +
+      geom_segment(data = res[[6]]$coord.test.height, aes(x = x, xend = xend, y = y, yend = yend), colour = "#444444", linetype = 2) +
+      geom_text(data = res[[6]]$coord.test.height, aes(x = x, y = (y + 0.2)), label = "p-value", colour = "#444444", hjust = 0, size = 2) +
+      geom_point(data = res[[6]]$coord.test.noLC, aes(x = x, y = y), colour = "#444444", size = 2, shape = 18) +
+      geom_text(data = res[[6]]$coord.test.noLC, aes(x = x, y = (y - 0.2)), label = "p-value", colour = "#444444", size = 2) +
+      geom_text(data = res[[6]]$coord.legend.test.height, aes(x = x, y = y + 0.1), label = text.legend.test.height, hjust = 0, colour = "#444444", size = 2) +
+      geom_text(data = res[[6]]$coord.legend.test.noLC, aes(x = x, y = y - 0.1), label = text.legend.test.noLC, hjust = 0, colour = "#444444", size = 2) +
       theme(
         legend.key = element_rect(colour = "white", fill = "white"),
         panel.background = element_rect(fill = 'white', colour = "white"),
@@ -198,17 +198,18 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       geom_hline(yintercept = 0, linetype = 2, color = "black", size = 0.2) +
       geom_vline(xintercept = 0, linetype = 2, color = "black", size = 0.2) +
       geom_point(data = coord.raters, aes(x = AxeA, y = AxeB, color = Cluster)) +
-      geom_text_repel(data = coord.raters, aes(x = AxeA, y = AxeB, label = rownames(coord.raters), color = Cluster), segment.color = "grey", segment.size = 0.3, size = 2.3) +
+      geom_text_repel(data = coord.raters, aes(x = AxeA, y = AxeB, label = rownames(coord.raters), color = Cluster), segment.color = "#444444", segment.size = 0.3, size = 2.3) +
       geom_point(data = coord.raters, aes(x = AxeA, y = AxeB, color = Cluster)) +
       ggtitle("Representation of the raters") +
       theme(
-        plot.title = element_text(hjust = 0.5, size = 12, colour = "black"),
+        plot.title = element_text(hjust = 0.5, size = 12, colour = "#444444"),
         plot.margin = unit(c(1, 0.5, 0.5, 0.5), "cm"),
-        panel.background = element_rect(fill = 'white', colour = "black"),
+        panel.background = element_rect(fill = 'white', colour = "#444444"),
         panel.grid.major = element_line(colour = "white"),
         panel.grid.minor = element_line(colour = "white"),
-        axis.text = element_text(colour = "black"),
-        axis.title = element_text(colour = "black"),
+        axis.text = element_text(colour = "#444444"),
+        axis.ticks = element_line(colour = "#444444"),
+        axis.title = element_text(colour = "#444444"),
         legend.position = "none")
     if (!is.null(col.clust)) {
       plot.ind.pca <- plot.ind.pca +
@@ -245,13 +246,14 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       geom_text_repel(data = coord.stimuli, aes(x = AxeA, y = AxeB, label = rownames(coord.stimuli)), segment.color = "transparent", segment.size = 0.3, size = 2.3) +
       ggtitle("Representation of the stimuli") +
       theme(
-        plot.title = element_text(hjust = 0.5, size = 12, colour = "black"),
+        plot.title = element_text(hjust = 0.5, size = 12, colour = "#444444"),
         plot.margin = unit(c(1, 0.5, 0.5, 0.5), "cm"),
-        panel.background = element_rect(fill = 'white', colour = "black"),
+        panel.background = element_rect(fill = 'white', colour = "#444444"),
         panel.grid.major = element_line(colour = "white"),
         panel.grid.minor = element_line(colour = "white"),
-        axis.text = element_text(colour = "black"),
-        axis.title = element_text(colour = "black"),
+        axis.text = element_text(colour = "#444444"),
+        axis.ticks = element_line(colour = "#444444"),
+        axis.title = element_text(colour = "#444444"),
         legend.position = "none")
     plot.legend.clust <- ggplot(NULL) +
       geom_label(data = res[[6]]$data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, fill = Cluster), colour = "transparent") +
