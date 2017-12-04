@@ -4,7 +4,7 @@
 \title{Graphical representation of the structure of disagreement among the panel of raters}
 \description{Draws the graphs representing the structure of disagreement among the set of ratings. Tunning parameters such as the color of the clusters or the axis of PCA to be plotted can be specified.}
 \usage{
-plot.AgreeClust(res, choice = "all", col.clust = NULL, axis = c(1, 2))
+plot.AgreeClust(res, choice = "all", col.clust = NULL, axis = c(1, 2), new.dev = TRUE, name.rater = "rater")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,6 +18,8 @@ A vector with as many color as clusters of raters. Colors can be specified by a 
 A length 2 numeric vector specifying the PCA components to be plotted. By default, the first 2 components are plotted.}
  \item{new.dev}{
 A boolean indicating if a new device window should be opened for each plot. By default, this is the case.}
+ \item{name.rater}{
+A character element indicating how the raters should be named (e.g. "rater", "participant", "psychologists")}
 }
 \value{
 Returns the graphical representations.
