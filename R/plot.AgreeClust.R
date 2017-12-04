@@ -1,4 +1,4 @@
-plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2), new.dev = TRUE) {
+plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2), new.dev = TRUE, name.rater = "rater") {
 
   options(warn = -1)
 
@@ -152,8 +152,12 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       plot.legend.clust <- plot.legend.clust +
         scale_fill_manual(values = palette.col[1 : nlevels(res[[6]]$data.labels$Cluster)])
     }
+    simpleCap <- function(x) {
+      s <- strsplit(x, " ")[[1]]
+      paste(toupper(substring(s, 1,1)), substring(s, 2), sep="", collapse=" ")
+    }
     legend.plot <- get.legend(plot.legend.clust)
-    main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2, col = "#444444"))
+    main.title <- textGrob(paste(paste0(simpleCap(name.rater), "s"), "clustering"), gp = gpar(fontsize = 12, font = 2, col = "#444444"))
     if (is.null(res[[6]]$data.labels.partitioning)) {
       grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
                                plot.legend.dendro + theme(legend.position = "none"),
@@ -206,7 +210,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       geom_point(data = coord.raters, aes(x = AxeA, y = AxeB, color = Cluster)) +
       geom_text_repel(data = coord.raters, aes(x = AxeA, y = AxeB, label = rownames(coord.raters), color = Cluster), segment.color = "#444444", segment.size = 0.3, size = 2.3) +
       geom_point(data = coord.raters, aes(x = AxeA, y = AxeB, color = Cluster)) +
-      ggtitle("Representation of the raters") +
+      ggtitle(paste("Representation of the", paste0(name.rater, "s"))) +
       theme(
         plot.title = element_text(hjust = 0.5, size = 12, colour = "#444444"),
         plot.margin = unit(c(1, 0.5, 0.5, 0.5), "cm"),
@@ -279,7 +283,7 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
         scale_fill_manual(values = palette.col[1 : nlevels(coord.raters$Cluster)])
     }
     legend.plot <- get.legend(plot.legend.clust)
-    main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12, font = 2, col = "#444444"))
+    main.title <- textGrob(paste("Multidimensional representation of the structure \n of disagreement among the panel of", paste0(name.rater, "s")), gp = gpar(fontsize = 12, font = 2, col = "#444444"))
     grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
                            plot.var.pca + theme(legend.position="none"),
                            ncol = 2, nrow = 1),
