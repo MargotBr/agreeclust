@@ -237,7 +237,7 @@ plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#42B983", "#F36170"))
 The clusters can be colored according to new colors in this plot. To do so, the following code is used:
 
 ```{r fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
-plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#FF8379", "#009193"))
+plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#FF8379", "#009193"), new.dev = FALSE)
 ```
 
 The results of the clustering process ($p-$values associated to the test of the significance of each $K-$ clusters structure, number of clusters of raters found, and the final partition of raters) can be accessed with this code:
@@ -253,7 +253,7 @@ The second graph created by the function shows the multidimensional representati
 In the present example, cluster 1 is characterized by '1' ratings for stimuli *Stim5*, *Stim6*, *Stim7*, and *Stim8*; and by '0' ratings for stimuli *Stim1*, *Stim2*, *Stim3*, and *Stim4*. On the contrary, cluster 2 is characterized by '0' ratings for stimuli *Stim5*, *Stim6*, *Stim7*, and *Stim8*; and by '1' ratings for stimuli *Stim1*, *Stim2*, *Stim3*, and *Stim4*.
 
 ```{r echo=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
-plot.AgreeClust(res.pedag, choice = "mul", col.clust = c("#42B983", "#F36170"))
+plot.AgreeClust(res.pedag, choice = "mul", col.clust = c("#42B983", "#F36170"), new.dev = FALSE)
 ```
 
 In the present example, the percentage of variability explained by the first factorial plane is $67.12\%+16.87\%=83.99\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. Howerver, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `FactoMineR` package (cf. help page of this function if needed). These results can be accessed with this code:
@@ -273,11 +273,11 @@ barplot(res.pedag$res.pca$eig[, 1], main = "Eigenvalues", names.arg = paste0("Di
 This graph allows to detect the number of dimensions interesting for the interpretation of the structure of disagreement. The user can then plot the graph for the other interesting dimensions, let's say the third and the fourth dimensions (even if in our case, they should not be interpreted):
 
 ```{r eval=FALSE}
-plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4))
+plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), new.dev = FALSE)
 ```
 
 ```{r echo=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
-plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B983", "#F36170"))
+plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B983", "#F36170"), new.dev = FALSE)
 ```
 
 Finally, the function provides an automatic description of the clusters of raters. This description can be accessed with this code: 
@@ -374,13 +374,13 @@ round(res.pedag$mat.disag, 1)
 The first graph created by the function shows the clustering process applied to this disagreement matrix. The dendrogram representing the structure of disagreement is presented at the top of the graph. The $p-$values associated to the different levels of its hierarchy show that two clusters of raters exist among the panel, as the $3-$ latent class model is not significant w.r.t the $2-$ latent class model. The consolidation step, whose the result is presented at the bottom of the graph, did not modify the partition of clusters. Finally, we can say that this panel is composed of two disagreed clusters: the first ten raters (cluster 1) against the last ten raters (cluster 2).
 
 ```{r echo=FALSE, fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
-plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#42B983", "#F36170"))
+plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#42B983", "#F36170"), new.dev = FALSE)
 ```
 
 The clusters can be colored according to new colors in this plot. To do so, the following code is used:
 
 ```{r fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
-plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#FF8379", "#009193"))
+plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#FF8379", "#009193"), new.dev = FALSE)
 ```
 
 The results of the clustering process ($p-$values associated to the test of the significance of each $K-$ clusters structure, number of clusters of raters found, and the final partition of raters) can be accessed with this code:
@@ -396,7 +396,7 @@ The second graph created by the function shows the multidimensional representati
 In the present example, cluster 1 is characterized by high ratings for stimuli *Stim5*, *Stim6*, *Stim7*, and *Stim8*; and by low ratings for stimuli *Stim1*, *Stim2*, *Stim3*, and *Stim4*. On the contrary, cluster 2 is characterized by low ratings for stimuli *Stim5*, *Stim6*, *Stim7*, and *Stim8*; and by high ratings for stimuli *Stim1*, *Stim2*, *Stim3*, and *Stim4*.
 
 ```{r echo=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
-plot.AgreeClust(res.pedag, choice = "mul", col.clust = c("#42B983", "#F36170"))
+plot.AgreeClust(res.pedag, choice = "mul", col.clust = c("#42B983", "#F36170"), new.dev = FALSE)
 ```
 
 In the present example, the percentage of variability explained by the first factorial plane is $65.43\%+16.59\%=82.02\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. Howerver, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `FactoMineR` package (cf. help page of this function if needed). These results can be accessed with this code:
@@ -416,11 +416,11 @@ barplot(res.pedag$res.pca$eig[, 1], main = "Eigenvalues", names.arg = paste0("Di
 This graph allows to detect the number of dimensions interesting for the interpretation of the structure of disagreement. The user can then plot the graph for the other interesting dimensions, let's say the third and the fourth dimensions (even if in our case, they should not be interpreted):
 
 ```{r eval=FALSE}
-plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4))
+plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), new.dev = FALSE)
 ```
 
 ```{r echo=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
-plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B983", "#F36170"))
+plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B983", "#F36170"), new.dev = FALSE)
 ```
 
 Finally, the function provides an automatic description of the clusters of raters. This description can be accessed with this code: 
