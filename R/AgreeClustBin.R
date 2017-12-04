@@ -1,4 +1,4 @@
-AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral.null = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE) {
+AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral.null = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE, ext.dev.Rstudio = FALSE) {
 
   options(warn = -1)
 
@@ -386,11 +386,21 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
     legend <- tmp$grobs[[leg]]
     return(legend)
   }
+  if ((Sys.getenv("RSTUDIO") == "1") == FALSE) {
+    empty.dev <- (dev.cur() == 1)
+  }
   legend.plot <- get.legend(plot.legend.clust)
+  if ((Sys.getenv("RSTUDIO") == "1") == FALSE) {
+    if (empty.dev == TRUE) {
+      dev.off()
+    }
+  }
 
   # combine all plots
   main.title <- textGrob("Raters clustering", gp = gpar(fontsize = 12, font = 2, col = "#444444"))
-  #dev.new(height = 7, width = 7)
+  if ((Sys.getenv("RSTUDIO") == "1") == FALSE | ext.dev.Rstudio == TRUE) {
+    dev.new(noRStudioGD = TRUE)
+  }
   res[[6]] <- list(data.segments, data.labels, dendrogram, res.test, coord.legend.dendro, coord.test.height, coord.test.noLC, coord.legend.test.height, coord.legend.test.noLC)
   names(res[[6]]) <- c("data.segments", "data.labels", "dendrogram", "res.test", "coord.legend.dendro", "coord.test.height", "coord.test.noLC", "coord.legend.test.height", "coord.legend.test.noLC")
   if (nb.found == 1) {
@@ -512,8 +522,10 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
       axis.title = element_text(colour = "#444444"),
       legend.position = "none")
   main.title <- textGrob("Multidimensional representation of the structure \n of disagreement among the panel of raters", gp = gpar(fontsize = 12, font = 2, col = "#444444"))
-  #dev.new(height = 5, width = 9)
   if (graph == TRUE) {
+    if ((Sys.getenv("RSTUDIO") == "1") == FALSE | ext.dev.Rstudio == TRUE) {
+      dev.new(noRStudioGD = TRUE)
+    }
     grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
                            plot.var.pca + theme(legend.position="none"),
                            ncol = 2, nrow = 1),

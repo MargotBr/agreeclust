@@ -1,4 +1,4 @@
-plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2), new.dev = TRUE, name.rater = "rater") {
+plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2), name.rater = "rater", ext.dev.Rstudio = FALSE) {
 
   options(warn = -1)
 
@@ -37,10 +37,6 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
 
   # plot the segmentation
   if (choice == "all" | choice == "seg") {
-    if (new.dev == TRUE) {
-      dev.new()
-      dev.new()
-    }
     plot.dendro <- ggplot(NULL) +
       geom_segment(data = res[[6]]$data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "#444444") +
       geom_text(data = res[[6]]$data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, colour = Cluster), size = 2.1) +
@@ -156,8 +152,15 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       s <- strsplit(x, " ")[[1]]
       paste(toupper(substring(s, 1,1)), substring(s, 2), sep="", collapse=" ")
     }
+    empty.dev <- (dev.cur() == 1)
     legend.plot <- get.legend(plot.legend.clust)
+    if (empty.dev == TRUE) {
+        dev.off()
+    }
     main.title <- textGrob(paste(paste0(simpleCap(name.rater), "s"), "clustering"), gp = gpar(fontsize = 12, font = 2, col = "#444444"))
+    if ((Sys.getenv("RSTUDIO") == "1") == FALSE | ext.dev.Rstudio == TRUE) {
+      dev.new(noRStudioGD = TRUE)
+    }
     if (is.null(res[[6]]$data.labels.partitioning)) {
       grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
                                plot.legend.dendro + theme(legend.position = "none"),
@@ -174,9 +177,6 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
 
   # plot the multidimensional representation of disagreement
   if (choice == "all" | choice == "mul") {
-    if (new.dev == TRUE) {
-      dev.new()
-    }
     res.pca <- res[[7]]
     coord.raters <- res.pca$ind$coord[, axis]
     mat.coord.raters <- cbind.data.frame(rownames(coord.raters), coord.raters)
@@ -282,8 +282,15 @@ plot.AgreeClust <- function(res, choice = "all", col.clust = NULL, axis = c(1, 2
       plot.legend.clust <- plot.legend.clust +
         scale_fill_manual(values = palette.col[1 : nlevels(coord.raters$Cluster)])
     }
+    empty.dev <- (dev.cur() == 1)
     legend.plot <- get.legend(plot.legend.clust)
+    if (empty.dev == TRUE) {
+        dev.off()
+    }
     main.title <- textGrob(paste("Multidimensional representation of the structure \n of disagreement among the panel of", paste0(name.rater, "s")), gp = gpar(fontsize = 12, font = 2, col = "#444444"))
+    if ((Sys.getenv("RSTUDIO") == "1") == FALSE | ext.dev.Rstudio == TRUE) {
+      dev.new(noRStudioGD = TRUE)
+    }
     grid.arrange(arrangeGrob(plot.ind.pca + theme(legend.position="none"),
                            plot.var.pca + theme(legend.position="none"),
                            ncol = 2, nrow = 1),

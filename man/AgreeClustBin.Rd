@@ -4,7 +4,7 @@
 \title{Agreement-based unsupervised clustering of binary ratings}
 \description{Performs an agreement-based clustering of binary ratings to obtain a segmentation of the panel of raters. The method is able to manage covariates providing informations about the raters and the stimuli (i.e. objects assessed) to facilitate the interpretation of the clusters of raters.}
 \usage{
-AgreeClustBin(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE)
+AgreeClustBin(dta, model = "Rating ~ Rater + Stimulus", max.clust = 10, approx.null = TRUE, paral = TRUE, consol = TRUE, id.info.rater = NULL, type.info.rater = NULL, id.info.stim = NULL, type.info.stim = NULL, graph = TRUE, ext.dev.Rstudio = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,6 +30,8 @@ A vector of integer elements composed of the identification of the columns conta
 A vector of character elements composed of the type of the covariates about the stimuli. This vector must be of the same length that id.info.stim. A continuous covariate is associated to 'cont' and a categorical covariate is associated to 'cat'. This argument is optional and, by default, it is fixed to NULL, meaning that dta does not contain supplementary information about the stimuli.}
   \item{graph}{
 A boolean specifying if the graphical outputs should be plotted or not. By default, they are plotted.}
+  \item{ext.dev.Rstudio}{
+A boolean specifying if the graphical outputs should be plotted in the Rstudio plot pane or not.}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
