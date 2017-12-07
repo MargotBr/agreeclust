@@ -12,7 +12,7 @@ library(AgreeClust)
 
 # <span style="color: #EA485C">Using AgreeClust</span>
 
-To get an overview of the functionalities of the packages, read the corresponding vignette:
+To get an overview of the functionalities of the package, read the corresponding vignette:
 
   ```{r eval=FALSE}
 vignette("AgreeClust")
