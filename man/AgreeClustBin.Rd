@@ -67,8 +67,8 @@ res.pedag <- AgreeClustBin(dta = pedagdataBin, model = "Rating ~ Rater + Stimulu
 res.pedag
 
 # 'Good gesture' data set
-data(ggdata)
-res.gg <- AgreeClustBin(dta = ggdata, model = "Rating ~ Rater + Stimulus", id.info.rater = 40 : nrow(ggdata), type.info.rater = rep("cat", 4), id.info.stim = 73 : ncol(ggdata), type.info.stim = c(rep("cat", 3), rep("cont", 11)))
+data(goodgesture)
+res.gg <- AgreeClustBin(dta = goodgesture, model = "Rating ~ Rater + Stimulus", id.info.rater = 40 : nrow(goodgesture), type.info.rater = rep("cat", 4), id.info.stim = 73 : ncol(goodgesture), type.info.stim = c(rep("cat", 3), rep("cont", 11)))
 res.gg
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

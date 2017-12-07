@@ -32,8 +32,18 @@ devtools::install_github("MargotBr/AgreeClust", build_vignettes = TRUE)
 library(AgreeClust)
 ```
 
-```{r echo=FALSE}
+```{r eval=FALSE}
 library(AgreeClust)
+```
+
+```{r}
+load("/Users/lma/ownCloud/R/AgreeClust/data/pedagdataBin.rda")
+load("/Users/lma/ownCloud/R/AgreeClust/data/pedagdataCont.rda")
+source("/Users/lma/ownCloud/R/AgreeClust/R/AgreeClustBin.R")
+source("/Users/lma/ownCloud/R/AgreeClust/R/AgreeClustCont.R")
+source("/Users/lma/ownCloud/R/AgreeClust/R/GlmSum.R")
+source("/Users/lma/ownCloud/R/AgreeClust/R/plot.AgreeClust.R")
+source("/Users/lma/ownCloud/R/AgreeClust/R/print.AgreeClust.R")
 ```
 
 # Using the proper format of data
@@ -204,7 +214,7 @@ Finally, the code to perform the clustering is:
 res.pedag <- AgreeClustBin(dta = pedagdataBin, id.info.rater = 9 : nrow(pedagdataBin), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataBin), type.info.stim = c(rep("cont", 4), "cat"))
 ```
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE}
 res.pedag <- AgreeClustBin(dta = pedagdataBin, id.info.rater = 9 : nrow(pedagdataBin), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataBin), type.info.stim = c(rep("cont", 4), "cat"), graph = FALSE)
 ```
 
@@ -265,7 +275,7 @@ res.pedag$res.pca
 We can draw a bar plot with the eigenvalues of PCA with the following code:
 
 <center>
-```{r fig.width=6, dpi=400}
+```{r fig.width=6, fig.height=3, dpi=400}
 barplot(res.pedag$res.pca$eig[, 1], main = "Eigenvalues", names.arg = paste0("Dim", 1 : nrow(res.pedag$res.pca$eig)))
 ```
 </center>
@@ -278,6 +288,16 @@ plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4))
 
 ```{r echo=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
 plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B983", "#F36170"))
+```
+
+The `plot.AgreeClust` allows to plot the multidimensional representation of the structure of disagreement in an interative way. By moving the cursor on a point, several pieces of information are printed:
+
+```{r eval=FALSE, fig.width=8, dpi=400, fig.height=6, message=FALSE, results=FALSE}
+plot.AgreeClust(res.pedag, choice = "mul", interact = TRUE)
+```
+
+```{r echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+plot.AgreeClust(res.pedag, choice = "mul", interact = TRUE, col.clust = c("#42B983", "#F36170"), vignette = TRUE)
 ```
 
 Finally, the function provides an automatic description of the clusters of raters. This description can be accessed with this code: 
@@ -347,7 +367,7 @@ Finally, the code to perform the clustering is:
 res.pedag <- AgreeClustCont(dta = pedagdataCont, id.info.rater = 9 : nrow(pedagdataCont), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataCont), type.info.stim = c(rep("cont", 4), "cat"))
 ```
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE}
 res.pedag <- AgreeClustCont(dta = pedagdataCont, id.info.rater = 9 : nrow(pedagdataCont), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataCont), type.info.stim = c(rep("cont", 4), "cat"), graph = FALSE)
 ```
 
@@ -408,7 +428,7 @@ res.pedag$res.pca
 We can draw a bar plot with the eigenvalues of PCA with the following code:
 
 <center>
-```{r fig.width=6, dpi=400}
+```{r fig.width=6, fig.height=3, dpi=400}
 barplot(res.pedag$res.pca$eig[, 1], main = "Eigenvalues", names.arg = paste0("Dim", 1 : nrow(res.pedag$res.pca$eig)))
 ```
 </center>
@@ -421,6 +441,16 @@ plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4))
 
 ```{r echo=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
 plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B983", "#F36170"))
+```
+
+The `plot.AgreeClust` allows to plot the multidimensional representation of the structure of disagreement in an interative way. By moving the cursor on a point, several pieces of information are printed:
+
+```{r eval=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
+plot.AgreeClust(res.pedag, choice = "mul", interact = TRUE)
+```
+
+```{r echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+plot.AgreeClust(res.pedag, choice = "mul", interact = TRUE, col.clust = c("#42B983", "#F36170"), vignette = TRUE)
 ```
 
 Finally, the function provides an automatic description of the clusters of raters. This description can be accessed with this code: 

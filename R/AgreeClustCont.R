@@ -33,6 +33,10 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   # create a res object to save the results
   res <- list()
 
+  # return the important arguments
+  res[[1]] <- list(dta.sauv, id.info.rater, type.info.rater, id.info.stim, type.info.stim)
+  names(res[[1]]) <- c("dta", "id.info.rater", "type.info.rater", "id.info.stim", "type.info.stim")
+
   # create the melted data set
   melted.data <- melt(as.matrix(dta))
   melted.data <- melted.data[, c(2,1,3)]
@@ -50,8 +54,8 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   mat.resids <- t(as.data.frame(mat.resids))
   disagmat <- dist(mat.resids, method = "euclidean")
   disagmat <- as.dist(disagmat)
-  res[[1]] <- mat.resids
-  res[[2]] <- as.matrix(disagmat)
+  res[[2]] <- mat.resids
+  res[[3]] <- as.matrix(disagmat)
 
   # construct the dendrogram
   dendrogram <- stats::hclust(disagmat, method = "ward.D2")
@@ -219,8 +223,8 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   partition.noconsol <- cutree(dendrogram, k = nb.found)
   mat.partition.noconsol <- cbind.data.frame(partition.noconsol, names(partition.noconsol))
   colnames(mat.partition.noconsol) <- c("Cluster", "Rater")
-  res[[3]] <- pval
-  res[[4]] <- nb.found
+  res[[4]] <- pval
+  res[[5]] <- nb.found
 
   # test the goodness of fit of the no-latent class model if nb.found = 1
   if (nb.found == 1) {
@@ -237,9 +241,9 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     partition.consol <- res.consol$cluster
     mat.partition.consol <- cbind.data.frame(partition.consol, names(partition.consol))
     colnames(mat.partition.consol) <- c("Cluster", "Rater")
-    res[[5]] <- partition.consol
+    res[[6]] <- partition.consol
   } else {
-    res[[5]] <- partition.noconsol
+    res[[6]] <- partition.noconsol
   }
 
   # plot the basic dendrogram
@@ -401,18 +405,18 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   if ((Sys.getenv("RSTUDIO") == "1") == FALSE | ext.dev.Rstudio == TRUE) {
     dev.new(noRStudioGD = TRUE)
   }
-  res[[6]] <- list(data.segments, data.labels, dendrogram, res.test, coord.legend.dendro, coord.test.height, coord.test.noLC, coord.legend.test.height, coord.legend.test.noLC)
-  names(res[[6]]) <- c("data.segments", "data.labels", "dendrogram", "res.test", "coord.legend.dendro", "coord.test.height", "coord.test.noLC", "coord.legend.test.height", "coord.legend.test.noLC")
+  res[[7]] <- list(data.segments, data.labels, dendrogram, res.test, coord.legend.dendro, coord.test.height, coord.test.noLC, coord.legend.test.height, coord.legend.test.noLC)
+  names(res[[7]]) <- c("data.segments", "data.labels", "dendrogram", "res.test", "coord.legend.dendro", "coord.test.height", "coord.test.noLC", "coord.legend.test.height", "coord.legend.test.noLC")
   if (nb.found == 1) {
-    res[[6]][[length(res[[6]]) + 1]] <- res.test.noLC
-    names(res[[6]])[length(res[[6]])] <- "res.test.noLC"
+    res[[7]][[length(res[[7]]) + 1]] <- res.test.noLC
+    names(res[[7]])[length(res[[7]])] <- "res.test.noLC"
   } else {
-    res[[6]][length(res[[6]]) + 1] <- list(NULL)
-    names(res[[6]])[length(res[[6]])] <- "res.test.noLC"
+    res[[7]][length(res[[7]]) + 1] <- list(NULL)
+    names(res[[7]])[length(res[[7]])] <- "res.test.noLC"
   }
   if (consol == FALSE) {
-    res[[6]][length(res[[6]]) + 1] <- list(NULL)
-    names(res[[6]])[length(res[[6]])] <- "data.labels.partitioning"
+    res[[7]][length(res[[7]]) + 1] <- list(NULL)
+    names(res[[7]])[length(res[[7]])] <- "data.labels.partitioning"
     if (graph == TRUE) {
       grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
                                plot.legend.dendro + theme(legend.position = "none"),
@@ -420,8 +424,8 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
                    legend.plot, nrow = 2, top = main.title, heights = c(8, 1))
     }
   } else if (consol == TRUE) {
-    res[[6]][[length(res[[6]]) + 1]] <- data.labels.partitioning
-    names(res[[6]])[length(res[[6]])] <- "data.labels.partitioning"
+    res[[7]][[length(res[[7]]) + 1]] <- data.labels.partitioning
+    names(res[[7]])[length(res[[7]])] <- "data.labels.partitioning"
     if (graph == TRUE) {
       grid.arrange(arrangeGrob(plot.dendro + theme(legend.position = "none"),
                                plot.legend.dendro + theme(legend.position = "none"),
@@ -438,7 +442,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     mat.partition <- mat.partition.noconsol
   }
   res.pca <- PCA(mat.resids, scale.unit = FALSE, ncp = Inf, graph = FALSE)
-  res[[7]] <- res.pca
+  res[[8]] <- res.pca
   axis = c(1, 2)
   coord.raters <- res.pca$ind$coord[, axis]
   mat.coord.raters <- cbind.data.frame(rownames(coord.raters), coord.raters)
@@ -534,7 +538,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
 
   # interpret the clusters
   if (nb.found > 1) {
-    res[[8]] <- list()
+    res[[9]] <- list()
     mat.partition$Cluster <- as.factor(mat.partition$Cluster)
     # supplement the interpretation of the clusters with information about the raters
     charact.cluster.rater <- function (i) {
@@ -703,22 +707,22 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
     }
     # combine the results
     for (i in 1 : nlevels(mat.partition$Cluster)) {
-      res[[8]][[i]] <- list.charact.cluster.rater[[i]]
+      res[[9]][[i]] <- list.charact.cluster.rater[[i]]
       if (!is.null(id.info.stim)) {
-        res[[8]][[i]][[length(res[[8]][[i]]) + 1]] <- list.charact.cluster.stim[[i]]
-        if (length(list.charact.cluster.stim[[i]]) == 1 & is.null(res[[8]][[i]]$info.stim[[1]])) {
-          res[[8]][[i]][length(res[[8]][[i]])] <- list(NULL)
+        res[[9]][[i]][[length(res[[9]][[i]]) + 1]] <- list.charact.cluster.stim[[i]]
+        if (length(list.charact.cluster.stim[[i]]) == 1 & is.null(res[[9]][[i]]$info.stim[[1]])) {
+          res[[9]][[i]][length(res[[9]][[i]])] <- list(NULL)
         }
-        names(res[[8]][[i]])[length(res[[8]][[i]])] <- "info.stim"
+        names(res[[9]][[i]])[length(res[[9]][[i]])] <- "info.stim"
       }
     }
-    names(res[[8]]) <- 1 : nlevels(mat.partition$Cluster)
+    names(res[[9]]) <- 1 : nlevels(mat.partition$Cluster)
   } else {
-    res[[8]] <- NULL
+    res[9] <- list(NULL)
   }
 
   # return the results
-  names(res) <- c("profiles.residuals", "mat.disag", "pval.dendro", "nb.clust.found", "partition", "res.plot.segment", "res.pca", "charact.clust")
+  names(res) <- c("call", "profiles.residuals", "mat.disag", "pval.dendro", "nb.clust.found", "partition", "res.plot.segment", "res.pca", "charact.clust")
   message("Clustering performed")
   options(warn = 0)
   class(res) <- c("AgreeClust", "list ")
