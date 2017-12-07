@@ -32,7 +32,7 @@ devtools::install_github("MargotBr/AgreeClust", build_vignettes = TRUE)
 library(AgreeClust)
 ```
 
-```{r eval=FALSE}
+```{r}
 library(AgreeClust)
 ```
 
