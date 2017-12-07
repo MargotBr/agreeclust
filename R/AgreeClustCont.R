@@ -725,7 +725,7 @@ AgreeClustCont <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust =
   names(res) <- c("call", "profiles.residuals", "mat.disag", "pval.dendro", "nb.clust.found", "partition", "res.plot.segment", "res.pca", "charact.clust")
   message("Clustering performed")
   options(warn = 0)
-  class(res) <- c("AgreeClust", "list ")
+  class(res) <- c("AgreeClustCont", "list ")
   return(res)
 
 }

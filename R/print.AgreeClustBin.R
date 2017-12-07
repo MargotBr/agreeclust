@@ -1,10 +1,10 @@
 print.AgreeClust <- function (res){
 
-  if (!inherits(res, "AgreeClust")){
-    stop("Non convenient data - res should be an AgreeClust object")
+  if (!inherits(res, "AgreeClustBin")){
+    stop("Non convenient data - res should be an AgreeClustBin object")
   }
 
-  cat("** Results for the agreement-based clustering (AgreeClust) **\n")
+  cat("** Results for the agreement-based clustering (AgreeClustBin) **\n")
   cat("\n")
   cat("The analysis was performed on", (ncol(res$call$dta) - length(res$call$id.info.stim)),
       "raters who assessed", (nrow(res$call$dta) - length(res$call$id.info.rater)), "stimuli\n")

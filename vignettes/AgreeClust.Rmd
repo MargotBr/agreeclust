@@ -36,16 +36,6 @@ library(AgreeClust)
 library(AgreeClust)
 ```
 
-```{r}
-load("/Users/lma/ownCloud/R/AgreeClust/data/pedagdataBin.rda")
-load("/Users/lma/ownCloud/R/AgreeClust/data/pedagdataCont.rda")
-source("/Users/lma/ownCloud/R/AgreeClust/R/AgreeClustBin.R")
-source("/Users/lma/ownCloud/R/AgreeClust/R/AgreeClustCont.R")
-source("/Users/lma/ownCloud/R/AgreeClust/R/GlmSum.R")
-source("/Users/lma/ownCloud/R/AgreeClust/R/plot.AgreeClust.R")
-source("/Users/lma/ownCloud/R/AgreeClust/R/print.AgreeClust.R")
-```
-
 # Using the proper format of data
 
 The package is able to manage matrices of dimensions $S \times R$, where $S$ denotes the number of strimuli rated during the experiment and $R$ denotes the number of raters who were involved in the experiment. At the intersection of the line $s$ and the column $r$ is the rating of the $s$-th stimulus by the $r$-th rater $Y_{sr}$.

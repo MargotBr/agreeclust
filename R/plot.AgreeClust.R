@@ -10,10 +10,9 @@ plot.AgreeClust <- function(res, choice = "all", interact = FALSE, col.clust = N
   suppressPackageStartupMessages(require(shiny, quietly = TRUE))
   suppressPackageStartupMessages(require(reshape2, quietly = TRUE))
   suppressPackageStartupMessages(require(doBy, quietly = TRUE))
-  suppressPackageStartupMessages(require(htmlwidgets, quietly = TRUE))
 
   # check the format of the arguments
-  if (!inherits(res, "AgreeClust")) {
+  if (!inherits(res, "AgreeClustBin") & !inherits(res, "AgreeClustCont")) {
     stop("Non convenient data - res should be an AgreeClust object")
   }
   choice <- match.arg(choice, c("all", "seg", "mul"))
@@ -189,6 +188,8 @@ plot.AgreeClust <- function(res, choice = "all", interact = FALSE, col.clust = N
     coord.raters <- res.pca$ind$coord[, axis]
     mat.coord.raters <- cbind.data.frame(rownames(coord.raters), coord.raters)
     colnames(mat.coord.raters) <- c("Rater", "AxeA", "AxeB")
+    mat.partition <- cbind.data.frame(names(res$partition), res$partition)
+    colnames(mat.partition) <- c("Rater", "Cluster")
     coord.raters <- merge(mat.coord.raters, mat.partition, by = "Rater")
     coord.raters$Cluster <- as.factor(coord.raters$Cluster)
     rownames(coord.raters) <- coord.raters[, "Rater"]
@@ -272,8 +273,7 @@ plot.AgreeClust <- function(res, choice = "all", interact = FALSE, col.clust = N
           title = paste("Representation of the", paste0(name.rater, "s")),
           xaxis = list(zerolinecolor = "#D6D5D5", scaleanchor = "y", showgrid = FALSE, title = paste("Dim ", axis[1], " - ", round(res.pca$eig[axis[1],2],2), "%", sep=""), titlefont = list(color = "#444444", size = 13), tickfont = list(size = 10, color = "#444444"), showline = TRUE, mirror = "ticks", linecolor = "#444444", linewidth = 1),
           yaxis = list(zerolinecolor = "#D6D5D5", scaleanchor = "x", showgrid = FALSE, title = paste("Dim ", axis[2], " - ", round(res.pca$eig[axis[2],2],2), "%", sep=""), titlefont = list(color = "#444444", size = 13), tickfont = list(size = 10, color = "#444444"), showline = TRUE, mirror = "ticks", linecolor = "#444444", linewidth = 1)
-        ) %>%
-        onRender("function(el, x) {Plotly.d3.select('.cursor-crosshair').style('cursor', 'default')}")
+        )
     }
     coord.stimuli <- as.data.frame(res.pca$var$coord[, axis])
     colnames(coord.stimuli) <- c("AxeA", "AxeB")
@@ -362,15 +362,27 @@ plot.AgreeClust <- function(res, choice = "all", interact = FALSE, col.clust = N
       colnames(mat.partition) <- c("Rater", "Cluster")
       melted.cluster <- merge(melted.data, mat.partition, by = "Rater")
       melted.cluster$Rating <- as.numeric(as.character(melted.cluster$Rating))
-      sum.pos.ratings <- summaryBy(Rating ~ Stimulus : Cluster, data = melted.cluster, FUN = "sum")
-      colnames(sum.pos.ratings) <- c("Stimulus", "Cluster", "NbPosRating")
-      size.clust <- summary(as.factor(mat.partition$Cluster))
-      for (i in 1 : nlevels(as.factor(mat.partition$Cluster))) {
-        tab.clust <- sum.pos.ratings[which(sum.pos.ratings$Cluster == levels(as.factor(mat.partition$Cluster))[i]), ]
-        tab.clust[, "NbPosRating"] <- tab.clust[, "NbPosRating"] / size.clust[which(names(size.clust) == levels(as.factor(mat.partition$Cluster))[i])] * 100
-        text.tooltip <- paste(text.tooltip,
-                              paste(paste0("<br>Positive ratings in Cluster ", levels(as.factor(mat.partition$Cluster))[i], ":"),
-                                    paste0(tab.clust[order(tab.clust$Stimulus, coord.stimuli$Stimulus), "NbPosRating"], "%")))
+      if (inherits(res, "AgreeClustBin")) {
+        sum.pos.ratings <- summaryBy(Rating ~ Stimulus : Cluster, data = melted.cluster, FUN = "sum")
+        colnames(sum.pos.ratings) <- c("Stimulus", "Cluster", "NbPosRating")
+        size.clust <- summary(as.factor(mat.partition$Cluster))
+        for (i in 1 : nlevels(as.factor(mat.partition$Cluster))) {
+          tab.clust <- sum.pos.ratings[which(sum.pos.ratings$Cluster == levels(as.factor(mat.partition$Cluster))[i]), ]
+          tab.clust[, "NbPosRating"] <- tab.clust[, "NbPosRating"] / size.clust[which(names(size.clust) == levels(as.factor(mat.partition$Cluster))[i])] * 100
+          text.tooltip <- paste(text.tooltip,
+                                paste(paste0("<br>Positive ratings in Cluster ", levels(as.factor(mat.partition$Cluster))[i], ":"),
+                                      paste0(tab.clust[order(tab.clust$Stimulus, coord.stimuli$Stimulus), "NbPosRating"], "%")))
+        }
+      }
+      if (inherits(res, "AgreeClustCont")) {
+        sum.ratings <- summaryBy(Rating ~ Stimulus : Cluster, data = melted.cluster, FUN = "mean")
+        colnames(sum.ratings) <- c("Stimulus", "Cluster", "MeanRating")
+        for (i in 1 : nlevels(as.factor(mat.partition$Cluster))) {
+          tab.clust <- sum.ratings[which(sum.ratings$Cluster == levels(as.factor(mat.partition$Cluster))[i]), ]
+          text.tooltip <- paste(text.tooltip,
+                                paste(paste0("<br>Average rating in Cluster ", levels(as.factor(mat.partition$Cluster))[i], ":"),
+                                      paste0(tab.clust[order(tab.clust$Stimulus, coord.stimuli$Stimulus), "MeanRating"], "")))
+        }
       }
       if (!is.null(res$call$id.info.stim)) {
         info.stim <- res$call$dta[, res$call$id.info.stim]
@@ -400,8 +412,7 @@ plot.AgreeClust <- function(res, choice = "all", interact = FALSE, col.clust = N
           titlefont = list(size = 14, color = "#444444"),
           xaxis = list(zerolinecolor = "#D6D5D5", scaleanchor = "y", showgrid = FALSE, title = paste("Dim ", axis[1], " - ", round(res.pca$eig[axis[1],2],2), "%", sep=""), titlefont = list(color = "#444444", size = 13), tickfont = list(size = 10, color = "#444444"), showline = TRUE, mirror = "ticks", linecolor = "#444444", linewidth = 1),
           yaxis = list(zerolinecolor = "#D6D5D5", scaleanchor = "x", showgrid = FALSE, title = paste("Dim ", axis[2], " - ", round(res.pca$eig[axis[2],2],2), "%", sep=""), titlefont = list(color = "#444444", size = 13), tickfont = list(size = 10, color = "#444444"), showline = TRUE, mirror = "ticks", linecolor = "#444444", linewidth = 1)
-        ) %>%
-        onRender("function(el, x) {Plotly.d3.select('.cursor-crosshair').style('cursor', 'default')}")
+        )
       combine.plot <- combineWidgets(plot.ind.pca.interact, plot.var.pca.interact, nrow = 1, ncol = 2,
                                      title = paste("Multidimensional representation of the structure <br>of disagreement among the panel of", paste0(name.rater, "s")),
                                      titleCSS = "font-size:16px",
