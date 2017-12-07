@@ -1,4 +1,4 @@
-print.AgreeClust <- function (res){
+print.AgreeClustBin <- function (res){
 
   if (!inherits(res, "AgreeClustBin")){
     stop("Non convenient data - res should be an AgreeClustBin object")
