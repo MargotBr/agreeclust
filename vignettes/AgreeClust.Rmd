@@ -229,7 +229,7 @@ res.pedag$mat.disag
 round(res.pedag$mat.disag, 1)
 ```
 
-The first graph created by the function shows the clustering process applied to this disagreement matrix. The dendrogram representing the structure of disagreement is presented at the top of the graph. The $p-$values associated to the different levels of its hierarchy show that two clusters of raters exist among the panel, as the $3-$ latent class model is not significant w.r.t the $2-$ latent class model. The consolidation step, whose the result is presented at the bottom of the graph, did not modify the partition of clusters. Finally, we can say that this panel is composed of two disagreed clusters: the first ten raters (cluster 1) against the last ten raters (cluster 2).
+The first graph created by the function shows the clustering process applied to this disagreement matrix. The dendrogram representing the structure of disagreement is presented at the top of the graph. The $p-$values associated to the different levels of its hierarchy show that two clusters of raters exist among the panel, as the $3-$ latent class model is not significant w.r.t the $2-$ latent class model. The consolidation step, whose the result is presented at the bottom of the graph, did not modify the partition of raters. Finally, we can say that this panel is composed of two disagreed clusters: the first ten raters (cluster 1) against the last ten raters (cluster 2).
 
 ```{r echo=FALSE, fig.width=8, dpi=400, fig.height=8, message=FALSE, results=FALSE}
 plot.AgreeClust(res.pedag, choice = "seg", col.clust = c("#42B983", "#F36170"))
