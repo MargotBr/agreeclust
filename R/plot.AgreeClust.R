@@ -371,7 +371,7 @@ plot.AgreeClust <- function(res, choice = "all", interact = FALSE, col.clust = N
           tab.clust[, "NbPosRating"] <- tab.clust[, "NbPosRating"] / size.clust[which(names(size.clust) == levels(as.factor(mat.partition$Cluster))[i])] * 100
           text.tooltip <- paste(text.tooltip,
                                 paste(paste0("<br>Positive ratings in Cluster ", levels(as.factor(mat.partition$Cluster))[i], ":"),
-                                      paste0(tab.clust[order(tab.clust$Stimulus, coord.stimuli$Stimulus), "NbPosRating"], "%")))
+                                      paste0(round(tab.clust[order(tab.clust$Stimulus, coord.stimuli$Stimulus), "NbPosRating"], 1), "%")))
         }
       }
       if (inherits(res, "AgreeClustCont")) {
