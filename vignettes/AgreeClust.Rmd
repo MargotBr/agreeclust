@@ -38,11 +38,11 @@ library(AgreeClust)
 
 # Using the proper format of data
 
-The package is able to manage matrices of dimensions $S \times R$, where $S$ denotes the number of strimuli rated during the experiment and $R$ denotes the number of raters who were involved in the experiment. At the intersection of the line $s$ and the column $r$ is the rating of the $s$-th stimulus by the $r$-th rater $Y_{sr}$.
+The package is able to manage matrices of dimensions $S \times R$, where $S$ denotes the number of stimuli rated during the experiment and $R$ denotes the number of raters who were involved in the experiment. At the intersection of the line $s$ and the column $r$ is the rating of the $s$-th stimulus by the $r$-th rater $Y_{sr}$.
 
 ![](Datanoext.jpeg)
 
-If external information about the stimuli and the raters was collected during the experiment, the previous data set is supplemented by these covariates. More precisely, covariates providing information about the stimuli are added to the previous data set as supplementary columns; and covariates providing information about the raters are added to the previous data set as supplementary lines. The intersection cells between these covariates are filled by missing data.
+If external information about the stimuli and/or the raters was collected during the experiment, the previous data set is supplemented by these covariates. More precisely, covariates providing information about the stimuli are added to the previous data set as supplementary columns; and covariates providing information about the raters are added to the previous data set as supplementary lines. The intersection cells between these covariates are filled by missing data.
 
 ![](Dataext.jpeg)
 
@@ -86,7 +86,7 @@ Sequentially testing the significance of a $(K+1)-$clusters structure embedded i
 
 For a fixed number, say $K$, of clusters, fitting the $K-$ latent class model (1) involves three steps: first, maximum-likelihood fitting of *perfect agreement* model (1); then, extraction of the best $K$-clusters partition using the Ward's algorithm applied to the Euclidean distance matrix of residuals $D^{\scriptscriptstyle \text{res}}$; and finally, maximum-likelihood fitting of model (1), based on the former $K-$ latent class $stimulus \times rater$ interaction pattern. Retracing the dendrogram resulting from the Ward's algorithm downward, starting from its top node, where all raters are classified in a unique cluster, and moving down it leads to a sequence of nested models (1) with increasing number of latent classes. Therefore, determination of the proper number of latent classes can be handled by sequential model comparison tests for the significance of the $(K+1)-$ latent class model w.r.t the $K-$ latent class model. Note that the null distribution of the test statistics has to be adapted to the fact that the latent class interaction structure is inferred from the data. We propose to approximate this null distribution by a Monte-Carlo method, based on simulations of the null $K-$ latent class model (1) as estimated at the previous step. When the null hypothesis cannot longer be rejected, $K$ is used as the proper number of clusters of raters among the panel.
 
-The $p-$value of each test is provided at the corresponding level of the dendrogram. If the 2-latent class model is not significant w.r.t the no-latent class model, that means that there is no necessity to cut the dendrogram and to segment the panel of raters. This aspect can highlights two kinds of situations: (1) the ratings provided by the raters are too heterogeneous to highlight consistent sub-clusters of raters; or (2) the ratings provided by the raters are too homogeneous to highlight consistent sub-clusters of raters, meaning that the panel of raters is composed of one homogeneous cluster of raters who provided consensual ratings. Naturally, this aspect is of the main interest in the context of studying the agreement/disagreement among the panel of raters. With the aim of providing this information, we propose to implement a statistical test to evaluate the goodness of fit of the no-latent class model (2). If the null hypothesis is not rejected, that means that the panel of raters rated the set of stimuli in a consensual way. The $p-$value of this test is provided at the top node of the dendrogram (only if a no-latent class sturcture is found).
+The $p-$value of each test is provided at the corresponding level of the dendrogram. If the 2-latent class model is not significant w.r.t the no-latent class model, that means that there is no necessity to cut the dendrogram and to segment the panel of raters. This aspect can highlights two kinds of situations: (1) the ratings provided by the raters are too heterogeneous to highlight consistent sub-clusters of raters; or (2) the ratings provided by the raters are too homogeneous to highlight consistent sub-clusters of raters, meaning that the panel of raters is composed of one homogeneous cluster of raters who provided consensual ratings. Naturally, this aspect is of the main interest in the context of studying the agreement/disagreement among the panel of raters. With the aim of providing this information, we propose to implement a statistical test to evaluate the goodness of fit of the no-latent class model (2). If the null hypothesis is not rejected, that means that the panel of raters rated the set of stimuli in a consensual way. The $p-$value of this test is provided at the top node of the dendrogram (only if a no-latent class structure is found).
  
 ## Consolidating the partition of raters
 
@@ -168,7 +168,7 @@ The `AgreeClustBin` function of the package is able to deal with binary ratings.
 
 <center> $g(y) = logit(\mathbb{P}(y = 1))$ </center>
 
-For implementing the cutting strategy of the dendrogram, the Likelhood-Ratio Test (LRT) is used as the statistic test to test the significance of the $(K+1)-$ latent class model w.r.t the $K-$ latent class model.
+For implementing the cutting strategy of the dendrogram, the Likelihood-Ratio Test (LRT) is used as the statistic test to test the significance of the $(K+1)-$ latent class model w.r.t the $K-$ latent class model.
  
 The help page of the functions can be accessed with this code:
 
@@ -184,7 +184,7 @@ data(pedagdataBin)
 pedagdataBin
 ```
 
-As shown on the help page, the function parallelizes by default the computation of the null LRT distribution for cutting the dendrogram (in this case, a file denoted *TestDendrogram_processing.txt* is automatically created in the working directory to access the processing status). Moreover, the function approximates by default the null LRT distribution by using the Satterthwaite's approximation. Finally, the function uses by default the following other important arguments:
+By default, the function implements in parallel the computation of the null LRT distribution for cutting the dendrogram (in this case, a file denoted *TestDendrogram_processing.txt* is automatically created in the working directory to access the processing status). Moreover, the function approximates by default the null LRT distribution by using the Satterthwaite's approximation. Finally, the function uses by default the following other important arguments:
 
 - `dta`, specifying the name of the data set to be used;
 - `model = "Rating ~ Rater + Stimulus"`, meaning that both the raters propensities and the stimuli propensities are taken into account when modeling the ratings data. Other available possibilities are `"Rating ~ Rater"` (in this case, the disagreement index is similar to the Cohen's kappa $\kappa$) or `"Rating ~ 1"` (in this case, the disagreement index is similar to the simple matching coefficient);
@@ -206,6 +206,7 @@ res.pedag <- AgreeClustBin(dta = pedagdataBin, id.info.rater = 9 : nrow(pedagdat
 
 ```{r echo=FALSE, message=FALSE}
 res.pedag <- AgreeClustBin(dta = pedagdataBin, id.info.rater = 9 : nrow(pedagdataBin), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataBin), type.info.stim = c(rep("cont", 4), "cat"), graph = FALSE)
+res.pedag
 ```
 
 The first object returned by the function is the matrix containing the profiles of deviance residuals. The larger the residual (in absolute value), the larger the departure from the situation of *perfect agreement* (cf. model (2)). This object can be accessed with this code:
@@ -256,7 +257,7 @@ In the present example, cluster 1 is characterized by '1' ratings for stimuli *S
 plot.AgreeClust(res.pedag, choice = "mul", col.clust = c("#42B983", "#F36170"))
 ```
 
-In the present example, the percentage of variability explained by the first factorial plane is $67.12\%+16.87\%=83.99\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. Howerver, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `FactoMineR` package (cf. help page of this function if needed). These results can be accessed with this code:
+In the present example, the percentage of variability explained by the first factorial plane is $67.12\%+16.87\%=83.99\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. However, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `FactoMineR` package (cf. help page of this function if needed). These results can be accessed with this code:
 
 ```{r}
 res.pedag$res.pca
@@ -280,7 +281,7 @@ plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4))
 plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B983", "#F36170"))
 ```
 
-The `plot.AgreeClust` allows to plot the multidimensional representation of the structure of disagreement in an interative way. By moving the cursor on a point, several pieces of information are printed:
+The `plot.AgreeClust` allows to plot the multidimensional representation of the structure of disagreement in an interactive way. By moving the cursor on a point, several pieces of information are printed:
 
 ```{r eval=FALSE, fig.width=8, dpi=400, fig.height=6, message=FALSE, results=FALSE}
 plot.AgreeClust(res.pedag, choice = "mul", interact = TRUE)
@@ -337,7 +338,7 @@ data(pedagdataCont)
 pedagdataCont
 ```
 
-As shown on the help page, the function parallelizes by default the computation of the null F distribution for cutting the dendrogram (in this case, a file denoted *TestDendrogram_processing.txt* is automatically created in the working directory to access the processing status). Moreover, the function uses by default the following other important arguments:
+By default, the function implements in parallel the computation of the null F distribution for cutting the dendrogram (in this case, a file denoted *TestDendrogram_processing.txt* is automatically created in the working directory to access the processing status). Moreover, the function uses by default the following other important arguments:
 
 - `dta`, specifying the name of the data set to be used;
 - `model = "Rating ~ Rater + Stimulus"`, meaning that both the raters propensities and the stimuli propensities are taken into account when modeling the ratings data (in this case, the disagreement index is similar to the Euclidean distance between the raw ratings once they have been centered by rater). Other available possibilities are `"Rating ~ Rater"` (in this case, the disagreement index is also similar to the Euclidean distance between the raw ratings once they have been centered by rater) or `"Rating ~ 1"` (in this case, the disagreement index is similar to the Euclidean distance between the raw ratings);
@@ -359,6 +360,7 @@ res.pedag <- AgreeClustCont(dta = pedagdataCont, id.info.rater = 9 : nrow(pedagd
 
 ```{r echo=FALSE, message=FALSE}
 res.pedag <- AgreeClustCont(dta = pedagdataCont, id.info.rater = 9 : nrow(pedagdataCont), type.info.rater = rep("cat", 3), id.info.stim = 21 : ncol(pedagdataCont), type.info.stim = c(rep("cont", 4), "cat"), graph = FALSE)
+res.pedag
 ```
 
 The first object returned by the function is the matrix containing the profiles of residuals. The larger the residual (in absolute value), the larger the departure from the situation of *perfect agreement* (cf. model (2)). This object can be accessed with this code:
@@ -409,7 +411,7 @@ In the present example, cluster 1 is characterized by high ratings for stimuli *
 plot.AgreeClust(res.pedag, choice = "mul", col.clust = c("#42B983", "#F36170"))
 ```
 
-In the present example, the percentage of variability explained by the first factorial plane is $65.43\%+16.59\%=82.02\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. Howerver, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `FactoMineR` package (cf. help page of this function if needed). These results can be accessed with this code:
+In the present example, the percentage of variability explained by the first factorial plane is $65.43\%+16.59\%=82.02\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. However, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `FactoMineR` package (cf. help page of this function if needed). These results can be accessed with this code:
 
 ```{r}
 res.pedag$res.pca
@@ -433,7 +435,7 @@ plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4))
 plot.AgreeClust(res.pedag, choice = "mul", axis = c(3, 4), col.clust = c("#42B983", "#F36170"))
 ```
 
-The `plot.AgreeClust` allows to plot the multidimensional representation of the structure of disagreement in an interative way. By moving the cursor on a point, several pieces of information are printed:
+The `plot.AgreeClust` allows to plot the multidimensional representation of the structure of disagreement in an interactive way. By moving the cursor on a point, several pieces of information are printed:
 
 ```{r eval=FALSE, fig.width=8, dpi=400, fig.height=5, message=FALSE, results=FALSE}
 plot.AgreeClust(res.pedag, choice = "mul", interact = TRUE)
