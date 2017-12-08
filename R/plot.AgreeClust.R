@@ -434,7 +434,7 @@ plot.AgreeClust <- function(res, choice = "all", interact = FALSE, col.clust = N
 
   # end the function
   options(warn = 0)
-  if (vignette == TRUE & interact == TRUE) {
+  if (vignette == TRUE & interact == TRUE & (choice == "all" | choice == "mul")) {
     message("Representations plotted")
     return(combine.plot)
   } else {
