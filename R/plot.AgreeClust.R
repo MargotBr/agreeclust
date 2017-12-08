@@ -381,7 +381,7 @@ plot.AgreeClust <- function(res, choice = "all", interact = FALSE, col.clust = N
           tab.clust <- sum.ratings[which(sum.ratings$Cluster == levels(as.factor(mat.partition$Cluster))[i]), ]
           text.tooltip <- paste(text.tooltip,
                                 paste(paste0("<br>Average rating in Cluster ", levels(as.factor(mat.partition$Cluster))[i], ":"),
-                                      paste0(tab.clust[order(tab.clust$Stimulus, coord.stimuli$Stimulus), "MeanRating"], "")))
+                                      paste0(round(tab.clust[order(tab.clust$Stimulus, coord.stimuli$Stimulus), "MeanRating"], 1), "")))
         }
       }
       if (!is.null(res$call$id.info.stim)) {
