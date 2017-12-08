@@ -12,17 +12,20 @@ Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
 Imports: 
-  dendextend, 
+  dendextend,
+  doBy,
   FactoMineR, 
   ggdendro, 
   ggplot2, 
   ggrepel,
   grid, 
   gridExtra, 
+  manipulateWidget,
   parallel, 
+  plotly,
   prettydoc, 
-  reshape2
-
+  reshape2,
+  shiny
 
 
 
