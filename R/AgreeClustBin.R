@@ -615,6 +615,11 @@ AgreeClustBin <- function(dta, model = "Rating ~ Rater + Stimulus", max.clust = 
               }
             }
           }
+          info.rater.sup.clust.plus <- info.rater.sup.clust[which(info.rater.sup.clust[, 2] == "+"), ]
+          info.rater.sup.clust.plus <- info.rater.sup.clust.plus[order(info.rater.sup.clust.plus[, 3], decreasing = FALSE), ]
+          info.rater.sup.clust.moins <- info.rater.sup.clust[which(info.rater.sup.clust[, 2] == "-"), ]
+          info.rater.sup.clust.moins <- info.rater.sup.clust.moins[order(info.rater.sup.clust.moins[, 3], decreasing = TRUE), ]
+          info.rater.sup.clust <- rbind.data.frame(info.rater.sup.clust.plus, info.rater.sup.clust.moins)
           res.clust.rater[[4]] <- info.rater.sup.clust
         }
       }
