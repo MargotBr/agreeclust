@@ -11,6 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+pkgload::load_all()
 ```
 
 # agreeclust <img src='man/figures/hex-agreeclust-white.png' align="right" height="139" />
@@ -27,13 +28,17 @@ library(agreeclust)
 
 # Repex
 
-```{r eval = FALSE}
+```{r eval = TRUE, message = FALSE, warning = FALSE, dpi = 400}
 library(agreeclust)
 data(binary_data_for_example)
-get_agreeclust_bin(dta = binary_data_for_example,
-                   id_info_rater = 9 : nrow(binary_data_for_example),
-                   type_info_rater = c(rep("cat", 2), "cont"),
-                   id_info_stim = 21 : ncol(binary_data_for_example),
-                   type_info_stim = c(rep("cont", 4), "cat")
-                   )
+res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
+                                id_info_rater = 9 : nrow(binary_data_for_example),
+                                type_info_rater = c(rep("cat", 2), "cont"),
+                                id_info_stim = 21 : ncol(binary_data_for_example),
+                                type_info_stim = c(rep("cont", 4), "cat"),
+                                paral_null = FALSE,
+                                graph = FALSE)
+names(res_pedag)
+plot_agreeclust(res_pedag)
+# plot_agreeclust(res_pedag, interact = TRUE)
 ```
