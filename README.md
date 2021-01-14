@@ -33,10 +33,24 @@ library(agreeclust)
 ``` r
 library(agreeclust)
 data(binary_data_for_example)
-get_agreeclust_bin(dta = binary_data_for_example,
-                   id_info_rater = 9 : nrow(binary_data_for_example),
-                   type_info_rater = c(rep("cat", 2), "cont"),
-                   id_info_stim = 21 : ncol(binary_data_for_example),
-                   type_info_stim = c(rep("cont", 4), "cat")
-                   )
+res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
+                                id_info_rater = 9 : nrow(binary_data_for_example),
+                                type_info_rater = c(rep("cat", 2), "cont"),
+                                id_info_stim = 21 : ncol(binary_data_for_example),
+                                type_info_stim = c(rep("cont", 4), "cat"),
+                                paral_null = FALSE,
+                                graph = FALSE)
+names(res_pedag)
+#> [1] "call"               "profiles_residuals" "mat_disag"         
+#> [4] "pval_dendro"        "nb_clust_found"     "partition"         
+#> [7] "res_plot_segment"   "res_pca"            "charact_clust"
+plot_agreeclust(res_pedag)
 ```
+
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" /><img src="man/figures/README-unnamed-chunk-3-2.png" width="100%" />
+
+``` r
+plot_agreeclust(res_pedag, interact = TRUE)
+```
+
+<img src="man/figures/README-unnamed-chunk-3-3.png" width="100%" />
