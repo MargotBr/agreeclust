@@ -1,0 +1,147 @@
+---
+title: "a- Global overview of the statistical methodology"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{a-overview-methodology}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+On the contrary to popular approaches used to study inter-rater agreement, the present method considers the ratings data provided by all raters when studying the structure of disagreement among the panel. More precisely, the structure of disagreement is captured through the profiles of residuals of a no-latent class regression model adjusted on the entire set of ratings, and can be visualized by using exploratory data analysis tools. 
+
+The disagreement between two raters is then quantify in a concise way through the Euclidean distance between their respective profiles of residuals, this disagreement index being used as a basis to construct a dendrogram representing the structure of disagreement among the panel. 
+
+The proper number of disagreed clusters among the panel of raters is then chosen by implementing a sequential strategy to test the significance of each $K$-clusters structure of disagreement. This modeling framework provides to the user a partition of the panel in several disagreed clusters of raters. 
+
+Finally, the approach allows the user to consolidate the previous partition of raters by using a partitioning algorithm, and to interpret the obtained clusters of raters by using covariates providing pieces of information about the raters themselves and/or about the stimuli rated during the experiment.
+
+## Modeling framework
+
+We propose hereafter a general modeling framework for the whole agreement data that introduces both stimuli and raters propensity scores by estimating the marginal distributions of ratings across all raters and all stimuli and not pairwise agreement tables, as this is done usually in inter-rater agreement studies. In the former regression framework, a latent modular structure of disagreement is also introduced as a particular $stimulus \times rater$ interaction structure.
+
+In the following, it will be assumed that the panel ${\cal C} = [1;R]$ of raters, where $R \geq 2$ is the number of raters, is partitioned into $K$ clusters ${\cal C}_{k}, k=1, \ldots, K$, with $1 \leq K \leq R$, $\bigcup_{k} {\cal C}_{k}={\cal C}$ and, for all $k \neq k'$, ${\cal C}_{k} \cap {\cal C}_{k'}=\emptyset$. The number of raters in cluster ${\cal C}_{k}$ will hereafter be denoted $R_{k}$, with $R_{k} \geq 2$. Let $Y_{srk}$ denote the rating of the $s$-th stimulus, with $s=1,\ldots,S$, by the $r$-th rater in cluster ${\cal C}_{k}$. The following latent class regression model is assumed:
+
+<center>$g(Y_{srk})=\mu+\alpha_{s}+\beta_{r|k}+\delta_{k}+(\alpha\delta)_{sk}$ (1)</center>
+
+where $g$ is the link function, $\alpha_{s}$ and $\beta_{r|k}$ are main effect parameters for the stimuli and the raters respectively, the notation $r|k$ being used here to indicate that the $rater$ effect is embedded into the $latent \ class$ effect. Those parameters $(\alpha_{s})_{s=1,\ldots,S}$ can be referred to as stimulus propensity scores, whereas, for all $k$, $(\beta_{r|k})_{r=1,\ldots,R_{k}}$ can be viewed as cluster-specific rater propensity scores. Analogously, $\delta_{k}$ is the propensity score for cluster ${\cal C}_{k}$ and $(\alpha\delta)_{sk}$ stands for the $stimulus \times cluster$ interaction effect.
+
+Note that the following additive model is obtained as a special case of the model (1) when no latent class structure (i.e. $K=1$) is assumed:
+
+<center>$g(Y_{srk})=\mu+\alpha_{s}+\beta_{r}$</center>
+
+Discussing the relevance of propensity scores in models (1) and (2) is out of the purpose of the present vignette. Anyway, the package allows the user to decide to consider or not the stimuli-specific parameters and/or the raters-specific parameters when modeling the ratings provided by the panel.
+
+### Constructing the dendrogram representing the structure of disagreement among the panel
+
+Since a perfect fit of model (2) would mean that the rating of a given stimulus does not vary from one rater to another, it will be considered as a *perfect agreement* model. Accordingly, model (1) can be viewed as a finite mixture of within-cluster *perfect agreement* models in the sense that model (2) holds within each cluster with cluster-specific propensity scores. Therefore, model (2) departs from the *perfect agreement* model by capturing a possible between-clusters disagreement on the ratings of the $s$-th stimulus through the $cluster \times stimulus$ interaction parameters.
+
+As ratings data have no replication, the two-way interaction $cluster \times stimulus$ is a part of the error term of model (2). This is why this error term can be used to model the heterogeneity in the ratings provided by the raters; the possible pattern of heterogeneity between the ratings being defined as the gap between the observed values and the values adjusted with model (2). Consequently, the possible pattern of disagreement between the $R$ raters among the panel can be seen as a discrepancy between the observed values and the values adjusted with the logistic regression model of perfect agreement (2), this discrepancy being measurable by the residuals of model (2):
+
+<center>$\hat{\varepsilon}_{sr}$</center>
+
+Two raters having the same $S-$profile of residuals $\hat{\varepsilon}_{r}=(\hat{\varepsilon}_{r1},\ldots,\hat{\varepsilon}_{rS})'$ would depart from the full agreement model the same way, and, consistently should appear in the same disagreement cluster. Therefore, we propose to consider the Euclidean distance $d^{\scriptscriptstyle \text{res}}_{rr'}$ between the profiles of residuals as a dissimilarity index between raters $r$ and $r'$:
+
+<center>$d^{\scriptscriptstyle \text{res}}_{rr'} = \sqrt{\sum\limits_{s=1}^{S}(\hat{\varepsilon}_{sr} - \hat{\varepsilon}_{sr'} )^{2}}$</center>
+
+Moreover, since the deviance residuals $\hat{\varepsilon}_{rs}$ are approximately distributed according to a standard normal distribution, any model-based or not clustering algorithm applied on the dissimilarity matrix $D^{\scriptscriptstyle \text{res}}$ with generic term $d^{\scriptscriptstyle \text{res}}_{rr'}$ can be used to extract modules of raters sharing the same pattern of rating for the stimuli. 
+
+Agglomerative hierarchical clustering algorithms is favored to extract the latent class disagreement structure from the dissimilarity matrix $D^{\scriptscriptstyle \text{res}}$. Indeed, these algorithms provide a sequence of nested partitions of the raters deduced from a dendrogram, starting from a full consensus among all raters (one cluster) to the extreme situation of a complete disagreement with as many clusters as raters. In the following, the former Ward's algorithm is used to infer on the latent class disagreement pattern.
+
+In the next section, a fitting procedure is proposed with ad-hoc testing methods for the significance of the latent class disagreement model.
+
+### Cutting the dendrogram at the proper level
+
+Sequentially testing the significance of a $(K+1)-$clusters structure embedded in a $K-$clusters super-structure can be addressed by analysis of model comparison tests in the general framework of model (1).
+
+For a fixed number, say $K$, of clusters, fitting the $K-$ latent class model (1) involves three steps: first, maximum-likelihood fitting of *perfect agreement* model (1); then, extraction of the best $K$-clusters partition using the Ward's algorithm applied to the Euclidean distance matrix of residuals $D^{\scriptscriptstyle \text{res}}$; and finally, maximum-likelihood fitting of model (1), based on the former $K-$ latent class $stimulus \times rater$ interaction pattern. Retracing the dendrogram resulting from the Ward's algorithm downward, starting from its top node, where all raters are classified in a unique cluster, and moving down it leads to a sequence of nested models (1) with increasing number of latent classes. Therefore, determination of the proper number of latent classes can be handled by sequential model comparison tests for the significance of the $(K+1)-$ latent class model w.r.t the $K-$ latent class model. Note that the null distribution of the test statistics has to be adapted to the fact that the latent class interaction structure is inferred from the data. We propose to approximate this null distribution by a Monte-Carlo method, based on simulations of the null $K-$ latent class model (1) as estimated at the previous step. When the null hypothesis cannot longer be rejected, $K$ is used as the proper number of clusters of raters among the panel.
+
+The $p-$value of each test is provided at the corresponding level of the dendrogram. If the 2-latent class model is not significant w.r.t the no-latent class model, that means that there is no necessity to cut the dendrogram and to segment the panel of raters. This aspect can highlights two kinds of situations: (1) the ratings provided by the raters are too heterogeneous to highlight consistent sub-clusters of raters; or (2) the ratings provided by the raters are too homogeneous to highlight consistent sub-clusters of raters, meaning that the panel of raters is composed of one homogeneous cluster of raters who provided consensual ratings. Naturally, this aspect is of the main interest in the context of studying the agreement/disagreement among the panel of raters. With the aim of providing this information, we propose to implement a statistical test to evaluate the goodness of fit of the no-latent class model (2). If the null hypothesis is not rejected, that means that the panel of raters rated the set of stimuli in a consensual way. The $p-$value of this test is provided at the top node of the dendrogram (only if a no-latent class structure is found).
+ 
+### Consolidating the partition of raters
+
+Once the partition of raters is defined, it can been consolidated by introducing it as the initial partition of a partitioning algorithm. More precisely, in this case, a $K-$means algorithm is implemented. In practice, at each step of this algorithm, each rater in affected to the cluster with the nearest center of gravity, serving as a prototype of the cluster. The partition resulting from this algorithm is finally conserved. In practice, the initial partition is never entirely replaced, but rather improved or *consolidated*.
+
+### Interpreting the clusters of raters
+
+Once the final partition of raters is defined, clusters are described by information about the raters such as the percentage of raters in each cluster or the parangon of each cluster (i.e. the rater the nearest of the center of gravity of the cluster, who can be defined as the rater the most representative of the cluster). Moreover, if external information about the raters and/or about the stimuli are present in the data set, these covariates can be used to supplement the interpretation of the clusters of raters.
+
+#### Interpreting clusters by using external information about the raters
+
+In some situations, supplementary information on the raters who participated to the experiment is available. These pieces of information often represent identity characteristics about the raters such as their gender, their age, their occupation, their level of expertise and so forth; but they can also represent habit characteristics. With the aim of characterizing the clusters of raters by using these pieces of information, univariate analyses are used to study the relationships between the clusters and the supplementary variables available about the raters. These univariate analyses depend on the type of the supplementary variables (i.e. continuous or categorical variables). They are described precisely in Husson et al. (2011) and implemented in the `FactoMineR` package (Lê, Josse & Husson, 2008). 
+
+##### Describing clusters by the values of a continuous variable describing the raters
+
+First, the global effect of the *Cluster* variable on the continuous variable $X$ describing the rater is studied through the global test of an analysis of variance model. If the global effect of the *Cluster* variable on the continuous variable $X$ is significant, the effect of each category of the *Cluster* variable is then studied independently. More precisely, for each category of the *Cluster* variable (i.e. for each cluster of raters), a $v$-test (a test value) is calculated as follows:
+
+\begin{equation*}
+  v\text{-test} = \frac{\bar{x_k}-\bar{x}}{\sqrt{\frac{s^2}{J_k}\left(\frac{R-R_k}{R-1}\right)}}
+\end{equation*}
+
+where $\bar{x_k}$ stands for the average of the given continuous variable $X$ for the raters of cluster ${\cal C}_{k}$, $\bar{x}$ stands for the average of the given continuous variable $X$ for all the raters of the panel, and $R_k$ stands for the number of raters in cluster ${\cal C}_{k}$. 
+
+This value $v$-test is used to test the following null hypothesis: \emph{$H_0$: the values of the continuous variable $X$ taken by the raters of cluster ${\cal C}_{k}$ are selected at random from all of the possible values of the continuous variable $X$}. We therefore consider the random variable $\bar{X_k}$, average of the values of $X$ taken by the raters in cluster ${\cal C}_{k}$. Its expected value and variance are:
+
+<center>$\mathbb{E}(\bar{X_k})=\bar{x}$ and $\mathbb{V}(\bar{X_k})=\frac{s^2}{R_k} \times \frac{R-R_k}{R-1}$</center>
+
+The $v$-test can therefore be considered a *standardized* deviation between the average of $X$ in the $k$-th cluster and the general average. Among other things, we can attribute a probability to the $v$-test. If, among the $R$ raters, the continuous variable $X$ is normally distributed according to the null hypothesis, the $\bar{X_k}$ distribution is as follows:
+
+\begin{equation*}
+  \bar{X_k}=\mathcal{N} \left(\bar{x},\frac{s}{\sqrt{R_k}}\sqrt{\frac{R-R_k}{R-1}} \right)
+\end{equation*}
+
+If the null hypothesis $H_0$ is accepted, that means that the average of the continuous variable for cluster ${\cal C}_{k}$ equals the general average among the panel; and that, in other words, the continuous variable does not characterize cluster ${\cal C}_{k}$. On the contrary, if the null hypothesis $H_0$ is rejected, that means that the continuous variable characterizes cluster ${\cal C}_{k}$. The sign of the $v$-test is then used to determine if the values of the continuous variable taken by the raters of cluster ${\cal C}_{k}$ are high (positive $v$-test) or low (negative $v$-test) w.r.t. the observations made on the entire panel.
+
+##### Describing clusters by the levels of a categorical variable describing the raters
+
+First, the global effect of the *Cluster* variable on the categorical variable $Q$ describing the rater is studied through a chi-square test of independence. If the *Cluster* variable and the categorical variable $Q$ are not significantly independent, the effect of each category of the *Cluster* variable is then studied independently. More precisely, for each category of the *Cluster* variable (i.e. for each cluster of raters) and for a given level (noticed $q$) of the categorical variable $Q$, the aim is to determine if cluster ${\cal C}_{k}$ is characterized by this given level $q$ or not. To do so, the proportion $R_{kq}/R_{k}$ corresponding to the proportion of raters among cluster ${\cal C}_{k}$ who take the given level $q$ is compared to the proportion $R_{q}/J$ corresponding to the proportion of raters among the entire panel who take the given level $q$. These two proportions are equal under the null hypothesis of independence $H_0$: 
+
+\begin{equation*}
+  \frac{R_{kq}}{R_{k}}=\frac{R_{q}}{R}
+\end{equation*}
+
+$R_{k}$ raters are randomly selected among $R$. We shall focus on the random variable $N$ equaled to the number $R_{kq}$ of occurrences of raters who have the characteristic $q$, while it must be remembered that their sample size within the population is $R_{q}$. Under the null hypothesis $H_0$, the random variable $N$ follows the hypergeometric distribution $\mathcal{H}(R,R_{q},R_{k})$. The probability of having a more extreme value than the observed value can therefore be calculated. 
+
+If the null hypothesis $H_0$ is accepted, that means that the level $q$ does not characterize cluster ${\cal C}_{k}$. On the contrary, if the null hypothesis $H_0$ is rejected, that means that the level $q$ characterizes cluster ${\cal C}_{k}$. The sign of the $v$-test is then used to determine if level $q$ is overrepresented (positive $v$-test) or underrepresented (negative $v$-test) in cluster ${\cal C}_{k}$ w.r.t. the observations made on the entire panel.
+
+#### Interpreting clusters by using external information about the stimuli
+
+In some situations, supplementary information on the stimuli rated during the experiment is available. If the stimuli are industrial goods, these pieces of information can represent intrinsic characteristics about the stimuli such as the composition, rheological properties, psycho-chemical properties, sensory properties and so forth; but they can also represent extrinsic characteristics about the stimuli such as their packaging. With the aim to characterize the clusters of raters by using these pieces of information, univariate analyses are used to study the relationship between the clusters and the supplementary variables available about the stimuli. These univariate depend on the type of the supplementary variables (i.e. continuous or categorical variables). 
+
+##### Describing clusters by the values of a quantitative variable describing the stimuli
+
+The interaction effect between the *Cluster* variable and the given continuous variable $X$ on the rating is studied through the following regression model involving sum contrasts:
+
+<center>$g(Y_{kl})=\mu+\delta_{k}+\beta x_{kl}+\sigma_{k}x_{kl}$ with $\sum\limits_{k=1}^{K}\delta_{k}=0$ and $\sum\limits_{k=1}^{K}\sigma_{k}=0$ </center>
+
+where $g$ is the link function; $Y_{kl}$ stands for the $l-$th rating provided by cluster ${\cal C}_{k}$; $\delta_{k}$ stands for the specific effect of cluster ${\cal C}_{k}$; $\beta$ stands for the effect of the continuous variable $X$; and $\sigma_{k}$ stands for the specific effect of the continuous variable $X$ for cluster ${\cal C}_{k}$.
+
+If the global effect of the interaction between the cluster and the continuous variable $X$ is significant, that means that the effect of the quantitative variable $X$ on the rating is not the same from one cluster to the other. 
+
+To highlight these aspects, the significance of the coefficients $\sigma_{k}$ is studied. Indeed, if the coefficient $\sigma_{k}$ is significant, that means that the impact of the values of the continuous $X$ on the rating is significantly different for cluster ${\cal C}_{k}$ w.r.t. the observations made on the entire panel. If this is the case, that means that the impact of the continuous variable $X$ on the rating characterizes cluster ${\cal C}_{k}$. The sign of the coefficient is then used to determine if large values of the continuous variable $X$ led to high ratings (positive coefficient) or low ratings (negative coefficient) in cluster ${\cal C}_{k}$ w.r.t. the observations made on the entire panel.
+
+##### Describing clusters by the values of a categorical variable describing the stimuli
+
+The interaction effect between the *Cluster* variable and the given categorical variable $Q$ on the rating is studied through the following regression model involving sum contrasts:
+
+<center>$g(Y_{qkl})=\mu+\omega_{q}+\delta_{k}+(\omega\delta_{qk})$ with $\sum\limits\limits_{q=1}^{Q}\omega_{q}=0$, $\sum\limits_{k=1}^{K}\delta_{k}=0$ and $\sum\limits_{q=1}^{Q}\sum\limits_{k=1}^{K}(\omega\delta)_{qk}=0$ </center>
+
+where $g$ is the link function; $Y_{qkl}$ stands for the $l-$th rating provided by cluster ${\cal C}_{k}$ for a stimulus with the characteristic $q$ of the categorical variable $Q$; $\omega_{q}$ stands for the specific effect of the characteristic $q$; $\delta_{k}$ stands for the specific effect of cluster ${\cal C}_{k}$; and $(\omega\delta)_{qk}$ stands for the specific effect of the characteristic $q$ for cluster ${\cal C}_{k}$.
+
+If the global effect of the interaction between the cluster and the categorical variable $Q$ is significant, that means that the effect of the levels of the categorical variable $Q$ on the rating is not the same from one cluster to the other.
+
+To highlight these aspects, the significance of the coefficients $(\sigma\delta)_{qk}$ is studied. Indeed, if the coefficient $(\omega\delta)_{qk}$ is significant, that means that the impact of the characteristic $q$ on the rating is significantly different for cluster ${\cal C}_{k}$ w.r.t. the observations made on the entire panel. If this is the case, that means that the impact of the characteristic $q$ on rating characterizes cluster ${\cal C}_{k}$. The sign of the coefficient is then used to determine if a presence of the characteristic $q$ led to high ratings (positive coefficient) or low ratings (negative coefficient) in cluster ${\cal C}_{k}$ w.r.t. the observations made on the entire panel.
+
+## References
+
+Husson, F., Lê, S., & Pagès, J. (2011) Exploratory multivariate analysis by example using R. CRC Press.
+
+Lê, S., Josse, J., & Husson, F. (2008) FactoMineR: an R package for multivariate analysis. Journal of Statistical Software, 25(1).

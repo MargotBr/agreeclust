@@ -1,0 +1,27 @@
+---
+title: "b- Using the proper format of data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{b-data-needed}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The package is able to manage matrices of dimensions $S \times R$, where $S$ denotes the number of stimuli rated during the experiment and $R$ denotes the number of raters who were involved in the experiment. At the intersection of the line $s$ and the column $r$ is the rating of the $s$-th stimulus by the $r$-th rater $Y_{sr}$.
+
+```{r echo = FALSE, out.width = '100%'}
+knitr::include_graphics("img/datanoext.jpeg")
+```
+
+If external information about the stimuli and/or the raters was collected during the experiment, the previous data set is supplemented by these covariates. More precisely, covariates providing information about the stimuli are added to the previous data set as supplementary columns; and covariates providing information about the raters are added to the previous data set as supplementary lines. The intersection cells between these covariates are filled by missing data.
+
+```{r echo = FALSE, out.width = '100%'}
+knitr::include_graphics("img/dataext.jpeg")
+```

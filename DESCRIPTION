@@ -1,33 +1,51 @@
-Package: AgreeClust
 Type: Package
-Title: Agreement-based unsupervised clustering of a panel of raters through a latent class regression modeling framework
+Package: agreeclust
+Title: Agreement-based unsupervised clustering of a panel of
+    raters through a latent class regression modeling framework
 Version: 1.0
 Date: 2017-11-02
 Author: Margot Brard, Sebastien Le, David Causeur
-Maintainer: Margot Brard <margot.brard@agrocampus-ouest.fr>
-Description: The AgreeClust package considers a latent class regression modeling framework for highlighting the structure of disagreement among panels of raters involved in an inquiry. On the contrary to popular approaches, the present method considers the ratings data provided by all raters when studying the structure of disagreement among the panel. More precisely, the structure of disagreement is captured through the profiles of residuals of a no-latent class regression model adjusted on the entire set of binary ratings, and can be visualized by using exploratory data analysis tools. The disagreement between two raters is then quantify in a concise way through the Euclidean distance between their respective profiles of residuals, this disagreement index being used as a basis to construct a dendrogram representing the structure of disagreement among the panel. The proper number of disagreed clusters among the panel of raters is then chosen by implementing a sequential strategy to test the significance of each K-clusters structure of disagreement.
-License: 
-Encoding: UTF-8
-Suggests: knitr,
-    rmarkdown
-VignetteBuilder: knitr
+Maintainer: Margot Brard <margot.brard@yahoo.fr>
+Description: The AgreeClust package considers a latent class
+    regression modeling framework for highlighting the structure of
+    disagreement among panels of raters involved in an inquiry. On the
+    contrary to popular approaches, the present method considers the
+    ratings data provided by all raters when studying the structure of
+    disagreement among the panel. More precisely, the structure of
+    disagreement is captured through the profiles of residuals of a
+    no-latent class regression model adjusted on the entire set of binary
+    ratings, and can be visualized by using exploratory data analysis
+    tools. The disagreement between two raters is then quantify in a
+    concise way through the Euclidean distance between their respective
+    profiles of residuals, this disagreement index being used as a basis
+    to construct a dendrogram representing the structure of disagreement
+    among the panel. The proper number of disagreed clusters among the
+    panel of raters is then chosen by implementing a sequential strategy
+    to test the significance of each K-clusters structure of disagreement.
+License: MIT + file LICENSE
+Depends: 
+    R (>= 2.10)
 Imports: 
-  dendextend,
-  doBy,
-  FactoMineR, 
-  ggdendro, 
-  ggplot2, 
-  ggrepel,
-  grid, 
-  gridExtra, 
-  manipulateWidget,
-  parallel, 
-  plotly,
-  prettydoc, 
-  reshape2,
-  shiny
-
-
-
-
-
+    car,
+    doBy,
+    FactoMineR,
+    ggdendro,
+    ggplot2,
+    ggrepel,
+    grid,
+    gridExtra,
+    magrittr,
+    manipulateWidget,
+    parallel,
+    plotly,
+    reshape2,
+    shiny,
+    stats
+Suggests: 
+    knitr,
+    pkgload,
+    rmarkdown
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+RoxygenNote: 7.1.1

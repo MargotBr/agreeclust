@@ -1,0 +1,188 @@
+---
+title: "c- Use of the package with binary ratings"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{c-binary-ratings}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+pkgload::load_all()
+```
+
+```{r setup, eval = FALSE}
+library(agreeclust)
+```
+
+The `get_agreeclust_binary()` function of the package is able to deal with binary ratings. The function considers a logistic latent class regression modeling for the agreement-based unsupervised clustering of a set of binary ratings:
+
+<center> $g(y) = logit(\mathbb{P}(y = 1))$ </center>
+
+For implementing the cutting strategy of the dendrogram, the Likelihood-Ratio Test (LRT) is used as the statistic test to test the significance of the $(K+1)-$ latent class model w.r.t the $K-$ latent class model.
+ 
+The help page of the functions can be accessed with this code:
+
+```{r eval = FALSE}
+help(get_agreeclust_binary)
+```
+
+To illustrate the outputs and graphs of the function, let's use a small pedagogic data set named *binary_data_for_example*. This data set refers to the ratings of 8 stimuli provided by a panel of 20 raters. Ratings data are supplemented by covariates providing information about the stimuli and the raters. The columns 21, 22, 23, 24, and 25 provide information about the stimuli: *Citrus fruits intensity* (continuous), *Vanilla intensity* (continuous), *Wood intensity* (continuous), *Lotus intensity* (continuous), and *Packaging* which is either the current one or a prototype (categorical). The lines 9, 10, 11 provide information about the raters: *Gender* (categorical), *Age bracket* (categorical), *Frequency of use* (continuous). The code to import and visualize this data set is:
+
+```{r echo = FALSE}
+data(binary_data_for_example)
+knitr::kable(binary_data_for_example)
+```
+
+By default, the function implements in parallel the computation of the null LRT distribution for cutting the dendrogram (in this case, a file denoted *TestDendrogram_processing.txt* is automatically created in the working directory to access the processing status). Moreover, the function approximates by default the null LRT distribution by using the Satterthwaite's approximation. Finally, the function uses by default the following other important arguments:
+
+- `dta`, specifying the name of the data set to be used;
+- `model = "rating ~ rater + stimulus"`, meaning that both the raters propensities and the stimuli propensities are taken into account when modeling the ratings data. Other available possibilities are `"rating ~ rater"` (in this case, the disagreement index is similar to the Cohen's kappa $\kappa$) or `"rating ~ 1"` (in this case, the disagreement index is similar to the simple matching coefficient);
+- `consol = TRUE`, meaning that the partition of raters is consolidated using a partitioning algorithm; 
+- `id_info_rater = NULL`, `type_info_rater = NULL`, `id_info_stim = NULL`, and `type_info_stim = NULL`, meaning that no covariates about either the raters nor the stimuli are available in the data set. 
+
+As the data set contains covariates about the raters and the stimuli, the last arguments have to be modified in the following way:
+
+- `id_info_rater = c(9, 10, 11)`, meaning that the 3 covariates about the raters are accessible in lines 9, 10, and 11 of the data set;
+- `type_info_rater = c(rep("cat", 2), "cont")`, meaning that the 2 first covariates about the raters are categorical and the last one continuous;
+- `id_info_stim = c(21, 22, 23, 24, 25)`, meaning that the 5 covariates about the stimuli are accessible in columns 21, 22, 23, 24, and 25 of the data set;
+- `type_info_stim = c(rep("cont", 4), "cat")`, meaning that the 4 first covariates about the stimuli are continuous and that the last one is categorical.
+
+Finally, the code to perform the clustering is:
+
+```{r eval = FALSE}
+res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
+                                id_info_rater = 9 : nrow(binary_data_for_example),
+                                type_info_rater = c(rep("cat", 2), "cont"),
+                                id_info_stim = 21 : ncol(binary_data_for_example),
+                                type_info_stim = c(rep("cont", 4), "cat")
+                                )
+```
+
+```{r echo = FALSE, message = FALSE}
+res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
+                                id_info_rater = 9 : nrow(binary_data_for_example),
+                                type_info_rater = c(rep("cat", 2), "cont"),
+                                id_info_stim = 21 : ncol(binary_data_for_example),
+                                type_info_stim = c(rep("cont", 4), "cat"),
+                                paral_null = FALSE,
+                                graph = FALSE)
+```
+
+The first object returned by the function is the matrix containing the profiles of deviance residuals. The larger the residual (in absolute value), the larger the departure from the situation of *perfect agreement* (cf. model (2)). This object can be accessed with this code:
+
+```{r eval = FALSE}
+res_pedag$profiles_residuals
+```
+
+```{r echo = FALSE}
+round(res_pedag$profiles_residuals, 1)
+```
+
+The second object returned by the function is the disagreement matrix between raters. The larger the value in this matrix, the more important the disagreement between the two corresponding raters. This object can be accessed with this code:
+
+```{r eval = FALSE}
+res_pedag$mat_disag
+```
+
+```{r echo = FALSE}
+round(res_pedag$mat_disag, 1)
+```
+
+The first graph created by the function shows the clustering process applied to this disagreement matrix. The dendrogram representing the structure of disagreement is presented at the top of the graph. The $p-$values associated to the different levels of its hierarchy show that two clusters of raters exist among the panel, as the $3-$ latent class model is not significant w.r.t the $2-$ latent class model. The consolidation step, whose the result is presented at the bottom of the graph, did not modify the partition of raters. Finally, we can say that this panel is composed of two disagreed clusters: the first ten raters (cluster 1) against the last ten raters (cluster 2).
+
+```{r echo = FALSE, dpi = 400, message = FALSE, results = FALSE}
+plot_agreeclust(res_pedag, choice = "seg", col_clust = c("#42B983", "#F36170"))
+```
+
+The clusters can be colored according to new colors in this plot. To do so, the following code is used:
+
+```{r fig.width = 8, dpi = 400, fig.height = 8, message = FALSE, results = FALSE}
+plot_agreeclust(res_pedag, choice = "seg", col_clust = c("#FF8379", "#009193"))
+```
+
+The results of the clustering process ($p-$values associated to the test of the significance of each $K-$ clusters structure, number of clusters of raters found, and the final partition of raters) can be accessed with this code:
+
+```{r}
+res_pedag$pval_dendro
+res_pedag$nb_clust_found
+res_pedag$partition # consolidated in this example
+```
+
+The second graph created by the function shows the multidimensional representation of the structure of disagreement observed among the panel. This representation is obtained by submitting the $20 \times 8$ matrix contained in the object *res_pedag$profiles_residuals* to a Principal Components Analysis (PCA). PCA provides two main representations: a representation of the individuals (i.e. a representation of the 20 raters) and a representation of the variables (i.e. a representation of the 8 stimuli). On the representation of the raters, two raters are distant if they present a high disagreement. As these two representations are related to each other, the representation of the raters has to be interpreted regarding to the representation of the stimuli. This may be expressed as follows: raters are on the same side as the stimuli for which they gave a '1' rating, and opposite of the stimuli for which they gave a '0' rating. 
+
+In the present example, cluster 1 is characterized by '1' ratings for stimuli *stim5*, *stim6*, *stim7*, and *stim8*; and by '0' ratings for stimuli *stim1*, *stim2*, *stim3*, and *stim4*. On the contrary, cluster 2 is characterized by '0' ratings for stimuli *stim5*, *stim6*, *stim7*, and *stim8*; and by '1' ratings for stimuli *stim1*, *stim2*, *stim3*, and *stim4*.
+
+```{r echo = FALSE, fig.width = 8, dpi = 400, fig.height = 5, message = FALSE, results = FALSE}
+plot_agreeclust(res_pedag, choice = "mul", col_clust = c("#42B983", "#F36170"))
+```
+
+In the present example, the percentage of variability explained by the first factorial plane is $67.12\%+16.87\%=83.99\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. However, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `FactoMineR` package (cf. help page of this function if needed). These results can be accessed with this code:
+
+```{r}
+res_pedag$res_pca
+```
+
+We can draw a bar plot with the eigenvalues of PCA with the following code:
+
+<center>
+```{r fig.width = 6, fig.height = 3, dpi = 400}
+barplot(res_pedag$res_pca$eig[, 1], main = "Eigenvalues", names.arg = paste0("Dim", 1 : nrow(res_pedag$res_pca$eig)))
+```
+</center>
+
+This graph allows to detect the number of dimensions interesting for the interpretation of the structure of disagreement. The user can then plot the graph for the other interesting dimensions, let's say the third and the fourth dimensions (even if in our case, they should not be interpreted):
+
+```{r eval = FALSE}
+plot_agreeclust(res_pedag, choice = "mul", axis = c(3, 4))
+```
+
+```{r echo = FALSE, fig.width = 8, dpi = 400, fig.height = 5, message = FALSE, results = FALSE}
+plot_agreeclust(res_pedag, choice = "mul", axis = c(3, 4), col_clust = c("#42B983", "#F36170"))
+```
+
+The `plot_agreeclust()` allows to plot the multidimensional representation of the structure of disagreement in an interactive way. By moving the cursor on a point, several pieces of information are printed:
+
+```{r eval = FALSE}
+plot_agreeclust(res_pedag, choice = "mul", interact = TRUE)
+```
+
+```{r echo = FALSE, fig.width = 10, fig.height = 6, warning = FALSE, message = FALSE}
+plot_agreeclust(res_pedag, choice = "mul", interact = TRUE, col_clust = c("#42B983", "#F36170"), vignette = TRUE)
+```
+
+Finally, the function provides an automatic description of the clusters of raters. This description can be accessed with this code: 
+
+```{r results = FALSE}
+res_pedag$charact_clust
+```
+
+As shown on the following output, cluster 1 is composed of 10 raters (50/% of the panel) and the most representative rater of this cluster is *subj7*. In this cluster, and relatively to the average, women, raters between 21 and 30 years old, and raters who often use the product are overrepresented; while men are underrepresented. Relatively to the average, raters of this cluster present a higher propensity to give a '1' rating to stimuli presenting a high intensity of citrus fruits flavor and to stimuli with the prototype packaging; while they present a lower propensity to give a '1' rating to stimuli presenting a high intensity of wood flavor and to stimuli with the current packaging:
+
+```{r echo = FALSE}
+res_pedag$charact_clust[[1]]
+```
+
+As there is only two clusters of raters in this example, the interpretation of cluster 2 is the opposite to those of cluster 1:
+
+```{r echo = FALSE}
+res_pedag$charact_clust[[2]]
+```
+
+A real data set of binary ratings is also available in the help page of the package. This data set corresponds to data obtained during an experiment where 39 videos of culinary gestures (oysters opening gestures) have been evaluated on a binary scale, by 72 participants, according to their representativeness of the complex concept of 'good gesture' (1) or not (0). However, as the computation of the tests for the significance of the levels of the dendrogram can be time-consuming, its analysis is not presented in this vignette. This analysis can be accessed with this code:
+
+```{r eval = FALSE}
+data("goodgesture")
+res_goodgesture <- get_agreeclust_bin(dta = goodgesture,
+                                      model = "rating ~ rater + stimulus",
+                                      id_info_rater = 40 : nrow(goodgesture),
+                                      type_info_rater = rep("cat", 4),
+                                      id_info_stim = 73 : ncol(goodgesture),
+                                      type_info_stim = c(rep("cat", 3), rep("cont", 11))
+                                      )
+res_goodgesture
+```
