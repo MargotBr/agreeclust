@@ -20,15 +20,28 @@ among the panel of raters is then chosen by implementing a sequential
 strategy to test the significance of each \(K\)-clusters structure of
 disagreement.
 
-To get the current version from GitHub:
+## Installation
+
+You can install the development version from
+[GitHub](https://github.com/) with:
 
 ``` r
-if(!requireNamespace("devtools")){install.packages("devtools")}
-devtools::install_github("MargotBr/agreeclust", build_vignettes = TRUE)
-library(agreeclust)
+if(!requireNamespace("remotes")){install.packages("remotes")}
+remotes::install_github("MargotBr/agreeclust", build_vignettes = TRUE) # create vignettes
 ```
 
-# Repex
+## Vignettes
+
+To get an overview of the functionalities of the package, you can read
+the vignettes:
+
+``` r
+vignette(topic = "a-overview-methodology", package = "agreeclust")
+vignette(topic = "b-data-needed", package = "agreeclust")
+vignette(topic = "c-binary-ratings", package = "agreeclust")
+```
+
+## Usage
 
 ``` r
 library(agreeclust)
@@ -38,19 +51,32 @@ res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
                                 type_info_rater = c(rep("cat", 2), "cont"),
                                 id_info_stim = 21 : ncol(binary_data_for_example),
                                 type_info_stim = c(rep("cont", 4), "cat"),
-                                paral_null = FALSE,
-                                graph = FALSE)
-names(res_pedag)
-#> [1] "call"               "profiles_residuals" "mat_disag"         
-#> [4] "pval_dendro"        "nb_clust_found"     "partition"         
-#> [7] "res_plot_segment"   "res_pca"            "charact_clust"
-plot_agreeclust(res_pedag)
+                                )
+res_pedag
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" /><img src="man/figures/README-unnamed-chunk-3-2.png" width="100%" />
-
-``` r
-plot_agreeclust(res_pedag, interact = TRUE)
-```
-
-<img src="man/figures/README-unnamed-chunk-3-3.png" width="100%" />
+    #> ** Results for the agreement-based clustering **
+    #> 
+    #> The analysis was performed on 20 raters who assessed 8 stimuli
+    #> The results are available in the following objects:
+    #> 
+    #>   name                 
+    #> 1 "$call"              
+    #> 2 "$profiles.residuals"
+    #> 3 "$mat.disag"         
+    #> 4 "$pval.dendro"       
+    #> 5 "$nb.clust.found"    
+    #> 6 "$partition"         
+    #> 7 "$res.plot.segment"  
+    #> 8 "$res.pca"           
+    #> 9 "$charact.clust"     
+    #>   description                                                                    
+    #> 1 "arguments used in the AgreeClust function"                                    
+    #> 2 "matrix of profiles of deviance residuals"                                     
+    #> 3 "disagreement matrix"                                                          
+    #> 4 "p-values in the dendrogram"                                                   
+    #> 5 "number of clusters of raters found"                                           
+    #> 6 "partition of raters found (consolidated or not)"                              
+    #> 7 "graphical results of the clustering (not needed)"                             
+    #> 8 "PCA results of the multidimensional analysis of the structure of disagreement"
+    #> 9 "description of the clusters of raters"
