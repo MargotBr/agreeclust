@@ -80,3 +80,22 @@ res_pedag
     #> 7 "graphical results of the clustering (not needed)"                             
     #> 8 "PCA results of the multidimensional analysis of the structure of disagreement"
     #> 9 "description of the clusters of raters"
+
+``` r
+# Visualisation of the clustering process
+plot_agreeclust(res_pedag, choice = "seg")
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="600" style="display: block; margin: auto;" />
+
+``` r
+# Visualisation of the multidimensional structure of disagreement
+plot_agreeclust(res_pedag, choice = "mul")
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="600" style="display: block; margin: auto;" />
+
+``` r
+# Interactive version
+plot_agreeclust(res_pedag, choice = "mul", interact = TRUE)
+```

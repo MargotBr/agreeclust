@@ -51,7 +51,7 @@ res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
 res_pedag
 ```
 
-```{r eval = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+```{r eval = FALSE, echo = FALSE, message = FALSE, warning = FALSE}
 library(agreeclust)
 data(binary_data_for_example)
 res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
@@ -64,7 +64,22 @@ res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
 print.agreeclust_binary(res_pedag)
 ```
 
-```{r echo = FALSE, eval = FALSE}
-# plot_agreeclust(res_pedag)
-# plot_agreeclust(res_pedag, interact = TRUE)
+```{r eval = TRUE, echo = FALSE}
+load("/Users/margotbrard/Documents/agreeclust/respedag.Rdata")
+print.agreeclust_binary(res_pedag)
+```
+
+```{r eval = TRUE, echo = TRUE, message = FALSE, fig.width = 7, fig.height = 7, fig.align = 'center', out.width = 600}
+# Visualisation of the clustering process
+plot_agreeclust(res_pedag, choice = "seg")
+```
+
+```{r eval = TRUE, echo = TRUE, message = FALSE, out.width = 600, fig.align = 'center'}
+# Visualisation of the multidimensional structure of disagreement
+plot_agreeclust(res_pedag, choice = "mul")
+```
+
+```{r eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE, out.width = 600, fig.align = 'center'}
+# Interactive version
+plot_agreeclust(res_pedag, choice = "mul", interact = TRUE)
 ```
