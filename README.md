@@ -86,14 +86,14 @@ res_pedag
 plot_agreeclust(res_pedag, choice = "seg")
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="600" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="600" style="display: block; margin: auto;" />
 
 ``` r
 # Visualisation of the multidimensional structure of disagreement
 plot_agreeclust(res_pedag, choice = "mul")
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="600" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="600" style="display: block; margin: auto;" />
 
 ``` r
 # Interactive version
