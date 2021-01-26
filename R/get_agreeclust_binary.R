@@ -478,7 +478,7 @@ get_agreeclust_bin <- function(dta, model = "rating ~ rater + stimulus", max_clu
   names(res) <- c("call", "profiles_residuals", "mat_disag", "pval_dendro", "nb_clust_found", "partition", "res_plot_segment", "res_pca", "charact_clust")
   message("Clustering performed")
 
-  class(res) <- c("agreeclust_binary", "list ")
+  class(res) <- c("agreeclust_binary", "list")
   return(res)
 
 }

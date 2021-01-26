@@ -18,17 +18,40 @@ pkgload::load_all()
 
 The `{agreeclust}` package considers a latent class regression modeling framework for highlighting the structure of disagreement among panels of raters involved in an inquiry. On the contrary to popular approaches, the present method considers the ratings data provided by all raters when studying the structure of disagreement among the panel. More precisely, the structure of disagreement is captured through the profiles of residuals of a no-latent class regression model adjusted on the entire set of binary ratings, and can be visualized by using exploratory data analysis tools. The disagreement between two raters is then quantify in a concise way through the Euclidean distance between their respective profiles of residuals, this disagreement index being used as a basis to construct a dendrogram representing the structure of disagreement among the panel. The proper number of disagreed clusters among the panel of raters is then chosen by implementing a sequential strategy to test the significance of each $K$-clusters structure of disagreement.
 
-To get the current version from GitHub:
+## Installation
+
+You can install the development version from [GitHub](https://github.com/) with:
 
 ```{r eval = FALSE}
-if(!requireNamespace("devtools")){install.packages("devtools")}
-devtools::install_github("MargotBr/agreeclust", build_vignettes = TRUE)
-library(agreeclust)
+if(!requireNamespace("remotes")){install.packages("remotes")}
+remotes::install_github("MargotBr/agreeclust", build_vignettes = TRUE) # create vignettes
 ```
 
-# Repex
+## Vignettes
 
-```{r eval = TRUE, message = FALSE, warning = FALSE, dpi = 400}
+To get an overview of the functionalities of the package, you can read the vignettes:
+
+```{r eval = FALSE}
+vignette(topic = "a-overview-methodology", package = "agreeclust")
+vignette(topic = "b-data-needed", package = "agreeclust")
+vignette(topic = "c-binary-ratings", package = "agreeclust")
+```
+
+## Usage
+
+```{r eval = FALSE, echo = TRUE}
+library(agreeclust)
+data(binary_data_for_example)
+res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
+                                id_info_rater = 9 : nrow(binary_data_for_example),
+                                type_info_rater = c(rep("cat", 2), "cont"),
+                                id_info_stim = 21 : ncol(binary_data_for_example),
+                                type_info_stim = c(rep("cont", 4), "cat"),
+                                )
+res_pedag
+```
+
+```{r eval = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 library(agreeclust)
 data(binary_data_for_example)
 res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
@@ -38,7 +61,20 @@ res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
                                 type_info_stim = c(rep("cont", 4), "cat"),
                                 paral_null = FALSE,
                                 graph = FALSE)
-names(res_pedag)
-plot_agreeclust(res_pedag)
-# plot_agreeclust(res_pedag, interact = TRUE)
+print.agreeclust_binary(res_pedag)
+```
+
+```{r eval = TRUE, echo = TRUE, message = FALSE, fig.width = 7, fig.height = 7, fig.align = 'center', out.width = 600}
+# Visualisation of the clustering process
+plot_agreeclust(res_pedag, choice = "seg")
+```
+
+```{r eval = TRUE, echo = TRUE, message = FALSE, out.width = 600, fig.align = 'center'}
+# Visualisation of the multidimensional structure of disagreement
+plot_agreeclust(res_pedag, choice = "mul")
+```
+
+```{r eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE, out.width = 600, fig.align = 'center'}
+# Interactive version
+plot_agreeclust(res_pedag, choice = "mul", interact = TRUE)
 ```
