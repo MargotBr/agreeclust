@@ -51,7 +51,7 @@ res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
 res_pedag
 ```
 
-```{r eval = FALSE, echo = FALSE, message = FALSE, warning = FALSE}
+```{r eval = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 library(agreeclust)
 data(binary_data_for_example)
 res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
@@ -61,11 +61,6 @@ res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
                                 type_info_stim = c(rep("cont", 4), "cat"),
                                 paral_null = FALSE,
                                 graph = FALSE)
-print.agreeclust_binary(res_pedag)
-```
-
-```{r eval = TRUE, echo = FALSE}
-load("/Users/margotbrard/Documents/agreeclust/respedag.Rdata")
 print.agreeclust_binary(res_pedag)
 ```
 
