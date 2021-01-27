@@ -3,6 +3,9 @@
 
 # agreeclust <img src='man/figures/hex-agreeclust-white.png' align="right" height="139" />
 
+The website presenting the package is:
+<https://margotbr.github.io/agreeclust/>
+
 The `{agreeclust}` package considers a latent class regression modeling
 framework for highlighting the structure of disagreement among panels of
 raters involved in an inquiry. On the contrary to popular approaches,
@@ -22,24 +25,34 @@ disagreement.
 
 ## Installation
 
-You can install the development version from
-[GitHub](https://github.com/) with:
+You can install the package from [GitHub](https://github.com/) with:
 
 ``` r
 if(!requireNamespace("remotes")){install.packages("remotes")}
 remotes::install_github("MargotBr/agreeclust", build_vignettes = TRUE) # create vignettes
 ```
 
-## Vignettes
-
-To get an overview of the functionalities of the package, you can read
-the vignettes:
+You can install the development version with:
 
 ``` r
-vignette(topic = "a-overview-methodology", package = "agreeclust")
-vignette(topic = "b-data-needed", package = "agreeclust")
-vignette(topic = "c-binary-ratings", package = "agreeclust")
+if(!requireNamespace("remotes")){install.packages("remotes")}
+remotes::install_github("MargotBr/agreeclust", ref = "dev", build_vignettes = TRUE) # create vignettes
 ```
+
+## Package functionalities
+
+To get an overview of the functionalities of the package, you can read
+the
+vignettes:
+
+``` r
+vignette(topic = "a- Global overview of the statistical methodology", package = "agreeclust")
+vignette(topic = "b- Using the proper format of data", package = "agreeclust")
+vignette(topic = "c- Use of the package with binary ratings", package = "agreeclust")
+```
+
+Or access the website presenting the package:
+<https://margotbr.github.io/agreeclust/>
 
 ## Usage
 
@@ -86,14 +99,14 @@ res_pedag
 plot_agreeclust(res_pedag, choice = "seg")
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="600" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="600" style="display: block; margin: auto;" />
 
 ``` r
 # Visualisation of the multidimensional structure of disagreement
 plot_agreeclust(res_pedag, choice = "mul")
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="600" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="600" style="display: block; margin: auto;" />
 
 ``` r
 # Interactive version
