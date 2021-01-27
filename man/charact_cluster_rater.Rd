@@ -15,6 +15,23 @@ charact_cluster_rater(
   id_info_stim
 )
 }
+\arguments{
+\item{i}{i}
+
+\item{mat.partition}{mat.partition}
+
+\item{res.pca}{res.pca}
+
+\item{id_info_rater}{id_info_rater}
+
+\item{dta.sauv}{dta.sauv}
+
+\item{mat.resids}{mat.resids}
+
+\item{type_info_rater}{type_info_rater}
+
+\item{id_info_stim}{id_info_stim}
+}
 \description{
 Function charact_cluster_rater
 }

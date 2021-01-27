@@ -1,4 +1,9 @@
 #' Function remove_outliers
+#'
+#' @param formula formula
+#' @param data data
+#' @param na.action na.action
+#'
 GlmSum <- function(formula, data, na.action = na.omit) {
 
   old.contr <- options()$contrasts
@@ -128,6 +133,13 @@ GlmSum <- function(formula, data, na.action = na.omit) {
 }
 
 #' Function remove_outliers
+#'
+#' @param x x
+#' @param na.rm na.rm
+#' @param ... ...
+#'
+#' @importFrom stats IQR
+#'
 remove_outliers <- function(x, na.rm = TRUE, ...) {
   qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
   H <- 10 * IQR(x, na.rm = na.rm)
@@ -138,6 +150,13 @@ remove_outliers <- function(x, na.rm = TRUE, ...) {
 }
 
 #' Function compute_dist_null
+#'
+#' @param j j
+#' @param list.data.null list.data.null
+#' @param K K
+#' @param model model
+#' @param model2 model2
+#'
 compute_dist_null <- function(j, list.data.null, K, model, model2) {
 
   # Null dendrogram
@@ -190,6 +209,16 @@ compute_dist_null <- function(j, list.data.null, K, model, model2) {
 }
 
 #' Function compute_pval
+#'
+#' @param K K
+#' @param dendrogram dendrogram
+#' @param melted.data melted.data
+#' @param model model
+#' @param model2 model2
+#' @param approx_null approx_null
+#' @param dta dta
+#' @param paral_null paral_null
+#'
 compute_pval <- function(K, dendrogram, melted.data, model, model2, approx_null, dta, paral_null) {
 
   if(control.break) {
@@ -278,6 +307,16 @@ compute_pval <- function(K, dendrogram, melted.data, model, model2, approx_null,
 }
 
 #' Function charact_cluster_rater
+#'
+#' @param i i
+#' @param mat.partition mat.partition
+#' @param res.pca res.pca
+#' @param id_info_rater id_info_rater
+#' @param dta.sauv dta.sauv
+#' @param mat.resids mat.resids
+#' @param type_info_rater type_info_rater
+#' @param id_info_stim id_info_stim
+#'
 charact_cluster_rater <- function(i, mat.partition, res.pca, id_info_rater, dta.sauv, mat.resids, type_info_rater, id_info_stim) {
 
   res.clust.rater <- list()
@@ -370,6 +409,16 @@ charact_cluster_rater <- function(i, mat.partition, res.pca, id_info_rater, dta.
 }
 
 #' Function charact_cluster_stim
+#'
+#' @param i i
+#' @param mat.partition mat.partition
+#' @param id_info_rater id_info_rater
+#' @param id_info_stim id_info_stim
+#' @param dta.sauv dta.sauv
+#' @param dta dta
+#' @param type_info_stim type_info_stim
+#' @param melted.data.clusters melted.data.clusters
+#'
 charact_cluster_stim <- function(i, mat.partition, id_info_rater, id_info_stim, dta.sauv, dta, type_info_stim, melted.data.clusters) {
 
   # interpret the cluster with external information about the stimuli
@@ -438,6 +487,9 @@ charact_cluster_stim <- function(i, mat.partition, id_info_rater, id_info_stim, 
 }
 
 #' Function get.legend
+#'
+#' @param plot plot
+#'
 get.legend <- function(plot){
   tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(plot))
   leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
@@ -446,12 +498,17 @@ get.legend <- function(plot){
 }
 
 #' Function simpleCap
+#'
+#' @param x x
+#'
 simpleCap <- function(x){
   s <- strsplit(x, " ")[[1]]
   paste(toupper(substring(s, 1,1)), substring(s, 2), sep="", collapse=" ")
 }
 
 #' Function print.get_agreeclust_binary
+#'
+#' @param res res
 print.agreeclust_binary <- function(res){
 
   if (!inherits(res, "agreeclust_binary")){

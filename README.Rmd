@@ -32,9 +32,9 @@ remotes::install_github("MargotBr/agreeclust", build_vignettes = TRUE) # create 
 To get an overview of the functionalities of the package, you can read the vignettes:
 
 ```{r eval = FALSE}
-vignette(topic = "a-overview-methodology", package = "agreeclust")
-vignette(topic = "b-data-needed", package = "agreeclust")
-vignette(topic = "c-binary-ratings", package = "agreeclust")
+vignette(topic = "a- Global overview of the statistical methodology", package = "agreeclust")
+vignette(topic = "b- Using the proper format of data", package = "agreeclust")
+vignette(topic = "c- Use of the package with binary ratings", package = "agreeclust")
 ```
 
 ## Usage

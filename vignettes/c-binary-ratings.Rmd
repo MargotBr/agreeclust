@@ -2,7 +2,7 @@
 title: "c- Use of the package with binary ratings"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{c-binary-ratings}
+  %\VignetteIndexEntry{c- Use of the package with binary ratings}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,7 +12,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-pkgload::load_all()
 ```
 
 ```{r setup, eval = FALSE}
@@ -63,7 +62,7 @@ res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
                                 )
 ```
 
-```{r echo = FALSE, message = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 res_pedag <- get_agreeclust_bin(dta = binary_data_for_example,
                                 id_info_rater = 9 : nrow(binary_data_for_example),
                                 type_info_rater = c(rep("cat", 2), "cont"),
@@ -95,7 +94,7 @@ round(res_pedag$mat_disag, 1)
 
 The first graph created by the function shows the clustering process applied to this disagreement matrix. The dendrogram representing the structure of disagreement is presented at the top of the graph. The $p-$values associated to the different levels of its hierarchy show that two clusters of raters exist among the panel, as the $3-$ latent class model is not significant w.r.t the $2-$ latent class model. The consolidation step, whose the result is presented at the bottom of the graph, did not modify the partition of raters. Finally, we can say that this panel is composed of two disagreed clusters: the first ten raters (cluster 1) against the last ten raters (cluster 2).
 
-```{r echo = FALSE, dpi = 400, message = FALSE, results = FALSE}
+```{r fig.width = 8, dpi = 400, fig.height = 8, message = FALSE, results = FALSE}
 plot_agreeclust(res_pedag, choice = "seg", col_clust = c("#42B983", "#F36170"))
 ```
 

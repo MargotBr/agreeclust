@@ -14,5 +14,10 @@ usethis::use_vignette("d-continuous-ratings")
 ## Description
 attachment::att_amend_desc()
 
+## Pkgdown
+install.packages("pkgdown")
+usethis::use_pkgdown()
+pkgdown::build_site()
+
 ## Check
 devtools::check()
