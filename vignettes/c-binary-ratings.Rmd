@@ -20,7 +20,7 @@ library(agreeclust)
 
 The `get_agreeclust_binary()` function of the package is able to deal with binary ratings. The function considers a logistic latent class regression modeling for the agreement-based unsupervised clustering of a set of binary ratings:
 
-<center> $g(y) = logit(\mathbb{P}(y = 1))$ </center>
+<center>$g(y) = logit(\mathbb{P}(y = 1))$</center>
 
 For implementing the cutting strategy of the dendrogram, the Likelihood-Ratio Test (LRT) is used as the statistic test to test the significance of the $(K+1)-$ latent class model w.r.t the $K-$ latent class model.
  
@@ -112,7 +112,7 @@ res_pedag$nb_clust_found
 res_pedag$partition # consolidated in this example
 ```
 
-The second graph created by the function shows the multidimensional representation of the structure of disagreement observed among the panel. This representation is obtained by submitting the $20 \times 8$ matrix contained in the object *res_pedag$profiles_residuals* to a Principal Components Analysis (PCA). PCA provides two main representations: a representation of the individuals (i.e. a representation of the 20 raters) and a representation of the variables (i.e. a representation of the 8 stimuli). On the representation of the raters, two raters are distant if they present a high disagreement. As these two representations are related to each other, the representation of the raters has to be interpreted regarding to the representation of the stimuli. This may be expressed as follows: raters are on the same side as the stimuli for which they gave a '1' rating, and opposite of the stimuli for which they gave a '0' rating. 
+The second graph created by the function shows the multidimensional representation of the structure of disagreement observed among the panel. This representation is obtained by submitting the $20 \times 8$ matrix contained in the object `res_pedag$profiles_residuals` to a Principal Components Analysis (PCA). PCA provides two main representations: a representation of the individuals (i.e. a representation of the 20 raters) and a representation of the variables (i.e. a representation of the 8 stimuli). On the representation of the raters, two raters are distant if they present a high disagreement. As these two representations are related to each other, the representation of the raters has to be interpreted regarding to the representation of the stimuli. This may be expressed as follows: raters are on the same side as the stimuli for which they gave a '1' rating, and opposite of the stimuli for which they gave a '0' rating. 
 
 In the present example, cluster 1 is characterized by '1' ratings for stimuli *stim5*, *stim6*, *stim7*, and *stim8*; and by '0' ratings for stimuli *stim1*, *stim2*, *stim3*, and *stim4*. On the contrary, cluster 2 is characterized by '0' ratings for stimuli *stim5*, *stim6*, *stim7*, and *stim8*; and by '1' ratings for stimuli *stim1*, *stim2*, *stim3*, and *stim4*.
 
@@ -120,7 +120,7 @@ In the present example, cluster 1 is characterized by '1' ratings for stimuli *s
 plot_agreeclust(res_pedag, choice = "mul", col_clust = c("#42B983", "#F36170"))
 ```
 
-In the present example, the percentage of variability explained by the first factorial plane is $67.12\%+16.87\%=83.99\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. However, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `FactoMineR` package (cf. help page of this function if needed). These results can be accessed with this code:
+In the present example, the percentage of variability explained by the first factorial plane is $67.12\%+16.87\%=83.99\%$. This percentage is high enough to interpret the structure of disagreement according to this first factorial plane only. However, is some situations, the user will have to interpret more dimensions of disagreement. To do so, the user can access all the results of the PCA as provided by the `PCA` function of the `{FactoMineR}` package (cf. help page of this function if needed). These results can be accessed with this code:
 
 ```{r}
 res_pedag$res_pca
