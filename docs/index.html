@@ -98,28 +98,34 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#agreeclust" class="anchor"></a>agreeclust <img src="reference/figures/hex-agreeclust-white.png" align="right" height="139">
 </h1></div>
+<p>The website presenting the package is: <a href="https://margotbr.github.io/agreeclust/" class="uri">https://margotbr.github.io/agreeclust/</a></p>
 <p>The <code>{agreeclust}</code> package considers a latent class regression modeling framework for highlighting the structure of disagreement among panels of raters involved in an inquiry. On the contrary to popular approaches, the present method considers the ratings data provided by all raters when studying the structure of disagreement among the panel. More precisely, the structure of disagreement is captured through the profiles of residuals of a no-latent class regression model adjusted on the entire set of binary ratings, and can be visualized by using exploratory data analysis tools. The disagreement between two raters is then quantify in a concise way through the Euclidean distance between their respective profiles of residuals, this disagreement index being used as a basis to construct a dendrogram representing the structure of disagreement among the panel. The proper number of disagreed clusters among the panel of raters is then chosen by implementing a sequential strategy to test the significance of each <span class="math inline"><em>K</em></span>-clusters structure of disagreement.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
+<p>You can install the package from <a href="https://github.com/">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">}</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"MargotBr/agreeclust"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># create vignettes</span></code></pre></div>
-</div>
-<div id="vignettes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#vignettes" class="anchor"></a>Vignettes</h2>
-<p>To get an overview of the functionalities of the package, you can read the vignettes:</p>
+<p>You can install the development version with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="st">"a-overview-methodology"</span>, package <span class="op">=</span> <span class="st">"agreeclust"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="st">"b-data-needed"</span>, package <span class="op">=</span> <span class="st">"agreeclust"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="st">"c-binary-ratings"</span>, package <span class="op">=</span> <span class="st">"agreeclust"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">}</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"MargotBr/agreeclust"</span>, ref <span class="op">=</span> <span class="st">"dev"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># create vignettes</span></code></pre></div>
+</div>
+<div id="package-functionalities" class="section level2">
+<h2 class="hasAnchor">
+<a href="#package-functionalities" class="anchor"></a>Package functionalities</h2>
+<p>To get an overview of the functionalities of the package, you can read the vignettes:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="st">"a- Global overview of the statistical methodology"</span>, package <span class="op">=</span> <span class="st">"agreeclust"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="st">"b- Using the proper format of data"</span>, package <span class="op">=</span> <span class="st">"agreeclust"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="st">"c- Use of the package with binary ratings"</span>, package <span class="op">=</span> <span class="st">"agreeclust"</span><span class="op">)</span></code></pre></div>
+<p>Or access the website presenting the package: <a href="https://margotbr.github.io/agreeclust/" class="uri">https://margotbr.github.io/agreeclust/</a></p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">agreeclust</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">binary_data_for_example</span><span class="op">)</span>
 <span class="va">res_pedag</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_agreeclust_bin.html">get_agreeclust_bin</a></span><span class="op">(</span>dta <span class="op">=</span> <span class="va">binary_data_for_example</span>,
@@ -129,40 +135,40 @@
                                 type_info_stim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"cont"</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"cat"</span><span class="op">)</span>,
                                 <span class="op">)</span>
 <span class="va">res_pedag</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">#&gt; ** Results for the agreement-based clustering **</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt; The analysis was performed on 20 raters who assessed 8 stimuli</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; The results are available in the following objects:</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt;   name                 </span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; 1 "$call"              </span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; 2 "$profiles.residuals"</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; 3 "$mat.disag"         </span></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt; 4 "$pval.dendro"       </span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; 5 "$nb.clust.found"    </span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; 6 "$partition"         </span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; 7 "$res.plot.segment"  </span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; 8 "$res.pca"           </span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; 9 "$charact.clust"     </span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt;   description                                                                    </span></a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; 1 "arguments used in the AgreeClust function"                                    </span></a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; 2 "matrix of profiles of deviance residuals"                                     </span></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; 3 "disagreement matrix"                                                          </span></a>
-<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; 4 "p-values in the dendrogram"                                                   </span></a>
-<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; 5 "number of clusters of raters found"                                           </span></a>
-<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; 6 "partition of raters found (consolidated or not)"                              </span></a>
-<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; 7 "graphical results of the clustering (not needed)"                             </span></a>
-<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; 8 "PCA results of the multidimensional analysis of the structure of disagreement"</span></a>
-<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt; 9 "description of the clusters of raters"</span></a></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">#&gt; ** Results for the agreement-based clustering **</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; The analysis was performed on 20 raters who assessed 8 stimuli</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; The results are available in the following objects:</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt;   name                 </span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; 1 "$call"              </span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; 2 "$profiles.residuals"</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt; 3 "$mat.disag"         </span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; 4 "$pval.dendro"       </span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt; 5 "$nb.clust.found"    </span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt; 6 "$partition"         </span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt; 7 "$res.plot.segment"  </span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; 8 "$res.pca"           </span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; 9 "$charact.clust"     </span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt;   description                                                                    </span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; 1 "arguments used in the AgreeClust function"                                    </span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; 2 "matrix of profiles of deviance residuals"                                     </span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 3 "disagreement matrix"                                                          </span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; 4 "p-values in the dendrogram"                                                   </span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; 5 "number of clusters of raters found"                                           </span></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt; 6 "partition of raters found (consolidated or not)"                              </span></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt; 7 "graphical results of the clustering (not needed)"                             </span></a>
+<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt; 8 "PCA results of the multidimensional analysis of the structure of disagreement"</span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt; 9 "description of the clusters of raters"</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Visualisation of the clustering process</span>
 <span class="fu"><a href="reference/plot_agreeclust.html">plot_agreeclust</a></span><span class="op">(</span><span class="va">res_pedag</span>, choice <span class="op">=</span> <span class="st">"seg"</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="600" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Visualisation of the multidimensional structure of disagreement</span>
-<span class="fu"><a href="reference/plot_agreeclust.html">plot_agreeclust</a></span><span class="op">(</span><span class="va">res_pedag</span>, choice <span class="op">=</span> <span class="st">"mul"</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="600" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Visualisation of the multidimensional structure of disagreement</span>
+<span class="fu"><a href="reference/plot_agreeclust.html">plot_agreeclust</a></span><span class="op">(</span><span class="va">res_pedag</span>, choice <span class="op">=</span> <span class="st">"mul"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="600" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Interactive version</span>
 <span class="fu"><a href="reference/plot_agreeclust.html">plot_agreeclust</a></span><span class="op">(</span><span class="va">res_pedag</span>, choice <span class="op">=</span> <span class="st">"mul"</span>, interact <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
