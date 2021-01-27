@@ -15,6 +15,23 @@ compute_pval(
   paral_null
 )
 }
+\arguments{
+\item{K}{K}
+
+\item{dendrogram}{dendrogram}
+
+\item{melted.data}{melted.data}
+
+\item{model}{model}
+
+\item{model2}{model2}
+
+\item{approx_null}{approx_null}
+
+\item{dta}{dta}
+
+\item{paral_null}{paral_null}
+}
 \description{
 Function compute_pval
 }

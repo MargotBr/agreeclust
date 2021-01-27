@@ -1,7 +1,8 @@
 #' Graphical representation of the structure of disagreement among the panel of raters
 #'
 #' @description Draws the graphs representing the structure of disagreement among the set of ratings. Tunning parameters such as the color of the clusters or the axis of PCA to be plotted can be specified.
-#' @usage plot_agreeclust(res, choice = "all", interact = FALSE, col_clust = NULL, axis = c(1, 2), name_rater = "rater", ext_dev_Rstudio = FALSE)
+#' @usage plot_agreeclust(res, choice = "all", interact = FALSE, col_clust = NULL, axis = c(1, 2),
+#' name_rater = "rater", ext_dev_Rstudio = FALSE, vignette = FALSE)
 
 #' @param res An object of class agreeclust returned by the functions of the package.
 #' @param choice A character element specifying the graphs to be plotted ('seg' for the representation of the segmentation process (dendrogram + partitioning if a consolidation process has been implemented), 'mul' for the multidimensional representation of the structure of disagreement (PCA), 'all' for both representations. By default, both representations are plotted.)
@@ -10,6 +11,7 @@
 #' @param axis A length 2 numeric vector specifying the PCA components to be plotted. By default, the first 2 components are plotted.
 #' @param name_rater A character element indicating how the raters should be named (e.g. "rater", "participant", "psychologists")
 #' @param ext_dev_Rstudio A boolean specifying if the graphical outputs should be plotted in the Rstudio plot pane or not.
+#' @param vignette A boolean specifying if the graphical outputs are plotted in a vignette or not.
 
 #' @import ggplot2
 #' @importFrom grid unit textGrob
@@ -19,6 +21,7 @@
 #' @importFrom manipulateWidget combineWidgets
 #' @importFrom gridExtra grid.arrange arrangeGrob
 #' @importFrom shiny tags
+#' @importFrom grDevices dev.cur dev.new dev.off
 
 #' @return Returns the graphical representations
 #' @export
@@ -34,8 +37,8 @@
 #'                                 )
 #' plot_agreeclust(res_pedag, col_clust = c("blue", "green"))
 #' plot_agreeclust(res_pedag, choice = "mul", interact = TRUE, col_clust = c("blue", "green"))
-
-plot_agreeclust <- function(res, choice = "all", interact = FALSE, col_clust = NULL, axis = c(1, 2), name_rater = "rater", ext_dev_Rstudio = FALSE, vignette = FALSE) {
+plot_agreeclust <- function(res, choice = "all", interact = FALSE, col_clust = NULL, axis = c(1, 2),
+                            name_rater = "rater", ext_dev_Rstudio = FALSE, vignette = FALSE) {
 
   # check the format of the arguments
   if (!inherits(res, "agreeclust_binary") & !inherits(res, "agreeclust_continuous")) {

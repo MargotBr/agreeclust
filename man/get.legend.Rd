@@ -6,6 +6,9 @@
 \usage{
 get.legend(plot)
 }
+\arguments{
+\item{plot}{plot}
+}
 \description{
 Function get.legend
 }

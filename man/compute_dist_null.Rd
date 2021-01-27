@@ -6,6 +6,17 @@
 \usage{
 compute_dist_null(j, list.data.null, K, model, model2)
 }
+\arguments{
+\item{j}{j}
+
+\item{list.data.null}{list.data.null}
+
+\item{K}{K}
+
+\item{model}{model}
+
+\item{model2}{model2}
+}
 \description{
 Function compute_dist_null
 }
