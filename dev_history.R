@@ -11,12 +11,13 @@ usethis::use_vignette("b-data-needed")
 usethis::use_vignette("c-binary-ratings")
 usethis::use_vignette("d-continuous-ratings")
 
+# Use pkgdown
+usethis::use_pkgdown()
+
 ## Description
 attachment::att_amend_desc()
 
 ## Pkgdown
-install.packages("pkgdown")
-usethis::use_pkgdown()
 pkgdown::build_site()
 
 ## Check

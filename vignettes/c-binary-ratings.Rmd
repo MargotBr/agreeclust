@@ -12,10 +12,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-pkgload::load_all()
 ```
 
-```{r setup, eval = FALSE}
+```{r setup, eval = TRUE}
 library(agreeclust)
 ```
 
@@ -34,7 +33,7 @@ help(get_agreeclust_binary)
 To illustrate the outputs and graphs of the function, let's use a small pedagogic data set named *binary_data_for_example*. This data set refers to the ratings of 8 stimuli provided by a panel of 20 raters. Ratings data are supplemented by covariates providing information about the stimuli and the raters. The columns 21, 22, 23, 24, and 25 provide information about the stimuli: *Citrus fruits intensity* (continuous), *Vanilla intensity* (continuous), *Wood intensity* (continuous), *Lotus intensity* (continuous), and *Packaging* which is either the current one or a prototype (categorical). The lines 9, 10, 11 provide information about the raters: *Gender* (categorical), *Age bracket* (categorical), *Frequency of use* (continuous). The code to import and visualize this data set is:
 
 ```{r echo = FALSE}
-data(binary_data_for_example)
+data("binary_data_for_example")
 knitr::kable(binary_data_for_example)
 ```
 
