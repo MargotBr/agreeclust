@@ -15,6 +15,23 @@ charact_cluster_stim(
   melted.data.clusters
 )
 }
+\arguments{
+\item{i}{i}
+
+\item{mat.partition}{mat.partition}
+
+\item{id_info_rater}{id_info_rater}
+
+\item{id_info_stim}{id_info_stim}
+
+\item{dta.sauv}{dta.sauv}
+
+\item{dta}{dta}
+
+\item{type_info_stim}{type_info_stim}
+
+\item{melted.data.clusters}{melted.data.clusters}
+}
 \description{
 Function charact_cluster_stim
 }

@@ -2,7 +2,7 @@
 title: "a- Global overview of the statistical methodology"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{a-overview-methodology}
+  %\VignetteIndexEntry{a- Global overview of the statistical methodology}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -6,6 +6,9 @@
 \usage{
 simpleCap(x)
 }
+\arguments{
+\item{x}{x}
+}
 \description{
 Function simpleCap
 }

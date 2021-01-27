@@ -2,7 +2,7 @@
 title: "b- Using the proper format of data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{b-data-needed}
+  %\VignetteIndexEntry{b- Using the proper format of data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

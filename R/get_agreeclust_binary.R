@@ -22,6 +22,7 @@
 #' @importFrom FactoMineR PCA catdes
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom gridExtra grid.arrange arrangeGrob
+#' @importFrom stats as.dendrogram as.dist binomial coef cutree deviance dist glm kmeans model.matrix na.omit pchisq pnorm predict quantile rchisq residuals runif summary.glm var vcov
 #'
 #' @return list
 #' \itemize{
@@ -59,7 +60,6 @@
 #'                                       paral_null = FALSE
 #'                                       )
 #' }
-
 get_agreeclust_bin <- function(dta, model = "rating ~ rater + stimulus", max_clust = 10, approx_null = TRUE, paral_null = TRUE, consol = TRUE, id_info_rater = NULL, type_info_rater = NULL, id_info_stim = NULL, type_info_stim = NULL, graph = TRUE, ext_dev_Rstudio = FALSE) {
 
   # save the data set

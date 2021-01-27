@@ -6,6 +6,13 @@
 \usage{
 remove_outliers(x, na.rm = TRUE, ...)
 }
+\arguments{
+\item{x}{x}
+
+\item{na.rm}{na.rm}
+
+\item{...}{...}
+}
 \description{
 Function remove_outliers
 }

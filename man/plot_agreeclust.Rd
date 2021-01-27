@@ -4,7 +4,8 @@
 \alias{plot_agreeclust}
 \title{Graphical representation of the structure of disagreement among the panel of raters}
 \usage{
-plot_agreeclust(res, choice = "all", interact = FALSE, col_clust = NULL, axis = c(1, 2), name_rater = "rater", ext_dev_Rstudio = FALSE)
+plot_agreeclust(res, choice = "all", interact = FALSE, col_clust = NULL, axis = c(1, 2),
+name_rater = "rater", ext_dev_Rstudio = FALSE, vignette = FALSE)
 }
 \arguments{
 \item{res}{An object of class agreeclust returned by the functions of the package.}
@@ -20,6 +21,8 @@ plot_agreeclust(res, choice = "all", interact = FALSE, col_clust = NULL, axis = 
 \item{name_rater}{A character element indicating how the raters should be named (e.g. "rater", "participant", "psychologists")}
 
 \item{ext_dev_Rstudio}{A boolean specifying if the graphical outputs should be plotted in the Rstudio plot pane or not.}
+
+\item{vignette}{A boolean specifying if the graphical outputs are plotted in a vignette or not.}
 }
 \value{
 Returns the graphical representations

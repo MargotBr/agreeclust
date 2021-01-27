@@ -6,6 +6,13 @@
 \usage{
 GlmSum(formula, data, na.action = na.omit)
 }
+\arguments{
+\item{formula}{formula}
+
+\item{data}{data}
+
+\item{na.action}{na.action}
+}
 \description{
 Function remove_outliers
 }
